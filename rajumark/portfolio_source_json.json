@@ -1,87 +1,163 @@
 {
   "personalInfo": {
     "name": "Raju Shingadiya",
-    "title": "Android Developer",
-    "email": "",
-    "phone": "",
-    "location": "",
+    "title": "Lead Android Developer",
+    "email": "raju348636@gmail.com",
+    "phone": "+916353321951",
+    "location": "Chandlodia, Ahmedabad, Gujarat 380081",
     "website": "",
     "github": "",
     "linkedin": "",
-    "summary": ""
+    "summary": "Experienced Android Developer with 4+ years of expertise in building scalable mobile applications, leading teams, and delivering complex solutions including AOSP development, Kotlin Multiplatform, and modern Android architecture."
   },
   "experience": [
     {
       "id": 1,
-      "company": "",
-      "position": "",
-      "duration": "",
-      "location": "",
+      "company": "Evince Development (CMMI Level 3 Certified)",
+      "position": "Lead Android Developer",
+      "duration": "Jan 2023 - Present",
+      "location": "Ahmedabad, Gujarat",
       "description": [
-        ""
+        "Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions",
+        "Handled all client communication to ensure smooth project execution",
+        "Developed cross-platform UI with Kotlin Multiplatform & Compose UI",
+        "Managed a 2-person team across multiple parallel projects"
       ],
-      "technologies": []
+      "technologies": ["Kotlin Multiplatform", "Compose UI", "AOSP", "Kiosk Solutions", "Team Leadership"]
+    },
+    {
+      "id": 2,
+      "company": "Light Link Solutions",
+      "position": "Senior Android Developer",
+      "duration": "Oct 2021 - Dec 2023",
+      "location": "Rajkot, Gujarat",
+      "description": [
+        "Built the Tileswale app (500K+ Downloads) using Jetpack components best practices",
+        "Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more",
+        "Improved app performance, UI consistency, and code maintainability",
+        "Contributed to a feature-rich, scalable app now live on the Play Store"
+      ],
+      "technologies": ["Jetpack Components", "MVVM", "Navigation", "LiveData", "Room", "Performance Optimization"]
+    },
+    {
+      "id": 3,
+      "company": "EsJay IT Solutions Pvt. Ltd.",
+      "position": "Mid-Level Android Developer",
+      "duration": "Aug 2020 - Oct 2021",
+      "location": "Rajkot, Gujarat",
+      "description": [
+        "Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box",
+        "Used anti-reverse engineering and Jetpack MVVM to deliver key banking features",
+        "Secured data with encryption, code obfuscation, and protected API communication",
+        "Worked with backend and QA teams to ship fast, scalable financial apps"
+      ],
+      "technologies": ["Fintech", "Security", "Encryption", "Code Obfuscation", "API Security", "Jetpack MVVM"]
+    },
+    {
+      "id": 4,
+      "company": "uBrain Studios Pvt. Ltd.",
+      "position": "Junior Android Developer",
+      "duration": "Jun 2018 – May 2020",
+      "location": "Rajkot, Gujarat",
+      "description": [
+        "Started Android development with core concepts: Activities, Fragments, RecyclerView",
+        "Built Desh Parivahan & Moozy apps with UI and API integration",
+        "Worked with Firebase, REST APIs, and local storage (Room/SQLite)",
+        "Improved debugging, Git usage, and team collaboration skills"
+      ],
+      "technologies": ["Android Fundamentals", "Firebase", "REST APIs", "Room", "SQLite", "Git"]
     }
   ],
   "education": [
     {
       "id": 1,
-      "institution": "",
-      "degree": "",
-      "duration": "",
-      "location": "",
-      "details": ""
+      "institution": "D.A. DEGREE ENGINEERING AND TECH",
+      "degree": "BE in Computer",
+      "duration": "2014 – 2018",
+      "location": "Mahemdavad, Gujarat, India",
+      "details": "Learned core skills in programming and system design"
     }
   ],
   "skills": {
-    "programmingLanguages": [],
-    "frameworks": [],
-    "tools": [],
-    "databases": [],
-    "platforms": []
+    "programmingLanguages": ["Kotlin", "Java", "Dart (basic)"],
+    "frameworks": ["Jetpack Compose UI", "Jetpack Components", "Flutter (basic, 2 projects only)", "Kotlin Multiplatform"],
+    "tools": ["AOSP development", "ROM customisation", "Koin", "Dagger", "CI/CD", "Play Feature Delivery"],
+    "databases": ["Room", "SQLite"],
+    "platforms": ["Android", "iOS (via KMP)", "Web (via KMP)"]
   },
   "projects": [
     {
       "id": 1,
-      "name": "",
-      "description": "",
-      "technologies": [],
-      "duration": "",
-      "role": "",
-      "highlights": []
-    }
-  ],
-  "certifications": [
+      "name": "Tileswale",
+      "description": "Mobile application with 500K+ downloads on Play Store",
+      "technologies": ["Jetpack Components", "MVVM", "Navigation", "LiveData", "Room"],
+      "duration": "2021 - 2023",
+      "role": "Senior Android Developer",
+      "highlights": ["500K+ downloads", "Feature-rich and scalable", "Performance optimized", "UI consistency improvements"]
+    },
     {
-      "id": 1,
-      "name": "",
-      "issuer": "",
-      "date": "",
-      "credentialId": ""
+      "id": 2,
+      "name": "Desh Parivahan",
+      "description": "Transportation and travel application",
+      "technologies": ["Android Fundamentals", "Firebase", "REST APIs", "Room/SQLite"],
+      "duration": "2018 - 2020",
+      "role": "Junior Android Developer",
+      "highlights": ["UI and API integration", "Firebase integration", "Local storage implementation"]
+    },
+    {
+      "id": 3,
+      "name": "Moozy",
+      "description": "Mobile application with comprehensive features",
+      "technologies": ["Android Fundamentals", "Firebase", "REST APIs", "Room/SQLite"],
+      "duration": "2018 - 2020",
+      "role": "Junior Android Developer",
+      "highlights": ["Complete app development", "API integration", "Database management"]
+    },
+    {
+      "id": 4,
+      "name": "Agent Center, Balance Center, Complaint Box",
+      "description": "Secure fintech applications for banking services",
+      "technologies": ["Security", "Encryption", "Code Obfuscation", "API Security", "Jetpack MVVM"],
+      "duration": "2020 - 2021",
+      "role": "Mid-Level Android Developer",
+      "highlights": ["Anti-reverse engineering", "Secure data handling", "Banking features implementation"]
     }
   ],
+  "certifications": [],
   "achievements": [
     {
       "id": 1,
-      "title": "",
-      "description": "",
-      "date": ""
+      "title": "500K+ Downloads",
+      "description": "Tileswale app achieved 500K+ downloads on Google Play Store",
+      "date": "2023"
+    },
+    {
+      "id": 2,
+      "title": "20+ AOSP Apps Delivered",
+      "description": "Successfully delivered 20+ AOSP Android apps and custom solutions",
+      "date": "2023-Present"
+    },
+    {
+      "id": 3,
+      "title": "Team Leadership",
+      "description": "Leading a 2-person team across multiple parallel projects",
+      "date": "2023-Present"
     }
   ],
   "languages": [
     {
-      "language": "",
-      "proficiency": ""
+      "language": "English",
+      "proficiency": "Professional"
+    },
+    {
+      "language": "Hindi",
+      "proficiency": "Native"
+    },
+    {
+      "language": "Gujarati",
+      "proficiency": "Native"
     }
   ],
-  "interests": [],
-  "references": [
-    {
-      "name": "",
-      "position": "",
-      "company": "",
-      "email": "",
-      "phone": ""
-    }
-  ]
+  "interests": ["Mobile Development", "Kotlin Multiplatform", "AOSP Development", "Clean Architecture", "Team Leadership"],
+  "references": []
 }
