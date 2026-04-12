@@ -1,0 +1,87 @@
+{
+  "personalInfo": {
+    "name": "Raju Shingadiya",
+    "title": "Android Developer",
+    "email": "",
+    "phone": "",
+    "location": "",
+    "website": "",
+    "github": "",
+    "linkedin": "",
+    "summary": ""
+  },
+  "experience": [
+    {
+      "id": 1,
+      "company": "",
+      "position": "",
+      "duration": "",
+      "location": "",
+      "description": [
+        ""
+      ],
+      "technologies": []
+    }
+  ],
+  "education": [
+    {
+      "id": 1,
+      "institution": "",
+      "degree": "",
+      "duration": "",
+      "location": "",
+      "details": ""
+    }
+  ],
+  "skills": {
+    "programmingLanguages": [],
+    "frameworks": [],
+    "tools": [],
+    "databases": [],
+    "platforms": []
+  },
+  "projects": [
+    {
+      "id": 1,
+      "name": "",
+      "description": "",
+      "technologies": [],
+      "duration": "",
+      "role": "",
+      "highlights": []
+    }
+  ],
+  "certifications": [
+    {
+      "id": 1,
+      "name": "",
+      "issuer": "",
+      "date": "",
+      "credentialId": ""
+    }
+  ],
+  "achievements": [
+    {
+      "id": 1,
+      "title": "",
+      "description": "",
+      "date": ""
+    }
+  ],
+  "languages": [
+    {
+      "language": "",
+      "proficiency": ""
+    }
+  ],
+  "interests": [],
+  "references": [
+    {
+      "name": "",
+      "position": "",
+      "company": "",
+      "email": "",
+      "phone": ""
+    }
+  ]
+}
