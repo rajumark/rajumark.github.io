@@ -3,7 +3,7 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raju Shingadiya - Android Developer Portfolio</title>
+    <title>Experience - Raju Shingadiya</title>
     <style>
         * {
             margin: 0;
@@ -83,109 +83,6 @@
             padding: 40px 48px;
             margin-left: 260px;
             overflow-y: auto;
-        }
-
-        .profile-image {
-            width: 120px;
-            height: 120px;
-            border-radius: 50%;
-            object-fit: cover;
-            margin-right: 30px;
-            border: 4px solid #E8E4DE;
-            flex-shrink: 0;
-        }
-
-        .header-content {
-            display: flex;
-            align-items: center;
-            margin-bottom: 20px;
-        }
-
-        .header-info {
-            flex: 1;
-        }
-
-        .profile-container {
-            position: relative;
-            display: inline-block;
-        }
-
-        .profile-tooltip {
-            position: absolute;
-            top: 50%;
-            left: 100%;
-            transform: translateY(-50%);
-            margin-left: 20px;
-            background: #EDE9E3;
-            border: 1px solid #E0DCD4;
-            border-radius: 12px;
-            padding: 16px;
-            min-width: 280px;
-            opacity: 0;
-            visibility: hidden;
-            transition: opacity 0.2s ease, visibility 0.2s ease;
-            z-index: 1000;
-            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
-        }
-
-        .profile-container:hover .profile-tooltip {
-            opacity: 1;
-            visibility: visible;
-        }
-
-        .tooltip-item {
-            display: flex;
-            align-items: center;
-            padding: 8px 12px;
-            margin: 4px 0;
-            border-radius: 8px;
-            color: #555;
-            text-decoration: none;
-            font-size: 14px;
-            transition: background 0.15s ease;
-            cursor: pointer;
-        }
-
-        .tooltip-item:hover {
-            background: #E0DCD4;
-            color: #333;
-        }
-
-        .tooltip-icon {
-            margin-right: 12px;
-            font-size: 16px;
-            width: 20px;
-            text-align: center;
-        }
-
-        .tooltip-text {
-            flex: 1;
-        }
-
-        .header-section {
-            margin-bottom: 40px;
-        }
-
-        .name {
-            font-size: 42px;
-            font-weight: 700;
-            color: #333;
-            margin-bottom: 8px;
-            font-family: Georgia, 'Times New Roman', serif;
-        }
-
-        .title {
-            font-size: 18px;
-            color: #666;
-            margin-bottom: 12px;
-        }
-
-        .contact-info {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 16px;
-            font-size: 14px;
-            color: #555;
         }
 
         .section {
@@ -298,70 +195,6 @@
             color: #888;
         }
 
-        .skills-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 10px;
-        }
-
-        .skill-tag {
-            padding: 10px 18px;
-            background: #E8E4DE;
-            border-radius: 24px;
-            font-size: 14px;
-            color: #444;
-        }
-
-        .skill-tag.highlight {
-            background: #DDD9D1;
-            font-weight: 500;
-        }
-
-        .edu-card {
-            max-width: 450px;
-        }
-
-        .edu-title {
-            font-size: 18px;
-            font-weight: 600;
-            color: #333;
-            margin-bottom: 6px;
-        }
-
-        .edu-subtitle {
-            font-size: 15px;
-            color: #666;
-            margin-bottom: 8px;
-        }
-
-        .edu-details {
-            font-size: 14px;
-            color: #888;
-        }
-
-        .links-container {
-            display: flex;
-            flex-wrap: wrap;
-            gap: 12px;
-        }
-
-        .link-btn {
-            display: flex;
-            align-items: center;
-            gap: 8px;
-            padding: 12px 20px;
-            background: #E8E4DE;
-            border-radius: 10px;
-            font-size: 14px;
-            color: #444;
-            text-decoration: none;
-            transition: background 0.15s;
-        }
-
-        .link-btn:hover {
-            background: #DDD9D1;
-        }
-
         .card-green { background: #D4E8D4; }
         .card-purple { background: #E4D4E8; }
         .card-yellow { background: #F0E8C8; }
@@ -388,6 +221,7 @@
             }
             .main-content {
                 padding: 32px;
+                margin-left: 220px;
             }
         }
 
@@ -407,35 +241,6 @@
                 padding: 24px;
                 margin-left: 0;
             }
-            .cards-grid {
-                grid-template-columns: 1fr;
-            }
-            .name {
-                font-size: 32px;
-            }
-            .header-content {
-                flex-direction: column;
-                align-items: flex-start;
-            }
-            .profile-image {
-                margin-right: 0;
-                margin-bottom: 20px;
-            }
-            .profile-tooltip {
-                position: fixed;
-                top: auto;
-                left: 50%;
-                right: auto;
-                bottom: 20px;
-                transform: translateX(-50%);
-                margin-left: 0;
-                max-width: 90%;
-                min-width: auto;
-            }
-            .profile-container:hover .profile-tooltip {
-                opacity: 1;
-                visibility: visible;
-            }
             .timeline-card {
                 padding-left: 50px;
             }
@@ -452,13 +257,13 @@
     <div class="layout">
         <aside class="sidebar">
             <div class="sidebar-section">
-                <a href="index.html" class="sidebar-item active">
+                <a href="index.html" class="sidebar-item">
                     <div class="sidebar-dot dot-blue"></div>
                     <span>About</span>
                 </a>
             </div>
             <div class="sidebar-section">
-                <a href="experience.html" class="sidebar-item">
+                <a href="experience.html" class="sidebar-item active">
                     <div class="sidebar-dot dot-green"></div>
                     <span>Experience</span>
                 </a>
@@ -482,39 +287,84 @@
                     </aside>
 
         <main class="main-content">
-            <div class="header-section" id="about">
-                <div class="header-content">
-                    <div class="profile-container">
-                        <img src="raju_profile_image.png" alt="Raju Shingadiya" class="profile-image">
-                        <div class="profile-tooltip">
-                            <a href="https://maps.google.com/?q=Ahmedabad,Gujarat,India" target="_blank" class="tooltip-item">
-                                <span class="tooltip-icon">📍</span>
-                                <span class="tooltip-text">Ahmedabad, Gujarat, India</span>
-                            </a>
-                            <a href="tel:+916353321951" class="tooltip-item">
-                                <span class="tooltip-icon">📱</span>
-                                <span class="tooltip-text">+91 6353321951</span>
-                            </a>
-                            <a href="mailto:raju348636@gmail.com" class="tooltip-item">
-                                <span class="tooltip-icon">✉️</span>
-                                <span class="tooltip-text">raju348636@gmail.com</span>
-                            </a>
+            <div class="section">
+                <div class="section-title">Experience</div>
+                <div class="cards-grid">
+                    <div class="timeline-line"></div>
+                    <div class="timeline-card">
+                        <div class="timeline-dot dot-green"></div>
+                        <div class="card card-green" id="evince">
+                            <div class="card-header">
+                                <span class="card-role">Lead Android Developer</span>
+                                <span class="card-date">Jan 2023 - Present</span>
+                            </div>
+                            <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
+                            <div class="card-location">Ahmedabad, Gujarat</div>
+                            <ul class="card-points">
+                                <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
+                                <li>Handled all client communication to ensure smooth project execution</li>
+                                <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
+                                <li>Managed a 2-person team across multiple parallel projects</li>
+                            </ul>
                         </div>
                     </div>
-                    <div class="header-info">
-                        <h1 class="name">Raju Shingadiya</h1>
-                        <p class="title">Lead Android Developer | Kotlin Multiplatform Specialist</p>
-                        <div class="contact-info">
-                            <span>📍 Ahmedabad, Gujarat, India</span>
-                            <span>📱 +91 6353321951</span>
-                            <span>✉️ raju348636@gmail.com</span>
+
+                    <div class="timeline-card">
+                        <div class="timeline-dot dot-purple"></div>
+                        <div class="card card-purple" id="lightlink">
+                            <div class="card-header">
+                                <span class="card-role">Senior Android Developer</span>
+                                <span class="card-date">Oct 2021 - Dec 2023</span>
+                            </div>
+                            <div class="card-company">Light Link Solutions</div>
+                            <div class="card-location">Rajkot, Gujarat</div>
+                            <ul class="card-points">
+                                <li>Built the Tileswale app (500K+ Downloads) using Jetpack components best practices</li>
+                                <li>Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more</li>
+                                <li>Improved app performance, UI consistency, and code maintainability</li>
+                                <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-card">
+                        <div class="timeline-dot dot-yellow"></div>
+                        <div class="card card-yellow" id="esjay">
+                            <div class="card-header">
+                                <span class="card-role">Mid-Level Android Developer</span>
+                                <span class="card-date">Aug 2020 - Oct 2021</span>
+                            </div>
+                            <div class="card-company">EsJay IT Solutions Pvt. Ltd.</div>
+                            <div class="card-location">Rajkot, Gujarat</div>
+                            <ul class="card-points">
+                                <li>Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box</li>
+                                <li>Used anti-reverse engineering and Jetpack MVVM to deliver key banking features</li>
+                                <li>Secured data with encryption, code obfuscation, and protected API communication</li>
+                                <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
+                            </ul>
+                        </div>
+                    </div>
+
+                    <div class="timeline-card">
+                        <div class="timeline-dot dot-beige"></div>
+                        <div class="card card-beige" id="ubrain">
+                            <div class="card-header">
+                                <span class="card-role">Junior Android Developer</span>
+                                <span class="card-date">Jun 2018 - May 2020</span>
+                            </div>
+                            <div class="card-company">uBrain Studios Pvt. Ltd.</div>
+                            <div class="card-location">Rajkot, Gujarat</div>
+                            <ul class="card-points">
+                                <li>Started Android development with core concepts: Activities, Fragments, RecyclerView</li>
+                                <li>Built Desh Parivahan & Moozy apps with UI and API integration</li>
+                                <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
+                                <li>Improved debugging, Git usage, and team collaboration skills</li>
+                            </ul>
                         </div>
                     </div>
                 </div>
             </div>
-
-            
-                    </main>
+        </main>
     </div>
 </body>
 </html>

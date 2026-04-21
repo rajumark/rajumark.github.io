@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>My Work - Raju Shingadiya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #F5F1EB;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #EDE9E3;
+            border-right: 1px solid #E0DCD4;
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header {
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background: #E0DCD4;
+        }
+
+        .sidebar-item.active {
+            background: #E0DCD4;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .sidebar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 48px;
+            margin-left: 260px;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .card-role {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .card-company {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 16px;
+        }
+
+        .card-points {
+            list-style: none;
+        }
+
+        .card-points li {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .card-points li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #888;
+        }
+
+        .card-green { background: #D4E8D4; }
+        .card-purple { background: #E4D4E8; }
+        .card-yellow { background: #F0E8C8; }
+        .card-beige { background: #E8E0D4; }
+        .card-pink { background: #E8D4E0; }
+        .card-blue { background: #D4E0E8; }
+
+        .dot-green { background: #27AE60; }
+        .dot-purple { background: #9B59B6; }
+        .dot-blue { background: #3498DB; }
+        .dot-yellow { background: #F1C40F; }
+        .dot-orange { background: #E67E22; }
+        .dot-red { background: #E74C3C; }
+        .dot-teal { background: #1ABC9C; }
+        .dot-pink { background: #E91E63; }
+        .dot-brown { background: #795548; }
+        .dot-cyan { background: #00BCD4; }
+        .dot-indigo { background: #3F51B5; }
+        .dot-lime { background: #8BC34A; }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                padding: 32px;
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #E0DCD4;
+                padding: 16px 0;
+            }
+            .main-content {
+                padding: 24px;
+                margin-left: 0;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-blue"></div>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="experience.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-green"></div>
+                    <span>Experience</span>
+                </a>
+                <a href="my-work.html" class="sidebar-item active">
+                    <div class="sidebar-dot dot-purple"></div>
+                    <span>My Work</span>
+                </a>
+                <a href="contact.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-pink"></div>
+                    <span>Contact Me</span>
+                </a>
+                <a href="skills.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-orange"></div>
+                    <span>Skills</span>
+                </a>
+                <a href="education.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-cyan"></div>
+                    <span>Education</span>
+                </a>
+            </div>
+                    </aside>
+
+        <main class="main-content">
+            <div class="section">
+                <div class="section-title">My Work</div>
+                <div class="cards-grid">
+                    <div class="card card-pink">
+                        <div class="card-role">Tileswale App</div>
+                        <div class="card-company">500K+ Downloads on Play Store</div>
+                        <ul class="card-points">
+                            <li>Built with Jetpack components following best practices</li>
+                            <li>MVVM architecture with Navigation, LiveData, Room</li>
+                            <li>Performance optimized and scalable</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <div class="card-role">Fintech Suite</div>
+                        <div class="card-company">EsJay IT Solutions</div>
+                        <ul class="card-points">
+                            <li>Agent Center, Balance Center, Complaint Box apps</li>
+                            <li>Anti-reverse engineering protection</li>
+                            <li>Encrypted data and secure API communication</li>
+                        </ul>
+                    </div>
+                    <div class="card card-blue">
+                        <div class="card-role">AOSP Custom ROM</div>
+                        <div class="card-company">Evince Development</div>
+                        <ul class="card-points">
+                            <li>Custom Android builds for specific hardware</li>
+                            <li>Kiosk mode implementations</li>
+                            <li>System-level modifications and optimizations</li>
+                        </ul>
+                    </div>
+                    <div class="card card-yellow">
+                        <div class="card-role">Kotlin Multiplatform Apps</div>
+                        <div class="card-company">Cross-platform Solutions</div>
+                        <ul class="card-points">
+                            <li>Shared business logic across platforms</li>
+                            <li>Compose UI for consistent design</li>
+                            <li>Code reusability and maintainability</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>

@@ -1,0 +1,341 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Skills - Raju Shingadiya</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #F5F1EB;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #EDE9E3;
+            border-right: 1px solid #E0DCD4;
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header {
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background: #E0DCD4;
+        }
+
+        .sidebar-item.active {
+            background: #E0DCD4;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .sidebar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 48px;
+            margin-left: 260px;
+            overflow-y: auto;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            padding: 10px 18px;
+            background: #E8E4DE;
+            border-radius: 24px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .skill-tag.highlight {
+            background: #DDD9D1;
+            font-weight: 500;
+        }
+
+        .skills-category {
+            margin-bottom: 40px;
+        }
+
+        .category-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 16px;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .category-icon {
+            width: 24px;
+            height: 24px;
+            border-radius: 50%;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 12px;
+        }
+
+        .dot-green { background: #27AE60; }
+        .dot-purple { background: #9B59B6; }
+        .dot-blue { background: #3498DB; }
+        .dot-yellow { background: #F1C40F; }
+        .dot-orange { background: #E67E22; }
+        .dot-red { background: #E74C3C; }
+        .dot-teal { background: #1ABC9C; }
+        .dot-pink { background: #E91E63; }
+        .dot-brown { background: #795548; }
+        .dot-cyan { background: #00BCD4; }
+        .dot-indigo { background: #3F51B5; }
+        .dot-lime { background: #8BC34A; }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                padding: 32px;
+                margin-left: 220px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #E0DCD4;
+                padding: 16px 0;
+            }
+            .main-content {
+                padding: 24px;
+                margin-left: 0;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-blue"></div>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="experience.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-green"></div>
+                    <span>Experience</span>
+                </a>
+                <a href="my-work.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-purple"></div>
+                    <span>My Work</span>
+                </a>
+                <a href="contact.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-pink"></div>
+                    <span>Contact Me</span>
+                </a>
+                <a href="skills.html" class="sidebar-item active">
+                    <div class="sidebar-dot dot-orange"></div>
+                    <span>Skills</span>
+                </a>
+                <a href="education.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-cyan"></div>
+                    <span>Education</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="section">
+                <div class="section-title">Technical Skills</div>
+                
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-green"></div>
+                        Core Technologies
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Kotlin</span>
+                        <span class="skill-tag highlight">Java</span>
+                        <span class="skill-tag highlight">Android SDK</span>
+                        <span class="skill-tag">XML</span>
+                        <span class="skill-tag">JSON</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-purple"></div>
+                        Modern Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Kotlin Multiplatform</span>
+                        <span class="skill-tag highlight">Jetpack Compose UI</span>
+                        <span class="skill-tag highlight">Flutter (Basic)</span>
+                        <span class="skill-tag">Dart (Basic)</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-blue"></div>
+                        Android Architecture
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">MVVM Architecture</span>
+                        <span class="skill-tag highlight">Clean Architecture</span>
+                        <span class="skill-tag highlight">Modularization</span>
+                        <span class="skill-tag">MVP</span>
+                        <span class="skill-tag">MVI</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-yellow"></div>
+                        Jetpack Components
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Navigation</span>
+                        <span class="skill-tag highlight">LiveData</span>
+                        <span class="skill-tag highlight">Room</span>
+                        <span class="skill-tag">ViewModel</span>
+                        <span class="skill-tag">WorkManager</span>
+                        <span class="skill-tag">DataStore</span>
+                        <span class="skill-tag">Paging</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-orange"></div>
+                        System & Custom Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">AOSP Development</span>
+                        <span class="skill-tag highlight">Kiosk Solutions</span>
+                        <span class="skill-tag highlight">ROM Customisation</span>
+                        <span class="skill-tag">System Apps</span>
+                        <span class="skill-tag">Custom Launchers</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-teal"></div>
+                        Dependency Injection & Tools
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Koin</span>
+                        <span class="skill-tag highlight">Dagger</span>
+                        <span class="skill-tag">Hilt</span>
+                        <span class="skill-tag">Retrofit</span>
+                        <span class="skill-tag">OkHttp</span>
+                        <span class="skill-tag">Glide</span>
+                        <span class="skill-tag">Coil</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-pink"></div>
+                        Development & Deployment
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">CI/CD</span>
+                        <span class="skill-tag highlight">Play Feature Delivery</span>
+                        <span class="skill-tag">Git</span>
+                        <span class="skill-tag">Gradle</span>
+                        <span class="skill-tag">Fastlane</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-brown"></div>
+                        Professional Skills
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Team Leadership</span>
+                        <span class="skill-tag highlight">Client Communication</span>
+                        <span class="skill-tag">Project Management</span>
+                        <span class="skill-tag">Code Review</span>
+                        <span class="skill-tag">Technical Documentation</span>
+                    </div>
+                </div>
+            </div>
+        </main>
+    </div>
+</body>
+</html>
