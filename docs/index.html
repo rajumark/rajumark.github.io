@@ -80,6 +80,26 @@
             overflow-y: auto;
         }
 
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 4px solid #E8E4DE;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
         .header-section {
             margin-bottom: 40px;
         }
@@ -299,6 +319,14 @@
             .name {
                 font-size: 32px;
             }
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .profile-image {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
         }
     </style>
 </head>
@@ -368,12 +396,17 @@
 
         <main class="main-content">
             <div class="header-section" id="about">
-                <h1 class="name">Raju Shingadiya</h1>
-                <p class="title">Lead Android Developer | Kotlin Multiplatform Specialist</p>
-                <div class="contact-info">
-                    <span>📍 Ahmedabad, Gujarat, India</span>
-                    <span>📱 +91 6353321951</span>
-                    <span>✉️ raju348636@gmail.com</span>
+                <div class="header-content">
+                    <img src="raju_profile_image.png" alt="Raju Shingadiya" class="profile-image">
+                    <div class="header-info">
+                        <h1 class="name">Raju Shingadiya</h1>
+                        <p class="title">Lead Android Developer | Kotlin Multiplatform Specialist</p>
+                        <div class="contact-info">
+                            <span>📍 Ahmedabad, Gujarat, India</span>
+                            <span>📱 +91 6353321951</span>
+                            <span>✉️ raju348636@gmail.com</span>
+                        </div>
+                    </div>
                 </div>
             </div>
 
