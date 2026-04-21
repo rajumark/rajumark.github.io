@@ -154,6 +154,54 @@
         .dot-indigo { background: #3F51B5; }
         .dot-lime { background: #8BC34A; }
 
+        .filter-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 8px;
+            margin-bottom: 20px;
+        }
+
+        .filter-chip {
+            padding: 6px 14px;
+            background: #E8E4DE;
+            border: 1px solid #E0DCD4;
+            border-radius: 16px;
+            font-size: 13px;
+            color: #555;
+            cursor: pointer;
+            transition: all 0.2s ease;
+            user-select: none;
+        }
+
+        .filter-chip:hover {
+            background: #DDD9D1;
+            border-color: #D0CCC4;
+        }
+
+        .filter-chip.active {
+            background: #27AE60;
+            color: white;
+            border-color: #27AE60;
+        }
+
+        .domain-category {
+            display: none;
+            animation: fadeIn 0.3s ease;
+        }
+
+        .domain-category.active {
+            display: block;
+        }
+
+        .domain-category.all {
+            display: block;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(10px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
         @media (max-width: 1024px) {
             .sidebar {
                 width: 220px;
@@ -223,12 +271,12 @@
                 <div class="skills-category">
                     <div class="category-title">
                         <div class="category-icon dot-green"></div>
-                        Core Technologies
+                        Programming Languages
                     </div>
                     <div class="skills-container">
                         <span class="skill-tag highlight">Kotlin</span>
                         <span class="skill-tag highlight">Java</span>
-                        <span class="skill-tag highlight">Android SDK</span>
+                        <span class="skill-tag">Dart (Basic)</span>
                         <span class="skill-tag">XML</span>
                         <span class="skill-tag">JSON</span>
                     </div>
@@ -237,20 +285,25 @@
                 <div class="skills-category">
                     <div class="category-title">
                         <div class="category-icon dot-purple"></div>
-                        Modern Development
+                        Android Framework & Libraries
                     </div>
                     <div class="skills-container">
-                        <span class="skill-tag highlight">Kotlin Multiplatform</span>
+                        <span class="skill-tag highlight">Android SDK</span>
                         <span class="skill-tag highlight">Jetpack Compose UI</span>
-                        <span class="skill-tag highlight">Flutter (Basic)</span>
-                        <span class="skill-tag">Dart (Basic)</span>
+                        <span class="skill-tag highlight">Navigation Component</span>
+                        <span class="skill-tag highlight">LiveData</span>
+                        <span class="skill-tag highlight">Room Database</span>
+                        <span class="skill-tag highlight">ViewModel</span>
+                        <span class="skill-tag highlight">WorkManager</span>
+                        <span class="skill-tag highlight">DataStore</span>
+                        <span class="skill-tag highlight">Paging Library</span>
                     </div>
                 </div>
 
                 <div class="skills-category">
                     <div class="category-title">
                         <div class="category-icon dot-blue"></div>
-                        Android Architecture
+                        Architecture & Design Patterns
                     </div>
                     <div class="skills-container">
                         <span class="skill-tag highlight">MVVM Architecture</span>
@@ -258,50 +311,21 @@
                         <span class="skill-tag highlight">Modularization</span>
                         <span class="skill-tag">MVP</span>
                         <span class="skill-tag">MVI</span>
-                    </div>
-                </div>
-
-                <div class="skills-category">
-                    <div class="category-title">
-                        <div class="category-icon dot-yellow"></div>
-                        Jetpack Components
-                    </div>
-                    <div class="skills-container">
-                        <span class="skill-tag highlight">Navigation</span>
-                        <span class="skill-tag highlight">LiveData</span>
-                        <span class="skill-tag highlight">Room</span>
-                        <span class="skill-tag">ViewModel</span>
-                        <span class="skill-tag">WorkManager</span>
-                        <span class="skill-tag">DataStore</span>
-                        <span class="skill-tag">Paging</span>
+                        <span class="skill-tag">Repository Pattern</span>
                     </div>
                 </div>
 
                 <div class="skills-category">
                     <div class="category-title">
                         <div class="category-icon dot-orange"></div>
-                        System & Custom Development
-                    </div>
-                    <div class="skills-container">
-                        <span class="skill-tag highlight">AOSP Development</span>
-                        <span class="skill-tag highlight">Kiosk Solutions</span>
-                        <span class="skill-tag highlight">ROM Customisation</span>
-                        <span class="skill-tag">System Apps</span>
-                        <span class="skill-tag">Custom Launchers</span>
-                    </div>
-                </div>
-
-                <div class="skills-category">
-                    <div class="category-title">
-                        <div class="category-icon dot-teal"></div>
-                        Dependency Injection & Tools
+                        Dependency Injection & Networking
                     </div>
                     <div class="skills-container">
                         <span class="skill-tag highlight">Koin</span>
                         <span class="skill-tag highlight">Dagger</span>
-                        <span class="skill-tag">Hilt</span>
-                        <span class="skill-tag">Retrofit</span>
-                        <span class="skill-tag">OkHttp</span>
+                        <span class="skill-tag highlight">Hilt</span>
+                        <span class="skill-tag highlight">Retrofit</span>
+                        <span class="skill-tag highlight">OkHttp</span>
                         <span class="skill-tag">Glide</span>
                         <span class="skill-tag">Coil</span>
                     </div>
@@ -309,33 +333,240 @@
 
                 <div class="skills-category">
                     <div class="category-title">
-                        <div class="category-icon dot-pink"></div>
-                        Development & Deployment
+                        <div class="category-icon dot-teal"></div>
+                        Cross-Platform & System Development
                     </div>
                     <div class="skills-container">
-                        <span class="skill-tag highlight">CI/CD</span>
-                        <span class="skill-tag highlight">Play Feature Delivery</span>
-                        <span class="skill-tag">Git</span>
-                        <span class="skill-tag">Gradle</span>
-                        <span class="skill-tag">Fastlane</span>
+                        <span class="skill-tag highlight">Kotlin Multiplatform</span>
+                        <span class="skill-tag highlight">AOSP Development</span>
+                        <span class="skill-tag highlight">Kiosk Solutions</span>
+                        <span class="skill-tag highlight">ROM Customisation</span>
+                        <span class="skill-tag">Flutter (Basic)</span>
+                        <span class="skill-tag">System Apps</span>
+                        <span class="skill-tag">Custom Launchers</span>
                     </div>
                 </div>
 
                 <div class="skills-category">
                     <div class="category-title">
-                        <div class="category-icon dot-brown"></div>
-                        Professional Skills
+                        <div class="category-icon dot-yellow"></div>
+                        Development Tools & DevOps
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Git</span>
+                        <span class="skill-tag highlight">Gradle</span>
+                        <span class="skill-tag highlight">CI/CD</span>
+                        <span class="skill-tag highlight">Play Feature Delivery</span>
+                        <span class="skill-tag">Fastlane</span>
+                        <span class="skill-tag">Android Studio</span>
+                        <span class="skill-tag">Firebase</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Applied Skills & Projects</div>
+                
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-green"></div>
+                        Mobile Application Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Built 20+ Production Android Apps</span>
+                        <span class="skill-tag highlight">500K+ Downloads App Experience</span>
+                        <span class="skill-tag">RESTful API Integration</span>
+                        <span class="skill-tag">Real-time Data Sync</span>
+                        <span class="skill-tag">Offline-First Architecture</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-purple"></div>
+                        System-Level Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Custom ROM Development</span>
+                        <span class="skill-tag highlight">AOSP Customization</span>
+                        <span class="skill-tag highlight">Kiosk Mode Solutions</span>
+                        <span class="skill-tag highlight">Firmware Builds</span>
+                        <span class="skill-tag">System App Integration</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-blue"></div>
+                        Security & Performance
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Anti-Reverse Engineering</span>
+                        <span class="skill-tag highlight">Code Obfuscation</span>
+                        <span class="skill-tag highlight">Data Encryption</span>
+                        <span class="skill-tag highlight">Secure API Communication</span>
+                        <span class="skill-tag">Performance Optimization</span>
+                        <span class="skill-tag">Memory Management</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Professional Skills</div>
+                
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-orange"></div>
+                        Leadership & Management
                     </div>
                     <div class="skills-container">
                         <span class="skill-tag highlight">Team Leadership</span>
                         <span class="skill-tag highlight">Client Communication</span>
-                        <span class="skill-tag">Project Management</span>
-                        <span class="skill-tag">Code Review</span>
-                        <span class="skill-tag">Technical Documentation</span>
+                        <span class="skill-tag highlight">Project Management</span>
+                        <span class="skill-tag">Technical Mentoring</span>
+                        <span class="skill-tag">Agile Methodologies</span>
+                    </div>
+                </div>
+
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-teal"></div>
+                        Technical Excellence
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Code Review</span>
+                        <span class="skill-tag highlight">Technical Documentation</span>
+                        <span class="skill-tag">Problem Solving</span>
+                        <span class="skill-tag">Debugging & Troubleshooting</span>
+                        <span class="skill-tag">Best Practices Implementation</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Domain Knowledge</div>
+                
+                <div class="filter-chips">
+                    <div class="filter-chip active" data-filter="all">All</div>
+                    <div class="filter-chip" data-filter="android">Android Development</div>
+                    <div class="filter-chip" data-filter="fintech">FinTech & Security</div>
+                    <div class="filter-chip" data-filter="enterprise">Enterprise Solutions</div>
+                </div>
+                
+                <div class="skills-category domain-category all active" data-category="all">
+                    <div class="category-title">
+                        <div class="category-icon dot-green"></div>
+                        All Domain Expertise
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Native Android Development</span>
+                        <span class="skill-tag highlight">Material Design</span>
+                        <span class="skill-tag highlight">Android Guidelines</span>
+                        <span class="skill-tag">Google Play Store</span>
+                        <span class="skill-tag">App Distribution</span>
+                        <span class="skill-tag highlight">Secure Banking Apps</span>
+                        <span class="skill-tag highlight">Financial Data Protection</span>
+                        <span class="skill-tag highlight">Compliance Requirements</span>
+                        <span class="skill-tag">Payment Integration</span>
+                        <span class="skill-tag">Authentication Systems</span>
+                        <span class="skill-tag highlight">B2B Applications</span>
+                        <span class="skill-tag highlight">Custom Device Solutions</span>
+                        <span class="skill-tag highlight">Enterprise Integration</span>
+                        <span class="skill-tag">Scalable Architecture</span>
+                        <span class="skill-tag">Multi-tenant Systems</span>
+                    </div>
+                </div>
+
+                <div class="skills-category domain-category" data-category="android">
+                    <div class="category-title">
+                        <div class="category-icon dot-green"></div>
+                        Android Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Native Android Development</span>
+                        <span class="skill-tag highlight">Material Design</span>
+                        <span class="skill-tag highlight">Android Guidelines</span>
+                        <span class="skill-tag">Google Play Store</span>
+                        <span class="skill-tag">App Distribution</span>
+                    </div>
+                </div>
+
+                <div class="skills-category domain-category" data-category="fintech">
+                    <div class="category-title">
+                        <div class="category-icon dot-purple"></div>
+                        FinTech & Security
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Secure Banking Apps</span>
+                        <span class="skill-tag highlight">Financial Data Protection</span>
+                        <span class="skill-tag highlight">Compliance Requirements</span>
+                        <span class="skill-tag">Payment Integration</span>
+                        <span class="skill-tag">Authentication Systems</span>
+                    </div>
+                </div>
+
+                <div class="skills-category domain-category" data-category="enterprise">
+                    <div class="category-title">
+                        <div class="category-icon dot-blue"></div>
+                        Enterprise Solutions
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">B2B Applications</span>
+                        <span class="skill-tag highlight">Custom Device Solutions</span>
+                        <span class="skill-tag highlight">Enterprise Integration</span>
+                        <span class="skill-tag">Scalable Architecture</span>
+                        <span class="skill-tag">Multi-tenant Systems</span>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Certifications & Learning</div>
+                
+                <div class="skills-category">
+                    <div class="category-title">
+                        <div class="category-icon dot-yellow"></div>
+                        Professional Development
+                    </div>
+                    <div class="skills-container">
+                        <span class="skill-tag highlight">Google Android Developer Training</span>
+                        <span class="skill-tag highlight">Kotlin Language Certification</span>
+                        <span class="skill-tag">Advanced Android Architecture</span>
+                        <span class="skill-tag">Mobile Security Best Practices</span>
+                        <span class="skill-tag">Continuous Learning</span>
                     </div>
                 </div>
             </div>
         </main>
     </div>
+
+    <script>
+        document.addEventListener('DOMContentLoaded', function() {
+            const filterChips = document.querySelectorAll('.filter-chip');
+            const domainCategories = document.querySelectorAll('.domain-category');
+
+            filterChips.forEach(chip => {
+                chip.addEventListener('click', function() {
+                    // Remove active class from all chips
+                    filterChips.forEach(c => c.classList.remove('active'));
+                    // Add active class to clicked chip
+                    this.classList.add('active');
+
+                    const filter = this.getAttribute('data-filter');
+
+                    // Hide all categories
+                    domainCategories.forEach(category => {
+                        category.classList.remove('active');
+                    });
+
+                    // Show selected category
+                    const selectedCategory = document.querySelector(`[data-category="${filter}"]`);
+                    if (selectedCategory) {
+                        selectedCategory.classList.add('active');
+                    }
+                });
+            });
+        });
+    </script>
 </body>
 </html>
