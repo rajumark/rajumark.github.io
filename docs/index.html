@@ -3,39 +3,533 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Raju Shingadiya Portfolio</title>
+    <title>Raju Shingadiya - Android Developer Portfolio</title>
     <style>
-        body {
+        * {
             margin: 0;
             padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #F5F1EB;
             min-height: 100vh;
+            color: #333;
+        }
+
+        .layout {
             display: flex;
-            justify-content: center;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #EDE9E3;
+            border-right: 1px solid #E0DCD4;
+            padding: 24px 0;
+            overflow-y: auto;
+            flex-shrink: 0;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header {
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            padding: 8px 20px;
+            display: flex;
             align-items: center;
-            font-family: Arial, sans-serif;
-            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
-            color: white;
+            gap: 12px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
         }
-        .container {
-            text-align: center;
-            padding: 2rem;
+
+        .sidebar-item:hover {
+            background: #E0DCD4;
         }
-        h1 {
-            font-size: 2.5rem;
-            margin-bottom: 1rem;
-            text-shadow: 2px 2px 4px rgba(0,0,0,0.3);
+
+        .sidebar-item.active {
+            background: #E0DCD4;
+            color: #333;
+            font-weight: 500;
         }
-        .coming-soon {
-            font-size: 1.2rem;
-            opacity: 0.9;
-            font-style: italic;
+
+        .sidebar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 48px;
+            overflow-y: auto;
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+        }
+
+        .name {
+            font-size: 42px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .title {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cards-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fill, minmax(380px, 1fr));
+            gap: 20px;
+        }
+
+        .card {
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-role {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-date {
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .card-company {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .card-location {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .card-points {
+            list-style: none;
+        }
+
+        .card-points li {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .card-points li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #888;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            padding: 10px 18px;
+            background: #E8E4DE;
+            border-radius: 24px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .skill-tag.highlight {
+            background: #DDD9D1;
+            font-weight: 500;
+        }
+
+        .edu-card {
+            max-width: 450px;
+        }
+
+        .edu-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .edu-subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .edu-details {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #E8E4DE;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #444;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .link-btn:hover {
+            background: #DDD9D1;
+        }
+
+        .card-green { background: #D4E8D4; }
+        .card-purple { background: #E4D4E8; }
+        .card-yellow { background: #F0E8C8; }
+        .card-beige { background: #E8E0D4; }
+        .card-pink { background: #E8D4E0; }
+        .card-blue { background: #D4E0E8; }
+
+        .dot-green { background: #27AE60; }
+        .dot-purple { background: #9B59B6; }
+        .dot-blue { background: #3498DB; }
+        .dot-yellow { background: #F1C40F; }
+        .dot-orange { background: #E67E22; }
+        .dot-red { background: #E74C3C; }
+        .dot-teal { background: #1ABC9C; }
+        .dot-pink { background: #E91E63; }
+        .dot-brown { background: #795548; }
+        .dot-cyan { background: #00BCD4; }
+        .dot-indigo { background: #3F51B5; }
+        .dot-lime { background: #8BC34A; }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                width: 100%;
+                border-right: none;
+                border-bottom: 1px solid #E0DCD4;
+                padding: 16px 0;
+            }
+            .main-content {
+                padding: 24px;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .name {
+                font-size: 32px;
+            }
         }
     </style>
 </head>
 <body>
-    <div class="container">
-        <h1>Raju Shingadiya Portfolio</h1>
-        <p class="coming-soon">Coming Soon</p>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <a href="#about" class="sidebar-item active">
+                    <div class="sidebar-dot dot-blue"></div>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header">Experience</div>
+                <a href="#evince" class="sidebar-item">
+                    <div class="sidebar-dot dot-green"></div>
+                    <span>Evince Dev</span>
+                </a>
+                <a href="#lightlink" class="sidebar-item">
+                    <div class="sidebar-dot dot-purple"></div>
+                    <span>Light Link</span>
+                </a>
+                <a href="#esjay" class="sidebar-item">
+                    <div class="sidebar-dot dot-yellow"></div>
+                    <span>EsJay IT</span>
+                </a>
+                <a href="#ubrain" class="sidebar-item">
+                    <div class="sidebar-dot dot-beige"></div>
+                    <span>uBrain Studios</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header">Expertise</div>
+                <a href="#skills" class="sidebar-item">
+                    <div class="sidebar-dot dot-orange"></div>
+                    <span>Skills</span>
+                </a>
+                <a href="#education" class="sidebar-item">
+                    <div class="sidebar-dot dot-cyan"></div>
+                    <span>Education</span>
+                </a>
+                <a href="#projects" class="sidebar-item">
+                    <div class="sidebar-dot dot-indigo"></div>
+                    <span>Projects</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <div class="sidebar-header">Connect</div>
+                <a href="mailto:raju348636@gmail.com" class="sidebar-item">
+                    <div class="sidebar-dot dot-teal"></div>
+                    <span>Email</span>
+                </a>
+                <a href="tel:+916353321951" class="sidebar-item">
+                    <div class="sidebar-dot dot-pink"></div>
+                    <span>Phone</span>
+                </a>
+                <a href="#linkedin" class="sidebar-item">
+                    <div class="sidebar-dot dot-blue"></div>
+                    <span>LinkedIn</span>
+                </a>
+                <a href="#github" class="sidebar-item">
+                    <div class="sidebar-dot dot-brown"></div>
+                    <span>GitHub</span>
+                </a>
+            </div>
+        </aside>
+
+        <main class="main-content">
+            <div class="header-section" id="about">
+                <h1 class="name">Raju Shingadiya</h1>
+                <p class="title">Lead Android Developer | Kotlin Multiplatform Specialist</p>
+                <div class="contact-info">
+                    <span>📍 Ahmedabad, Gujarat, India</span>
+                    <span>📱 +91 6353321951</span>
+                    <span>✉️ raju348636@gmail.com</span>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Experience</div>
+                <div class="cards-grid">
+                    <div class="card card-green" id="evince">
+                        <div class="card-header">
+                            <span class="card-role">Lead Android Developer</span>
+                            <span class="card-date">Jan 2023 - Present</span>
+                        </div>
+                        <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
+                        <div class="card-location">Ahmedabad, Gujarat</div>
+                        <ul class="card-points">
+                            <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
+                            <li>Handled all client communication to ensure smooth project execution</li>
+                            <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
+                            <li>Managed a 2-person team across multiple parallel projects</li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-purple" id="lightlink">
+                        <div class="card-header">
+                            <span class="card-role">Senior Android Developer</span>
+                            <span class="card-date">Oct 2021 - Dec 2023</span>
+                        </div>
+                        <div class="card-company">Light Link Solutions</div>
+                        <div class="card-location">Rajkot, Gujarat</div>
+                        <ul class="card-points">
+                            <li>Built the Tileswale app (500K+ Downloads) using Jetpack components best practices</li>
+                            <li>Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more</li>
+                            <li>Improved app performance, UI consistency, and code maintainability</li>
+                            <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-yellow" id="esjay">
+                        <div class="card-header">
+                            <span class="card-role">Mid-Level Android Developer</span>
+                            <span class="card-date">Aug 2020 - Oct 2021</span>
+                        </div>
+                        <div class="card-company">EsJay IT Solutions Pvt. Ltd.</div>
+                        <div class="card-location">Rajkot, Gujarat</div>
+                        <ul class="card-points">
+                            <li>Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box</li>
+                            <li>Used anti-reverse engineering and Jetpack MVVM to deliver key banking features</li>
+                            <li>Secured data with encryption, code obfuscation, and protected API communication</li>
+                            <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
+                        </ul>
+                    </div>
+
+                    <div class="card card-beige" id="ubrain">
+                        <div class="card-header">
+                            <span class="card-role">Junior Android Developer</span>
+                            <span class="card-date">Jun 2018 - May 2020</span>
+                        </div>
+                        <div class="card-company">uBrain Studios Pvt. Ltd.</div>
+                        <div class="card-location">Rajkot, Gujarat</div>
+                        <ul class="card-points">
+                            <li>Started Android development with core concepts: Activities, Fragments, RecyclerView</li>
+                            <li>Built Desh Parivahan & Moozy apps with UI and API integration</li>
+                            <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
+                            <li>Improved debugging, Git usage, and team collaboration skills</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section" id="skills">
+                <div class="section-title">Technical Skills</div>
+                <div class="skills-container">
+                    <span class="skill-tag highlight">Kotlin</span>
+                    <span class="skill-tag highlight">Kotlin Multiplatform</span>
+                    <span class="skill-tag highlight">Jetpack Compose UI</span>
+                    <span class="skill-tag highlight">AOSP Development</span>
+                    <span class="skill-tag highlight">Kiosk Solutions</span>
+                    <span class="skill-tag">Java</span>
+                    <span class="skill-tag">Jetpack Components</span>
+                    <span class="skill-tag">MVVM Architecture</span>
+                    <span class="skill-tag">Clean Architecture</span>
+                    <span class="skill-tag">Koin</span>
+                    <span class="skill-tag">Dagger</span>
+                    <span class="skill-tag">Modularization</span>
+                    <span class="skill-tag">ROM Customisation</span>
+                    <span class="skill-tag">Flutter (Basic)</span>
+                    <span class="skill-tag">Dart (Basic)</span>
+                    <span class="skill-tag">CI/CD</span>
+                    <span class="skill-tag">Play Feature Delivery</span>
+                    <span class="skill-tag">Team Leadership</span>
+                    <span class="skill-tag">Client Communication</span>
+                </div>
+            </div>
+
+            <div class="section" id="education">
+                <div class="section-title">Education</div>
+                <div class="card card-blue edu-card">
+                    <div class="edu-title">D.A. Degree Engineering and Tech</div>
+                    <div class="edu-subtitle">BE in Computer Engineering</div>
+                    <div class="edu-details">Mahemdavad, Gujarat, India • 2014 – 2018</div>
+                </div>
+            </div>
+
+            <div class="section" id="projects">
+                <div class="section-title">Featured Projects</div>
+                <div class="cards-grid">
+                    <div class="card card-pink">
+                        <div class="card-role">Tileswale App</div>
+                        <div class="card-company">500K+ Downloads on Play Store</div>
+                        <ul class="card-points">
+                            <li>Built with Jetpack components following best practices</li>
+                            <li>MVVM architecture with Navigation, LiveData, Room</li>
+                            <li>Performance optimized and scalable</li>
+                        </ul>
+                    </div>
+                    <div class="card card-green">
+                        <div class="card-role">Fintech Suite</div>
+                        <div class="card-company">EsJay IT Solutions</div>
+                        <ul class="card-points">
+                            <li>Agent Center, Balance Center, Complaint Box apps</li>
+                            <li>Anti-reverse engineering protection</li>
+                            <li>Encrypted data and secure API communication</li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+
+            <div class="section">
+                <div class="section-title">Connect</div>
+                <div class="links-container">
+                    <a href="#" class="link-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M19 0h-14c-2.761 0-5 2.239-5 5v14c0 2.761 2.239 5 5 5h14c2.762 0 5-2.239 5-5v-14c0-2.761-2.238-5-5-5zm-11 19h-3v-11h3v11zm-1.5-12.268c-.966 0-1.75-.79-1.75-1.764s.784-1.764 1.75-1.764 1.75.79 1.75 1.764-.783 1.764-1.75 1.764zm13.5 12.268h-3v-5.604c0-3.368-4-3.113-4 0v5.604h-3v-11h3v1.765c1.396-2.586 7-2.777 7 2.476v6.759z"/>
+                        </svg>
+                        LinkedIn
+                    </a>
+                    <a href="#" class="link-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M12 0c-6.626 0-12 5.373-12 12 0 5.302 3.438 9.8 8.207 11.387.599.111.793-.261.793-.577v-2.234c-3.338.726-4.033-1.416-4.033-1.416-.546-1.387-1.333-1.756-1.333-1.756-1.089-.745.083-.729.083-.729 1.205.084 1.839 1.237 1.839 1.237 1.07 1.834 2.807 1.304 3.492.997.107-.775.418-1.305.762-1.604-2.665-.305-5.467-1.334-5.467-5.931 0-1.311.469-2.381 1.236-3.221-.124-.303-.535-1.524.117-3.176 0 0 1.008-.322 3.301 1.23.957-.266 1.983-.399 3.003-.404 1.02.005 2.047.138 3.006.404 2.291-1.552 3.297-1.23 3.297-1.23.653 1.653.242 2.874.118 3.176.77.84 1.235 1.911 1.235 3.221 0 4.609-2.807 5.624-5.479 5.921.43.372.823 1.102.823 2.222v3.293c0 .319.192.694.801.576 4.765-1.589 8.199-6.086 8.199-11.386 0-6.627-5.373-12-12-12z"/>
+                        </svg>
+                        GitHub
+                    </a>
+                    <a href="mailto:raju348636@gmail.com" class="link-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M20 4H4c-1.1 0-1.99.9-1.99 2L2 18c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4l-8 5-8-5V6l8 5 8-5v2z"/>
+                        </svg>
+                        Email
+                    </a>
+                    <a href="tel:+916353321951" class="link-btn">
+                        <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor">
+                            <path d="M6.62 10.79c1.44 2.83 3.76 5.14 6.59 6.59l2.2-2.2c.27-.27.67-.36 1.02-.24 1.12.37 2.33.57 3.57.57.55 0 1 .45 1 1V20c0 .55-.45 1-1 1-9.39 0-17-7.61-17-17 0-.55.45-1 1-1h3.5c.55 0 1 .45 1 1 0 1.25.2 2.45.57 3.57.11.35.03.74-.25 1.02l-2.2 2.2z"/>
+                        </svg>
+                        Phone
+                    </a>
+                </div>
+            </div>
+        </main>
     </div>
 </body>
 </html>
