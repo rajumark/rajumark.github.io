@@ -105,6 +105,7 @@
         }
 
         .card {
+            position: relative;
             border-radius: 16px;
             padding: 24px;
             transition: transform 0.15s, box-shadow 0.15s;
@@ -154,6 +155,85 @@
         .card-beige { background: #E8E0D4; }
         .card-pink { background: #E8D4E0; }
         .card-blue { background: #D4E0E8; }
+        .card-rose { background: #F0D6D6; }
+        .card-teal { background: #D4ECE8; }
+
+        .subsection-title {
+            font-size: 14px;
+            color: #555;
+            font-weight: 600;
+            margin-bottom: 16px;
+        }
+
+        .card-actions {
+            position: absolute;
+            bottom: 12px;
+            right: 12px;
+            display: flex;
+            gap: 8px;
+            opacity: 0;
+            transition: opacity 0.2s;
+        }
+
+        .card:hover .card-actions {
+            opacity: 1;
+        }
+
+        .card-btn {
+            width: 36px;
+            height: 36px;
+            border-radius: 50%;
+            background: rgba(255,255,255,0.92);
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            text-decoration: none;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.12);
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .card-btn:hover {
+            transform: scale(1.1);
+            box-shadow: 0 4px 12px rgba(0,0,0,0.18);
+        }
+
+        .with-actions {
+            padding-bottom: 52px;
+        }
+
+        .card-chips {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 6px;
+            margin-top: 12px;
+        }
+
+        .card-chip {
+            display: inline-flex;
+            align-items: center;
+            gap: 4px;
+            padding: 5px 14px;
+            border-radius: 999px;
+            font-size: 12px;
+            font-weight: 500;
+            text-decoration: none;
+            background: rgba(255,255,255,0.85);
+            color: #444;
+            box-shadow: 0 1px 4px rgba(0,0,0,0.08);
+            transition: background 0.15s, transform 0.15s, box-shadow 0.15s;
+        }
+
+        .card-chip:hover {
+            background: rgba(255,255,255,1);
+            transform: translateY(-1px);
+            box-shadow: 0 2px 8px rgba(0,0,0,0.14);
+        }
+
+        .card-chip svg {
+            width: 14px;
+            height: 14px;
+            flex-shrink: 0;
+        }
 
         .dot-green { background: #27AE60; }
         .dot-purple { background: #9B59B6; }
@@ -237,7 +317,7 @@
             <div class="section">
                 <div class="section-title">My Work</div>
                 <div class="cards-grid">
-                    <div class="card card-pink">
+                    <div class="card card-pink with-actions">
                         <div class="card-role">Tileswale App</div>
                         <div class="card-company">500K+ Downloads on Play Store</div>
                         <ul class="card-points">
@@ -245,8 +325,16 @@
                             <li>MVVM architecture with Navigation, LiveData, Room</li>
                             <li>Performance optimized and scalable</li>
                         </ul>
+                        <div class="card-chips">
+                            <a href="https://play.google.com/store/apps/details?id=com.lightlink.tileswaleApp&hl=en_IN" target="_blank" class="card-chip">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M3 20.5v-17c0-.98.68-1.46 1.5-1.07L20.5 11c.82.4.82 1.2 0 1.6L4.5 21.57c-.82.39-1.5-.09-1.5-1.07z"/>
+                                </svg>
+                                Play Store
+                            </a>
+                        </div>
                     </div>
-                    <div class="card card-green">
+                    <div class="card card-green with-actions">
                         <div class="card-role">Fintech Suite</div>
                         <div class="card-company">EsJay IT Solutions</div>
                         <ul class="card-points">
@@ -254,8 +342,16 @@
                             <li>Anti-reverse engineering protection</li>
                             <li>Encrypted data and secure API communication</li>
                         </ul>
+                        <div class="card-chips">
+                            <a href="https://play.google.com/store/apps/dev?id=8344674203401493426&hl=en" target="_blank" class="card-chip">
+                                <svg width="14" height="14" viewBox="0 0 24 24" fill="#666">
+                                    <path d="M3 20.5v-17c0-.98.68-1.46 1.5-1.07L20.5 11c.82.4.82 1.2 0 1.6L4.5 21.57c-.82.39-1.5-.09-1.5-1.07z"/>
+                                </svg>
+                                Play Store
+                            </a>
+                        </div>
                     </div>
-                    <div class="card card-blue">
+                    <div class="card card-blue with-actions">
                         <div class="card-role">AOSP Custom ROM</div>
                         <div class="card-company">Evince Development</div>
                         <ul class="card-points">
@@ -263,6 +359,11 @@
                             <li>Kiosk mode implementations</li>
                             <li>System-level modifications and optimizations</li>
                         </ul>
+                        <div class="card-chips">
+                            <a href="https://keyphone.tech/" target="_blank" class="card-chip">Keyphone</a>
+                            <a href="https://donary.com/" target="_blank" class="card-chip">Donary</a>
+                            <a href="https://advancedentry.com/" target="_blank" class="card-chip">Advancedentry</a>
+                        </div>
                     </div>
                     <div class="card card-yellow">
                         <div class="card-role">Kotlin Multiplatform Apps</div>
@@ -272,6 +373,104 @@
                             <li>Compose UI for consistent design</li>
                             <li>Code reusability and maintainability</li>
                         </ul>
+                    </div>
+                </div>
+            </div>
+            <div class="section">
+                <div class="section-title">Personal Projects</div>
+                <div class="subsection-title">On Device AI Apps</div>
+                <div class="cards-grid">
+                    <div class="card card-purple with-actions">
+                        <div class="card-role">LocalChat</div>
+                        <div class="card-company">On-device LLM Chatbot</div>
+                        <ul class="card-points">
+                            <li>Powered by Gemini Nano via Android AICore — fully offline</li>
+                            <li>100% private with zero data leaving your device</li>
+                            <li>Material Design 3 with dynamic color and dark mode support</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="https://github.com/rajumark/localchat" target="_blank" class="card-btn" title="GitHub">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </a>
+                            <a href="https://rajumark.github.io/localchat/" target="_blank" class="card-btn" title="Website">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card card-beige with-actions">
+                        <div class="card-role">LocalPhotos</div>
+                        <div class="card-company">On-device photo search by text</div>
+                        <ul class="card-points">
+                            <li>OCR-powered search using ML Kit Text Recognition v2</li>
+                            <li>Full-text search with FTS4 — completely offline</li>
+                            <li>Material Design 3 with dynamic color and dark mode support</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="https://github.com/rajumark/localphotos" target="_blank" class="card-btn" title="GitHub">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </a>
+                            <a href="https://rajumark.github.io/localphotos/" target="_blank" class="card-btn" title="Website">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card card-rose with-actions">
+                        <div class="card-role">LocalTranslate</div>
+                        <div class="card-company">On-device text translation</div>
+                        <ul class="card-points">
+                            <li>Translate between 30+ languages using ML Kit Translate API</li>
+                            <li>100% private — all translation runs locally, no internet needed</li>
+                            <li>Material Design 3 with dynamic color and dark mode support</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="https://github.com/rajumark/localtranslate" target="_blank" class="card-btn" title="GitHub">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </a>
+                            <a href="https://rajumark.github.io/localtranslate/" target="_blank" class="card-btn" title="Website">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="card card-teal with-actions">
+                        <div class="card-role">LocalDocuments</div>
+                        <div class="card-company">On-device document scanner</div>
+                        <ul class="card-points">
+                            <li>Powered by ML Kit Document Scanner API — no camera permission needed</li>
+                            <li>Automatic capture, edge detection, filters, and PDF output</li>
+                            <li>Material Design 3 with dynamic color and dark mode support</li>
+                        </ul>
+                        <div class="card-actions">
+                            <a href="https://github.com/rajumark/localdocuments" target="_blank" class="card-btn" title="GitHub">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"></path>
+                                </svg>
+                            </a>
+                            <a href="https://rajumark.github.io/localdocuments/" target="_blank" class="card-btn" title="Website">
+                                <svg width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="#333" stroke-width="2" stroke-linecap="round" stroke-linejoin="round">
+                                    <path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"></path>
+                                    <polyline points="15 3 21 3 21 9"></polyline>
+                                    <line x1="10" y1="14" x2="21" y2="3"></line>
+                                </svg>
+                            </a>
+                        </div>
                     </div>
                 </div>
             </div>
