@@ -2,7 +2,12 @@
   "mobile": [
     { "icon": "images/apps_logo_screenshots/tileswale_apps_logo.webp", "title": "Tileswale", "link": "https://play.google.com/store/apps/details?id=com.lightlink.tileswaleApp" },
     { "icon": "images/apps_logo_screenshots/deshparivahan.webp", "title": "Desh Parivahan", "link": "https://play.google.com/store/apps/details?id=com.deshparivahan.deshparivahan" },
-    { "icon": "images/apps_logo_screenshots/zobaze.webp", "title": "Zobaze", "link": "https://play.google.com/store/apps/dev?id=6773541816598877702&hl=en_IN" }
+    { "icon": "images/apps_logo_screenshots/zobaze.webp", "title": "Zobaze", "link": "https://play.google.com/store/apps/dev?id=6773541816598877702&hl=en_IN" },
+    { "icon": "images/apps_logo_screenshots/mybalance.webp", "title": "My Balance Center - for CREDIT", "link": "https://play.google.com/store/apps/details?id=com.esjayit.mybalancecenter&hl=en" },
+    { "icon": "images/apps_logo_screenshots/mycomplaintbox.webp", "title": "My Complaint Box", "link": "https://play.google.com/store/apps/details?id=com.esjay.complainbox&hl=en" },
+    { "icon": "images/apps_logo_screenshots/agentcollectioncenter.webp", "title": "Agent Collection Center - Dail", "link": "https://play.google.com/store/apps/details?id=com.esjay.agentcollectioncenter&hl=en" },
+    { "icon": "images/apps_logo_screenshots/patriaclub.webp", "title": "Patria Club", "link": "https://play.google.com/store/apps/details?id=com.esjayit.patriaclub&hl=en" },
+    { "icon": "images/apps_logo_screenshots/advancedentry.jpg", "title": "Advanced Entry", "link": "https://advancedentry.com/" }
   ],
   "desktop": [
     { "icon": "https://placehold.co/56x56/9B59B6/fff?text=D1", "title": "Desktop App One", "link": "#" },
