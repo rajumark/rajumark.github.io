@@ -1,0 +1,520 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Raju Shingadiya - Android Developer Portfolio</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, sans-serif;
+            background: #F5F1EB;
+            min-height: 100vh;
+            color: #333;
+        }
+
+        .layout {
+            display: flex;
+            min-height: 100vh;
+        }
+
+        .sidebar {
+            width: 260px;
+            background: #EDE9E3;
+            border-right: 1px solid #E0DCD4;
+            padding: 24px 0;
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            overflow-y: auto;
+            z-index: 100;
+        }
+
+        .sidebar-section {
+            margin-bottom: 8px;
+        }
+
+        .sidebar-header {
+            padding: 8px 20px;
+            font-size: 11px;
+            color: #888;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+            font-weight: 600;
+        }
+
+        .sidebar-item {
+            padding: 8px 20px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            font-size: 14px;
+            color: #555;
+            cursor: pointer;
+            transition: background 0.15s;
+            text-decoration: none;
+        }
+
+        .sidebar-item:hover {
+            background: #E0DCD4;
+        }
+
+        .sidebar-item.active {
+            background: #E0DCD4;
+            color: #333;
+            font-weight: 500;
+        }
+
+        .sidebar-dot {
+            width: 8px;
+            height: 8px;
+            border-radius: 50%;
+            flex-shrink: 0;
+        }
+
+        .main-content {
+            flex: 1;
+            padding: 40px 48px;
+            margin-left: 260px;
+            overflow-y: auto;
+        }
+
+        .profile-image {
+            width: 120px;
+            height: 120px;
+            border-radius: 50%;
+            object-fit: cover;
+            margin-right: 30px;
+            border: 4px solid #E8E4DE;
+            flex-shrink: 0;
+        }
+
+        .header-content {
+            display: flex;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .header-info {
+            flex: 1;
+        }
+
+        .profile-container {
+            position: relative;
+            display: inline-block;
+        }
+
+        .profile-tooltip {
+            position: absolute;
+            top: 50%;
+            left: 100%;
+            transform: translateY(-50%);
+            margin-left: 20px;
+            background: #EDE9E3;
+            border: 1px solid #E0DCD4;
+            border-radius: 12px;
+            padding: 16px;
+            min-width: 280px;
+            opacity: 0;
+            visibility: hidden;
+            transition: opacity 0.2s ease, visibility 0.2s ease;
+            z-index: 1000;
+            box-shadow: 0 4px 16px rgba(0,0,0,0.08);
+        }
+
+        .profile-container:hover .profile-tooltip {
+            opacity: 1;
+            visibility: visible;
+        }
+
+        .tooltip-item {
+            display: flex;
+            align-items: center;
+            padding: 8px 12px;
+            margin: 4px 0;
+            border-radius: 8px;
+            color: #555;
+            text-decoration: none;
+            font-size: 14px;
+            transition: background 0.15s ease;
+            cursor: pointer;
+        }
+
+        .tooltip-item:hover {
+            background: #E0DCD4;
+            color: #333;
+        }
+
+        .tooltip-icon {
+            margin-right: 12px;
+            font-size: 16px;
+            width: 20px;
+            text-align: center;
+        }
+
+        .tooltip-text {
+            flex: 1;
+        }
+
+        .header-section {
+            margin-bottom: 40px;
+        }
+
+        .name {
+            font-size: 42px;
+            font-weight: 700;
+            color: #333;
+            margin-bottom: 8px;
+            font-family: Georgia, 'Times New Roman', serif;
+        }
+
+        .title {
+            font-size: 18px;
+            color: #666;
+            margin-bottom: 12px;
+        }
+
+        .contact-info {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 16px;
+            font-size: 14px;
+            color: #555;
+        }
+
+        .section {
+            margin-bottom: 48px;
+        }
+
+        .section-title {
+            font-size: 12px;
+            color: #666;
+            font-weight: 600;
+            margin-bottom: 20px;
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .cards-grid {
+            display: flex;
+            flex-direction: column;
+            gap: 0;
+            position: relative;
+        }
+
+        .timeline-line {
+            position: absolute;
+            left: 30px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E0DCD4;
+            z-index: 1;
+        }
+
+        .timeline-card {
+            position: relative;
+            padding-left: 70px;
+            margin-bottom: 30px;
+            z-index: 2;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: 22px;
+            top: 24px;
+            width: 16px;
+            height: 16px;
+            border-radius: 50%;
+            border: 3px solid #E8E4DE;
+            z-index: 3;
+        }
+
+        .card {
+            border-radius: 16px;
+            padding: 24px;
+            transition: transform 0.15s, box-shadow 0.15s;
+        }
+
+        .card:hover {
+            transform: translateY(-3px);
+            box-shadow: 0 8px 24px rgba(0,0,0,0.08);
+        }
+
+        .card-header {
+            display: flex;
+            justify-content: space-between;
+            align-items: flex-start;
+            margin-bottom: 8px;
+        }
+
+        .card-role {
+            font-size: 17px;
+            font-weight: 600;
+            color: #333;
+        }
+
+        .card-date {
+            font-size: 12px;
+            color: #888;
+            white-space: nowrap;
+        }
+
+        .card-company {
+            font-size: 14px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .card-location {
+            font-size: 12px;
+            color: #888;
+            margin-bottom: 16px;
+        }
+
+        .card-points {
+            list-style: none;
+        }
+
+        .card-points li {
+            font-size: 14px;
+            color: #555;
+            line-height: 1.6;
+            margin-bottom: 8px;
+            padding-left: 16px;
+            position: relative;
+        }
+
+        .card-points li::before {
+            content: "•";
+            position: absolute;
+            left: 0;
+            color: #888;
+        }
+
+        .skills-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 10px;
+        }
+
+        .skill-tag {
+            padding: 10px 18px;
+            background: #E8E4DE;
+            border-radius: 24px;
+            font-size: 14px;
+            color: #444;
+        }
+
+        .skill-tag.highlight {
+            background: #DDD9D1;
+            font-weight: 500;
+        }
+
+        .edu-card {
+            max-width: 450px;
+        }
+
+        .edu-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #333;
+            margin-bottom: 6px;
+        }
+
+        .edu-subtitle {
+            font-size: 15px;
+            color: #666;
+            margin-bottom: 8px;
+        }
+
+        .edu-details {
+            font-size: 14px;
+            color: #888;
+        }
+
+        .links-container {
+            display: flex;
+            flex-wrap: wrap;
+            gap: 12px;
+        }
+
+        .link-btn {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            padding: 12px 20px;
+            background: #E8E4DE;
+            border-radius: 10px;
+            font-size: 14px;
+            color: #444;
+            text-decoration: none;
+            transition: background 0.15s;
+        }
+
+        .link-btn:hover {
+            background: #DDD9D1;
+        }
+
+        .card-green { background: #D4E8D4; }
+        .card-purple { background: #E4D4E8; }
+        .card-yellow { background: #F0E8C8; }
+        .card-beige { background: #E8E0D4; }
+        .card-pink { background: #E8D4E0; }
+        .card-blue { background: #D4E0E8; }
+
+        .dot-green { background: #27AE60; }
+        .dot-purple { background: #9B59B6; }
+        .dot-blue { background: #3498DB; }
+        .dot-yellow { background: #F1C40F; }
+        .dot-orange { background: #E67E22; }
+        .dot-red { background: #E74C3C; }
+        .dot-teal { background: #1ABC9C; }
+        .dot-pink { background: #E91E63; }
+        .dot-brown { background: #795548; }
+        .dot-cyan { background: #00BCD4; }
+        .dot-indigo { background: #3F51B5; }
+        .dot-lime { background: #8BC34A; }
+
+        @media (max-width: 1024px) {
+            .sidebar {
+                width: 220px;
+            }
+            .main-content {
+                padding: 32px;
+            }
+        }
+
+        @media (max-width: 768px) {
+            .layout {
+                flex-direction: column;
+            }
+            .sidebar {
+                position: relative;
+                width: 100%;
+                height: auto;
+                border-right: none;
+                border-bottom: 1px solid #E0DCD4;
+                padding: 16px 0;
+            }
+            .main-content {
+                padding: 24px;
+                margin-left: 0;
+            }
+            .cards-grid {
+                grid-template-columns: 1fr;
+            }
+            .name {
+                font-size: 32px;
+            }
+            .header-content {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+            .profile-image {
+                margin-right: 0;
+                margin-bottom: 20px;
+            }
+            .profile-tooltip {
+                position: fixed;
+                top: auto;
+                left: 50%;
+                right: auto;
+                bottom: 20px;
+                transform: translateX(-50%);
+                margin-left: 0;
+                max-width: 90%;
+                min-width: auto;
+            }
+            .profile-container:hover .profile-tooltip {
+                opacity: 1;
+                visibility: visible;
+            }
+            .timeline-card {
+                padding-left: 50px;
+            }
+            .timeline-line {
+                left: 20px;
+            }
+            .timeline-dot {
+                left: 12px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="layout">
+        <aside class="sidebar">
+            <div class="sidebar-section">
+                <a href="index.html" class="sidebar-item active">
+                    <div class="sidebar-dot dot-blue"></div>
+                    <span>About</span>
+                </a>
+            </div>
+            <div class="sidebar-section">
+                <a href="experience.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-green"></div>
+                    <span>Experience</span>
+                </a>
+                <a href="my-work.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-purple"></div>
+                    <span>My Work</span>
+                </a>
+                <a href="contact.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-pink"></div>
+                    <span>Contact Me</span>
+                </a>
+                <a href="skills.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-orange"></div>
+                    <span>Skills</span>
+                </a>
+                <a href="education.html" class="sidebar-item">
+                    <div class="sidebar-dot dot-cyan"></div>
+                    <span>Education</span>
+                </a>
+            </div>
+                    </aside>
+
+        <main class="main-content">
+            <div class="header-section" id="about">
+                <div class="header-content">
+                    <div class="profile-container">
+                        <img src="raju_profile_image.png" alt="Raju Shingadiya" class="profile-image">
+                        <div class="profile-tooltip">
+                            <a href="https://maps.google.com/?q=Ahmedabad,Gujarat,India" target="_blank" class="tooltip-item">
+                                <span class="tooltip-icon">📍</span>
+                                <span class="tooltip-text">Ahmedabad, Gujarat, India</span>
+                            </a>
+                            <a href="tel:+916353321951" class="tooltip-item">
+                                <span class="tooltip-icon">📱</span>
+                                <span class="tooltip-text">+91 6353321951</span>
+                            </a>
+                            <a href="mailto:raju348636@gmail.com" class="tooltip-item">
+                                <span class="tooltip-icon">✉️</span>
+                                <span class="tooltip-text">raju348636@gmail.com</span>
+                            </a>
+                        </div>
+                    </div>
+                    <div class="header-info">
+                        <h1 class="name">Raju Shingadiya</h1>
+                        <p class="title">Lead Android Developer | Kotlin Multiplatform Specialist</p>
+                        <div class="contact-info">
+                            <span>📍 Ahmedabad, Gujarat, India</span>
+                            <span>📱 +91 6353321951</span>
+                            <span>✉️ raju348636@gmail.com</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+
+            
+                    </main>
+    </div>
+</body>
+</html>
