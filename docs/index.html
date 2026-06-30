@@ -274,7 +274,12 @@
       document.getElementById('modal').classList.remove('open');
     });
 
-    switchTab(document.querySelector('.nav-item.active'));
+    document.querySelectorAll('.nav-item').forEach(item => {
+      if (item.classList.contains('active')) {
+        const text = item.childNodes[0].nodeValue.trim();
+        item.querySelector('.indicator').style.width = measureText(text) + 'px';
+      }
+    });
   </script>
 </body>
 </html>
