@@ -448,11 +448,13 @@
     function renderApps(category) {
       const grid = document.getElementById('appGrid');
       const apps = projectsData[category];
-      if (!apps && category !== 'aosp') { grid.innerHTML = ''; return; }
       if (category === 'aosp') {
+        grid.style.display = 'block';
         grid.innerHTML = aospHTML;
         return;
       }
+      grid.style.display = '';
+      if (!apps) { grid.innerHTML = ''; return; }
       grid.innerHTML = apps.map(app => `
         <a class="app-item" href="${app.link}" target="_blank" rel="noopener noreferrer">
           <img class="app-icon" src="${app.icon}" alt="${app.title}" loading="lazy">
