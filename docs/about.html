@@ -204,6 +204,40 @@
       color: #1a8a3f;
     }
     .chip .icon { width: 15px; height: 15px; flex-shrink: 0; }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 8px 12px;
+        gap: 0;
+      }
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+        gap: 0;
+        padding: 8px 0 0;
+      }
+      .nav-item {
+        padding: 0 12px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        height: 36px;
+      }
+      .nav-resume {
+        padding: 6px 14px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .content {
+        padding: 24px 16px;
+      }
+      .greeting {
+        font-size: 20px;
+      }
+    }
   </style>
 </head>
 <body>

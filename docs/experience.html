@@ -304,6 +304,65 @@
       transition: width 0.25s;
       pointer-events: none;
     }
+
+    @media (max-width: 768px) {
+      .header {
+        flex-wrap: wrap;
+        height: auto;
+        padding: 8px 12px;
+        gap: 0;
+      }
+      .nav {
+        width: 100%;
+        overflow-x: auto;
+        gap: 0;
+        padding: 8px 0 0;
+      }
+      .nav-item {
+        padding: 0 12px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+        height: 36px;
+      }
+      .nav-resume {
+        padding: 6px 14px;
+        font-size: 12px;
+        white-space: nowrap;
+        flex-shrink: 0;
+      }
+      .content {
+        padding: 16px;
+      }
+      .timeline-card {
+        padding-left: 50px;
+      }
+      .timeline-dot {
+        left: 14px;
+      }
+      .timeline-line {
+        left: 22px;
+      }
+      .card {
+        padding: 16px;
+        flex-direction: column;
+      }
+      .card-map {
+        flex: none;
+        width: 100%;
+        margin-top: 12px;
+      }
+      .card-map iframe {
+        min-height: 120px;
+      }
+      .card-header {
+        flex-direction: column;
+        gap: 4px;
+      }
+      .card-role {
+        font-size: 15px;
+      }
+    }
   </style>
 </head>
 <body>
