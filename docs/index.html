@@ -183,7 +183,11 @@
       padding: 24px;
       border: 1px solid #e0e0e0;
       transition: box-shadow 0.15s;
+      display: flex;
+      gap: 24px;
+      flex-wrap: wrap;
     }
+    .card-body { flex: 1; min-width: 0; }
     .card-logo {
       width: 45px;
       height: 45px;
@@ -240,6 +244,28 @@
       left: 0;
       color: #888;
     }
+    .card-website {
+      display: inline-block;
+      margin-top: 12px;
+      font-size: 12px;
+      color: #1a8a3f;
+      text-decoration: none;
+    }
+    .card-website:hover { text-decoration: underline; }
+    .card-map {
+      border-radius: 16px;
+      overflow: hidden;
+      flex: 1 1 240px;
+      border: 1px solid #e0e0e0;
+      display: flex;
+    }
+    .card-map iframe {
+      width: 100%;
+      height: 100%;
+      min-height: 160px;
+      border: 0;
+      display: block;
+    }
     .dot-green { background: #27AE60; }
     .dot-purple { background: #9B59B6; }
     .dot-yellow { background: #F1C40F; }
@@ -284,76 +310,100 @@
           <div class="timeline-card">
             <div class="timeline-dot dot-green"></div>
             <div class="card">
-              <img class="card-logo" src="images/companies_logos/evincedev_logo.jpg" alt="Evince Development">
-              <div class="card-header">
-                <span class="card-role">Lead Android Developer</span>
-                <span class="card-date">Jan 2023 - Present</span>
+              <div class="card-body">
+                <img class="card-logo" src="images/companies_logos/evincedev_logo.jpg" alt="Evince Development">
+                <div class="card-header">
+                  <span class="card-role">Lead Android Developer</span>
+                  <span class="card-date">Jan 2023 - Present</span>
+                </div>
+                <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
+                <div class="card-location">Ahmedabad, Gujarat</div>
+                <ul class="card-points">
+                  <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
+                  <li>Handled all client communication to ensure smooth project execution</li>
+                  <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
+                  <li>Managed a 2-person team across multiple parallel projects</li>
+                </ul>
+                <a class="card-website" href="https://evincedev.com/" target="_blank">evincedev.com ↗</a>
               </div>
-              <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
-              <div class="card-location">Ahmedabad, Gujarat</div>
-              <ul class="card-points">
-                <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
-                <li>Handled all client communication to ensure smooth project execution</li>
-                <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
-                <li>Managed a 2-person team across multiple parallel projects</li>
-              </ul>
+              <div class="card-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.316454007479!2d72.5018648793457!3d23.012150200000008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9b0066d90e75%3A0xda383af1cc837c65!2sEvince%20Development%20Pvt.%20Ltd!5e0!3m2!1sen!2sin!4v1782795778135!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              </div>
             </div>
           </div>
 
           <div class="timeline-card">
             <div class="timeline-dot dot-purple"></div>
             <div class="card">
-              <img class="card-logo" src="images/companies_logos/tileswale_logo.png" alt="Light Link Solutions">
-              <div class="card-header">
-                <span class="card-role">Senior Android Developer</span>
-                <span class="card-date">Oct 2021 - Dec 2023</span>
+              <div class="card-body">
+                <img class="card-logo" src="images/companies_logos/tileswale_logo.png" alt="Light Link Solutions">
+                <div class="card-header">
+                  <span class="card-role">Senior Android Developer</span>
+                  <span class="card-date">Oct 2021 - Dec 2023</span>
+                </div>
+                <div class="card-company">Light Link Solutions</div>
+                <div class="card-location">Rajkot, Gujarat</div>
+                <ul class="card-points">
+                  <li>Built the Tileswale app (500K+ Downloads) using Jetpack components best practices</li>
+                  <li>Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more</li>
+                  <li>Improved app performance, UI consistency, and code maintainability</li>
+                  <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
+                </ul>
+                <a class="card-website" href="https://tileswale.com/" target="_blank">tileswale.com ↗</a>
               </div>
-              <div class="card-company">Light Link Solutions</div>
-              <div class="card-location">Rajkot, Gujarat</div>
-              <ul class="card-points">
-                <li>Built the Tileswale app (500K+ Downloads) using Jetpack components best practices</li>
-                <li>Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more</li>
-                <li>Improved app performance, UI consistency, and code maintainability</li>
-                <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
-              </ul>
+              <div class="card-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3690.919028866322!2d70.76458297506929!3d22.318901842221393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959c9b32b62461d%3A0x6cf3c7cc128b39d!2sLight%20Link%20Solutions!5e0!3m2!1sen!2sin!4v1782795725299!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              </div>
             </div>
           </div>
 
           <div class="timeline-card">
             <div class="timeline-dot dot-yellow"></div>
             <div class="card">
-              <img class="card-logo" src="images/companies_logos/esjay_logo.png" alt="EsJay IT Solutions">
-              <div class="card-header">
-                <span class="card-role">Mid-Level Android Developer</span>
-                <span class="card-date">Aug 2020 - Oct 2021</span>
+              <div class="card-body">
+                <img class="card-logo" src="images/companies_logos/esjay_logo.png" alt="EsJay IT Solutions">
+                <div class="card-header">
+                  <span class="card-role">Mid-Level Android Developer</span>
+                  <span class="card-date">Aug 2020 - Oct 2021</span>
+                </div>
+                <div class="card-company">EsJay IT Solutions Pvt. Ltd.</div>
+                <div class="card-location">Rajkot, Gujarat</div>
+                <ul class="card-points">
+                  <li>Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box</li>
+                  <li>Used anti-reverse engineering and Jetpack MVVM to deliver key banking features</li>
+                  <li>Secured data with encryption, code obfuscation, and protected API communication</li>
+                  <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
+                </ul>
+                <a class="card-website" href="https://www.esjayit.com/" target="_blank">esjayit.com ↗</a>
               </div>
-              <div class="card-company">EsJay IT Solutions Pvt. Ltd.</div>
-              <div class="card-location">Rajkot, Gujarat</div>
-              <ul class="card-points">
-                <li>Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box</li>
-                <li>Used anti-reverse engineering and Jetpack MVVM to deliver key banking features</li>
-                <li>Secured data with encryption, code obfuscation, and protected API communication</li>
-                <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
-              </ul>
+              <div class="card-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59055.141956146086!2d70.72611137695124!3d22.317867841884745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959c983c72932a1%3A0xe2cbd1ef3552777a!2sEsJay%20IT%20Solutions%20Private%20Limited!5e0!3m2!1sen!2sin!4v1782795570660!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              </div>
             </div>
           </div>
 
           <div class="timeline-card">
             <div class="timeline-dot dot-beige"></div>
             <div class="card">
-              <img class="card-logo" src="images/companies_logos/ubrainstudio_logo.jpg" alt="uBrain Studios">
-              <div class="card-header">
-                <span class="card-role">Junior Android Developer</span>
-                <span class="card-date">Jun 2018 - May 2020</span>
+              <div class="card-body">
+                <img class="card-logo" src="images/companies_logos/ubrainstudio_logo.jpg" alt="uBrain Studios">
+                <div class="card-header">
+                  <span class="card-role">Junior Android Developer</span>
+                  <span class="card-date">Jun 2018 - May 2020</span>
+                </div>
+                <div class="card-company">uBrain Studios Pvt. Ltd.</div>
+                <div class="card-location">Rajkot, Gujarat</div>
+                <ul class="card-points">
+                  <li>Started Android development with core concepts: Activities, Fragments, RecyclerView</li>
+                  <li>Built Desh Parivahan & Moozy apps with UI and API integration</li>
+                  <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
+                  <li>Improved debugging, Git usage, and team collaboration skills</li>
+                </ul>
+                <a class="card-website" href="https://www.ubrainstudios.com/" target="_blank">ubrainstudios.com ↗</a>
               </div>
-              <div class="card-company">uBrain Studios Pvt. Ltd.</div>
-              <div class="card-location">Rajkot, Gujarat</div>
-              <ul class="card-points">
-                <li>Started Android development with core concepts: Activities, Fragments, RecyclerView</li>
-                <li>Built Desh Parivahan & Moozy apps with UI and API integration</li>
-                <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
-                <li>Improved debugging, Git usage, and team collaboration skills</li>
-              </ul>
+              <div class="card-map">
+                <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14768.465615148247!2d70.7784111!3d22.27358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959ca12788a78cd%3A0xfbf7de7dc8bd788f!2suBrain%20Studios%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1782795460311!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+              </div>
             </div>
           </div>
         </div>
