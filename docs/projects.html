@@ -127,13 +127,32 @@
     .chip .icon { width: 15px; height: 15px; flex-shrink: 0; }
 
     .content {
-      display: flex;
-      align-items: center;
-      justify-content: center;
+      padding: 20px 48px;
       min-height: calc(100vh - 56px);
-      font-size: 18px;
-      font-weight: 300;
-      color: #888;
+    }
+    .filter-chips {
+      display: flex;
+      gap: 10px;
+      flex-wrap: wrap;
+    }
+    .filter-chip {
+      display: inline-flex;
+      align-items: center;
+      padding: 8px 20px;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #777;
+      background: #fff;
+      cursor: pointer;
+      user-select: none;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .filter-chip.active {
+      border-color: #1a8a3f;
+      color: #1a8a3f;
     }
 
     .nav-item .indicator {
@@ -165,7 +184,11 @@
   </div>
 
   <div class="content">
-    Projects page coming soon
+    <div class="filter-chips">
+      <span class="filter-chip active">Mobile Apps</span>
+      <span class="filter-chip">Desktop Apps</span>
+      <span class="filter-chip">AI Apps</span>
+    </div>
   </div>
 
   <div class="modal-overlay" id="modal">
@@ -224,6 +247,13 @@
     });
 
     document.querySelector('.nav-item.active') && updateIndicator(document.querySelector('.nav-item.active'));
+
+    document.querySelectorAll('.filter-chip').forEach(chip => {
+      chip.addEventListener('click', () => {
+        document.querySelectorAll('.filter-chip').forEach(c => c.classList.remove('active'));
+        chip.classList.add('active');
+      });
+    });
   </script>
 </body>
 </html>
