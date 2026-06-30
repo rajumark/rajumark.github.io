@@ -244,18 +244,30 @@
       left: 0;
       color: #888;
     }
-    .card-website {
-      display: inline-block;
+    .card-links {
       margin-top: 12px;
+      display: flex;
+      gap: 16px;
+      flex-wrap: wrap;
+    }
+    .card-links a {
       font-size: 12px;
       color: #1a8a3f;
       text-decoration: none;
+      display: inline-flex;
+      align-items: center;
+      gap: 4px;
+      border: 1px solid #1a8a3f;
+      border-radius: 16px;
+      padding: 4px 12px;
+      transition: background 0.15s;
     }
-    .card-website:hover { text-decoration: underline; }
+    .card-links a:hover { background: #f0faf0; }
+    .card-links a .icon { width: 12px; height: 12px; }
     .card-map {
       border-radius: 16px;
       overflow: hidden;
-      flex: 1 1 240px;
+      flex: 0 0 30%;
       border: 1px solid #e0e0e0;
       display: flex;
     }
@@ -324,7 +336,10 @@
                   <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
                   <li>Managed a 2-person team across multiple parallel projects</li>
                 </ul>
-                <a class="card-website" href="https://evincedev.com/" target="_blank">evincedev.com ↗</a>
+                <div class="card-links">
+                  <a href="https://evincedev.com/" target="_blank">evincedev.com ↗</a>
+                  <a href="https://www.google.com/maps/place/Evince+Development+Pvt.+Ltd/@23.0121477,72.5045047,3a,99.2y,90t/data=!3m8!1e2!3m6!1sCIABIhAISi0TeUll8aKzmfERtY5X!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAPNQkAHVx9AZ-5lQGLYC78bGFSe21T7j47phy36USsimqEPNhIJgHhJH0vuvDhGujq-xO9s-GyKAZ8TD1DAeReKowDC8rZs8rg1Z-WTiGIHdfDgUdCO3au4lYWAL6L9LELEYTAxfx1eLL8eEWgs%3Dw129-h86-k-no!7i800!8i533!4m7!3m6!1s0x395e9b0066d90e75:0xda383af1cc837c65!8m2!3d23.0121502!4d72.5044398!10e5!16s%2Fg%2F11vs_mx8j2?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Photos</a>
+                </div>
               </div>
               <div class="card-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.316454007479!2d72.5018648793457!3d23.012150200000008!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9b0066d90e75%3A0xda383af1cc837c65!2sEvince%20Development%20Pvt.%20Ltd!5e0!3m2!1sen!2sin!4v1782795778135!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -349,7 +364,10 @@
                   <li>Improved app performance, UI consistency, and code maintainability</li>
                   <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
                 </ul>
-                <a class="card-website" href="https://tileswale.com/" target="_blank">tileswale.com ↗</a>
+                <div class="card-links">
+                  <a href="https://tileswale.com/" target="_blank">tileswale.com ↗</a>
+                  <a href="https://www.google.com/maps/place/Light+Link+Solutions/@22.3189066,70.7674656,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICftPvGogE!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAPNQkAGQ36AhSks4QLcULgr1ihLQowLBxTWGjry8znhk_Z22bOzEwo8zbFyAJhzSdxeLu_6EaQDPd24Vm2iOvkrpaDa8wlshMvNGRFY_6HudVCEruz8jSYmsWeN9EaCNk_OXUsCmXbZF%3Dw114-h86-k-no!7i4032!8i3024!4m7!3m6!1s0x3959c9b32b62461d:0x6cf3c7cc128b39d!8m2!3d22.3188969!4d70.7671579!10e5!16s%2Fg%2F11h_6hmpgj?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Photos</a>
+                </div>
               </div>
               <div class="card-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3690.919028866322!2d70.76458297506929!3d22.318901842221393!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959c9b32b62461d%3A0x6cf3c7cc128b39d!2sLight%20Link%20Solutions!5e0!3m2!1sen!2sin!4v1782795725299!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -374,7 +392,10 @@
                   <li>Secured data with encryption, code obfuscation, and protected API communication</li>
                   <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
                 </ul>
-                <a class="card-website" href="https://www.esjayit.com/" target="_blank">esjayit.com ↗</a>
+                <div class="card-links">
+                  <a href="https://www.esjayit.com/" target="_blank">esjayit.com ↗</a>
+                  <a href="https://www.google.com/maps/place/EsJay+IT+Solutions+Private+Limited/@22.3177951,70.7675138,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgICk9dryCQ!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAPNQkAGOzX5JGDBM1Kn-BTzaEUBzr6SPOQcUgmEbLEUlngEdXFUr33qMEOkYK8mCBXRR8Kk1hrV316f_Z-s7KQm63s1LOuMBQGRa_8FVgtEdABsoeM82j_4q_v2fINrDn-s_4NZ2IYLx%3Dw128-h86-k-no!7i2992!8i2000!4m7!3m6!1s0x3959c983c72932a1:0xe2cbd1ef3552777a!8m2!3d22.3177887!4d70.7673112!10e5!16s%2Fg%2F11h875xvjl?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Photos</a>
+                </div>
               </div>
               <div class="card-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d59055.141956146086!2d70.72611137695124!3d22.317867841884745!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959c983c72932a1%3A0xe2cbd1ef3552777a!2sEsJay%20IT%20Solutions%20Private%20Limited!5e0!3m2!1sen!2sin!4v1782795570660!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
@@ -399,7 +420,10 @@
                   <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
                   <li>Improved debugging, Git usage, and team collaboration skills</li>
                 </ul>
-                <a class="card-website" href="https://www.ubrainstudios.com/" target="_blank">ubrainstudios.com ↗</a>
+                <div class="card-links">
+                  <a href="https://www.ubrainstudios.com/" target="_blank">ubrainstudios.com ↗</a>
+                  <a href="https://www.google.com/maps/place/uBrain+Studios+Pvt.+Ltd./@22.27358,70.7784111,3a,75y,90t/data=!3m7!1e2!3m5!1sCIHM0ogKEICAgID-i-e18AE!2e10!3e12!7i4032!8i3024!4m7!3m6!1s0x3959ca12788a78cd:0xfbf7de7dc8bd788f!8m2!3d22.2736482!4d70.7783957!10e5!16s%2Fg%2F113j_2fm3?entry=ttu&g_ep=EgoyMDI2MDYyNC4wIKXMDSoASAFQAw%3D%3D" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Photos</a>
+                </div>
               </div>
               <div class="card-map">
                 <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14768.465615148247!2d70.7784111!3d22.27358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959ca12788a78cd%3A0xfbf7de7dc8bd788f!2suBrain%20Studios%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1782795460311!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
