@@ -136,7 +136,51 @@
       color: #888;
     }
     .page { display: none; }
-    .page.active { display: flex; align-items: center; justify-content: center; width: 100%; }
+    .page.active { display: flex; flex-direction: column; align-items: center; justify-content: center; width: 100%; }
+
+    .resume-btn {
+      display: inline-flex;
+      align-items: center;
+      gap: 10px;
+      padding: 16px 40px;
+      border: 2px solid #1a8a3f;
+      border-radius: 30px;
+      color: #1a8a3f;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 15px;
+      font-weight: 500;
+      text-decoration: none;
+      cursor: pointer;
+      transition: background 0.2s, color 0.2s;
+    }
+    .resume-btn:hover {
+      background: #1a8a3f;
+      color: #fff;
+    }
+    .resume-btn .icon { width: 20px; height: 20px; }
+    .resume-sub {
+      font-size: 13px;
+      font-weight: 300;
+      color: #999;
+      margin-top: 12px;
+    }
+
+    .nav-resume {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      padding: 8px 20px;
+      background: #1a8a3f;
+      color: #fff !important;
+      border-radius: 20px;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+      transition: opacity 0.2s;
+    }
+    .nav-resume:hover { opacity: 0.85; }
+    .nav-resume .indicator { display: none; }
 
     .nav-item .indicator {
       position: absolute;
@@ -163,11 +207,21 @@
       <a class="nav-item" href="experience.html">Experience<span class="indicator"></span></a>
       <a class="nav-item" href="skills.html">Skills<span class="indicator"></span></a>
       <a class="nav-item" data-page="contact">Contact me<span class="indicator"></span></a>
+      <a class="nav-resume" href="https://raw.githubusercontent.com/rajumark/rajumark.github.io/master/source_information/Raju%20Shingadiya%20Android-Resume.pdf" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Resume<span class="indicator"></span>
+      </a>
     </div>
   </div>
 
   <div class="content">
-    <div class="page active" id="page-about">About page coming soon</div>
+    <div class="page active" id="page-about">
+      <a class="resume-btn" href="https://raw.githubusercontent.com/rajumark/rajumark.github.io/master/source_information/Raju%20Shingadiya%20Android-Resume.pdf" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
+        Download Resume
+      </a>
+      <div class="resume-sub">PDF &bull; Raju Shingadiya &bull; Android Developer</div>
+    </div>
     <div class="page" id="page-contact">Contact page coming soon</div>
   </div>
 
