@@ -138,6 +138,113 @@
     .page { display: none; }
     .page.active { display: flex; align-items: center; justify-content: center; width: 100%; }
 
+    #page-experience.active { display: block; padding: 40px 48px; align-items: unset; justify-content: unset; }
+    .section-title {
+      font-size: 12px;
+      color: #666;
+      font-weight: 600;
+      margin-bottom: 20px;
+      text-transform: uppercase;
+      letter-spacing: 0.5px;
+    }
+    .cards-grid {
+      display: flex;
+      flex-direction: column;
+      gap: 0;
+      position: relative;
+    }
+    .timeline-line {
+      position: absolute;
+      left: 30px;
+      top: 0;
+      bottom: 0;
+      width: 2px;
+      background: #E0DCD4;
+      z-index: 1;
+    }
+    .timeline-card {
+      position: relative;
+      padding-left: 70px;
+      margin-bottom: 30px;
+      z-index: 2;
+    }
+    .timeline-dot {
+      position: absolute;
+      left: 22px;
+      top: 24px;
+      width: 16px;
+      height: 16px;
+      border-radius: 50%;
+      border: 3px solid #E8E4DE;
+      z-index: 3;
+    }
+    .card {
+      border-radius: 16px;
+      padding: 24px;
+      border: 1px solid #e0e0e0;
+      transition: box-shadow 0.15s;
+    }
+    .card-logo {
+      width: 45px;
+      height: 45px;
+      object-fit: cover;
+      border-radius: 8px;
+      float: left;
+      margin-right: 16px;
+      margin-bottom: 8px;
+    }
+    .card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .card-header {
+      display: flex;
+      justify-content: space-between;
+      align-items: flex-start;
+      margin-bottom: 8px;
+    }
+    .card-role {
+      font-size: 17px;
+      font-weight: 600;
+      color: #333;
+      font-family: Comfortaa, Arial, sans-serif;
+    }
+    .card-date {
+      font-size: 12px;
+      color: #888;
+      white-space: nowrap;
+    }
+    .card-company {
+      font-size: 14px;
+      color: #666;
+      margin-bottom: 8px;
+    }
+    .card-location {
+      font-size: 12px;
+      color: #888;
+      margin-bottom: 16px;
+    }
+    .card-points {
+      list-style: none;
+    }
+    .card-points li {
+      font-size: 14px;
+      color: #555;
+      line-height: 1.6;
+      margin-bottom: 8px;
+      padding-left: 16px;
+      position: relative;
+    }
+    .card-points li::before {
+      content: "•";
+      position: absolute;
+      left: 0;
+      color: #888;
+    }
+    .dot-green { background: #27AE60; }
+    .dot-purple { background: #9B59B6; }
+    .dot-yellow { background: #F1C40F; }
+    .dot-beige { background: #C4B89A; }
+
     .nav-item .indicator {
       position: absolute;
       bottom: 4px;
@@ -169,7 +276,89 @@
   <div class="content">
     <div class="page active" id="page-about">About page coming soon</div>
     <div class="page" id="page-projects">Projects page coming soon</div>
-    <div class="page" id="page-experience">Experience page coming soon</div>
+    <div class="page" id="page-experience">
+      <div class="section">
+        <div class="section-title">Experience</div>
+        <div class="cards-grid">
+          <div class="timeline-line"></div>
+          <div class="timeline-card">
+            <div class="timeline-dot dot-green"></div>
+            <div class="card">
+              <img class="card-logo" src="images/companies_logos/evincedev_logo.jpg" alt="Evince Development">
+              <div class="card-header">
+                <span class="card-role">Lead Android Developer</span>
+                <span class="card-date">Jan 2023 - Present</span>
+              </div>
+              <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
+              <div class="card-location">Ahmedabad, Gujarat</div>
+              <ul class="card-points">
+                <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
+                <li>Handled all client communication to ensure smooth project execution</li>
+                <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
+                <li>Managed a 2-person team across multiple parallel projects</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="timeline-dot dot-purple"></div>
+            <div class="card">
+              <img class="card-logo" src="images/companies_logos/tileswale_logo.png" alt="Light Link Solutions">
+              <div class="card-header">
+                <span class="card-role">Senior Android Developer</span>
+                <span class="card-date">Oct 2021 - Dec 2023</span>
+              </div>
+              <div class="card-company">Light Link Solutions</div>
+              <div class="card-location">Rajkot, Gujarat</div>
+              <ul class="card-points">
+                <li>Built the Tileswale app (500K+ Downloads) using Jetpack components best practices</li>
+                <li>Gained hands-on experience with MVVM, Navigation, LiveData, Room, and more</li>
+                <li>Improved app performance, UI consistency, and code maintainability</li>
+                <li>Contributed to a feature-rich, scalable app now live on the Play Store</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="timeline-dot dot-yellow"></div>
+            <div class="card">
+              <img class="card-logo" src="images/companies_logos/esjay_logo.png" alt="EsJay IT Solutions">
+              <div class="card-header">
+                <span class="card-role">Mid-Level Android Developer</span>
+                <span class="card-date">Aug 2020 - Oct 2021</span>
+              </div>
+              <div class="card-company">EsJay IT Solutions Pvt. Ltd.</div>
+              <div class="card-location">Rajkot, Gujarat</div>
+              <ul class="card-points">
+                <li>Developed secure fintech apps including Agent Center, Balance Center, and Complaint Box</li>
+                <li>Used anti-reverse engineering and Jetpack MVVM to deliver key banking features</li>
+                <li>Secured data with encryption, code obfuscation, and protected API communication</li>
+                <li>Worked with backend and QA teams to ship fast, scalable financial apps</li>
+              </ul>
+            </div>
+          </div>
+
+          <div class="timeline-card">
+            <div class="timeline-dot dot-beige"></div>
+            <div class="card">
+              <img class="card-logo" src="images/companies_logos/ubrainstudio_logo.jpg" alt="uBrain Studios">
+              <div class="card-header">
+                <span class="card-role">Junior Android Developer</span>
+                <span class="card-date">Jun 2018 - May 2020</span>
+              </div>
+              <div class="card-company">uBrain Studios Pvt. Ltd.</div>
+              <div class="card-location">Rajkot, Gujarat</div>
+              <ul class="card-points">
+                <li>Started Android development with core concepts: Activities, Fragments, RecyclerView</li>
+                <li>Built Desh Parivahan & Moozy apps with UI and API integration</li>
+                <li>Worked with Firebase, REST APIs, and local storage (Room/SQLite)</li>
+                <li>Improved debugging, Git usage, and team collaboration skills</li>
+              </ul>
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
     <div class="page" id="page-contact">Contact page coming soon</div>
   </div>
 
