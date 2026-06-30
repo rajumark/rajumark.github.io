@@ -3,7 +3,7 @@
 <head>
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
-  <title>Tabs UI</title>
+  <title>Projects - Raju Shingadiya</title>
   <link rel="preconnect" href="https://fonts.googleapis.com">
   <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
   <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
@@ -135,8 +135,6 @@
       font-weight: 300;
       color: #888;
     }
-    .page { display: none; }
-    .page.active { display: flex; align-items: center; justify-content: center; width: 100%; }
 
     .nav-item .indicator {
       position: absolute;
@@ -159,18 +157,15 @@
       <span class="name">Raju Shingadiya</span>
     </div>
     <div class="nav">
-      <a class="nav-item active" data-page="about">About<span class="indicator"></span></a>
-      <a class="nav-item" data-page="projects">Projects<span class="indicator"></span></a>
-      <a class="nav-item" data-page="experience">Experience<span class="indicator"></span></a>
-      <a class="nav-item" data-page="contact">Contact me<span class="indicator"></span></a>
+      <a class="nav-item" href="index.html">About<span class="indicator"></span></a>
+      <a class="nav-item active" href="projects.html">Projects<span class="indicator"></span></a>
+      <a class="nav-item" href="experience.html">Experience<span class="indicator"></span></a>
+      <a class="nav-item" href="contact.html">Contact me<span class="indicator"></span></a>
     </div>
   </div>
 
   <div class="content">
-    <div class="page active" id="page-about">About page coming soon</div>
-    <div class="page" id="page-projects">Projects page coming soon</div>
-    <div class="page" id="page-experience">Experience page coming soon</div>
-    <div class="page" id="page-contact">Contact page coming soon</div>
+    Projects page coming soon
   </div>
 
   <div class="modal-overlay" id="modal">
@@ -219,27 +214,6 @@
       el.querySelector('.indicator').style.width = w + 'px';
     }
 
-    function resetIndicators() {
-      document.querySelectorAll('.nav-item .indicator').forEach(ind => ind.style.width = '0');
-    }
-
-    function switchTab(tab) {
-      document.querySelectorAll('.nav-item').forEach(i => i.classList.remove('active'));
-      document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
-      tab.classList.add('active');
-      const page = document.getElementById('page-' + tab.dataset.page);
-      if (page) page.classList.add('active');
-      resetIndicators();
-      updateIndicator(tab);
-    }
-
-    document.querySelectorAll('.nav-item').forEach(item => {
-      item.addEventListener('click', e => {
-        e.preventDefault();
-        switchTab(item);
-      });
-    });
-
     function openModal() {
       document.getElementById('modal').classList.add('open');
     }
@@ -249,7 +223,7 @@
       document.getElementById('modal').classList.remove('open');
     });
 
-    switchTab(document.querySelector('.nav-item.active'));
+    document.querySelector('.nav-item.active') && updateIndicator(document.querySelector('.nav-item.active'));
   </script>
 </body>
 </html>
