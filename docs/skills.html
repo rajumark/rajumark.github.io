@@ -1,0 +1,379 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Skills - Raju Shingadiya</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+    html, body { height: 100%; }
+    body {
+      background-color: #fff;
+      color: #333;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 300;
+      line-height: 1.4;
+      text-rendering: optimizeLegibility;
+    }
+
+    .header {
+      display: flex;
+      align-items: center;
+      max-width: 1200px;
+      margin: 0 auto;
+      padding: 0 0 0 4px;
+      height: 56px;
+      gap: 32px;
+    }
+
+    .profile {
+      display: flex;
+      align-items: center;
+      gap: 10px;
+    }
+
+    .avatar {
+      width: 32px;
+      height: 32px;
+      border-radius: 50%;
+      object-fit: cover;
+      cursor: pointer;
+    }
+
+    .name {
+      font-size: 15px;
+      font-weight: 500;
+      color: #222;
+    }
+
+    .nav { display: flex; align-items: center; height: 100%; }
+
+    .nav-item {
+      position: relative;
+      display: flex;
+      align-items: center;
+      height: 100%;
+      padding: 0 20px;
+      color: #777;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      text-decoration: none;
+    }
+
+    .nav-item.active {
+      color: #1a8a3f;
+    }
+
+    .nav-item .indicator {
+      position: absolute;
+      bottom: 4px;
+      left: 50%;
+      transform: translateX(-50%);
+      height: 3px;
+      background: #1a8a3f;
+      border-radius: 2px;
+      width: 0;
+      transition: width 0.25s;
+      pointer-events: none;
+    }
+
+    .content {
+      padding: 20px 48px;
+      min-height: calc(100vh - 56px);
+      max-width: 900px;
+    }
+
+    .skills-section {
+      margin-bottom: 28px;
+    }
+
+    .skills-title {
+      font-size: 14px;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 12px;
+    }
+
+    .skills-list {
+      display: flex;
+      flex-wrap: wrap;
+      gap: 8px;
+    }
+
+    .skill-item {
+      padding: 6px 14px;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      font-size: 12px;
+      font-weight: 500;
+      color: #555;
+    }
+
+    .skill-item.highlight {
+      border-color: #1a8a3f;
+      color: #1a8a3f;
+    }
+    .skill-item.new {
+      border-color: #1a8a3f;
+      color: #1a8a3f;
+      background: #e8f5e9;
+    }
+    .new-badge {
+      display: inline-block;
+      font-size: 9px;
+      font-weight: 500;
+      color: #fff;
+      background: #1a8a3f;
+      border-radius: 8px;
+      padding: 1px 6px;
+      margin-left: 4px;
+      vertical-align: middle;
+      line-height: 1.4;
+    }
+
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.6);
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 1000;
+    }
+    .modal-overlay.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .modal-overlay img {
+      width: 180px;
+      height: 180px;
+      border-radius: 50%;
+      object-fit: cover;
+      box-shadow: 0 8px 30px rgba(0,0,0,0.3);
+      margin-bottom: 24px;
+    }
+    .modal-chips {
+      display: flex;
+      gap: 12px;
+      flex-wrap: wrap;
+      justify-content: center;
+    }
+    .chip {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      background: #fff;
+      border: 1px solid #ccc;
+      border-radius: 20px;
+      padding: 8px 18px;
+      font-family: Comfortaa, Arial, sans-serif;
+      font-size: 13px;
+      font-weight: 500;
+      color: #777;
+      text-decoration: none;
+      cursor: pointer;
+      transition: border-color 0.15s, color 0.15s;
+    }
+    .chip:hover {
+      border-color: #1a8a3f;
+      color: #1a8a3f;
+    }
+    .chip .icon { width: 15px; height: 15px; flex-shrink: 0; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="profile">
+      <img class="avatar" src="raju_profile_small_image.png" alt="Raju Shingadiya">
+      <span class="name">Raju Shingadiya</span>
+    </div>
+    <div class="nav">
+      <a class="nav-item" href="index.html">About<span class="indicator"></span></a>
+      <a class="nav-item" href="projects.html">Projects<span class="indicator"></span></a>
+      <a class="nav-item" href="experience.html">Experience<span class="indicator"></span></a>
+      <a class="nav-item active" href="skills.html">Skills<span class="indicator"></span></a>
+      <a class="nav-item" href="contact.html">Contact me<span class="indicator"></span></a>
+    </div>
+  </div>
+
+  <div class="content">
+    <div class="skills-section">
+      <div class="skills-title">Vibe Coding <span class="new-badge">NEW</span></div>
+      <div class="skills-list">
+        <span class="skill-item new">Prompt Engineering</span>
+        <span class="skill-item new">Agent Customization</span>
+        <span class="skill-item new">AI Tooling & Automation</span>
+        <span class="skill-item new">Cursor + Claude</span>
+        <span class="skill-item new">LLM Integration</span>
+        <span class="skill-item new">Workflow Optimization</span>
+        <span class="skill-item new">Local LLM Orchestration</span>
+        <span class="skill-item new">Android CLI Tools</span>
+        <span class="skill-item new">AI Studio</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Core Technologies</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Kotlin</span>
+        <span class="skill-item highlight">Java</span>
+        <span class="skill-item highlight">Android SDK</span>
+        <span class="skill-item">XML</span>
+        <span class="skill-item">JSON</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Android Framework</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Jetpack Compose UI</span>
+        <span class="skill-item highlight">Navigation Component</span>
+        <span class="skill-item highlight">LiveData</span>
+        <span class="skill-item highlight">Room Database</span>
+        <span class="skill-item highlight">ViewModel</span>
+        <span class="skill-item">WorkManager</span>
+        <span class="skill-item">DataStore</span>
+        <span class="skill-item">Paging Library</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Architecture</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">MVVM Architecture</span>
+        <span class="skill-item highlight">Clean Architecture</span>
+        <span class="skill-item highlight">Modularization</span>
+        <span class="skill-item">MVP</span>
+        <span class="skill-item">Repository Pattern</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Cross-Platform & System</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Kotlin Multiplatform</span>
+        <span class="skill-item highlight">AOSP Development</span>
+        <span class="skill-item highlight">Kiosk Solutions</span>
+        <span class="skill-item highlight">ROM Customisation</span>
+        <span class="skill-item">Flutter (Basic)</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Tools & Libraries</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Koin</span>
+        <span class="skill-item highlight">Dagger</span>
+        <span class="skill-item highlight">Retrofit</span>
+        <span class="skill-item highlight">Git</span>
+        <span class="skill-item highlight">Gradle</span>
+        <span class="skill-item highlight">CI/CD</span>
+        <span class="skill-item">OkHttp</span>
+        <span class="skill-item">Glide</span>
+        <span class="skill-item">Firebase</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Applied Experience</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Built 20+ Production Android Apps</span>
+        <span class="skill-item highlight">500K+ Downloads App Experience</span>
+        <span class="skill-item highlight">Custom ROM Development</span>
+        <span class="skill-item highlight">Secure Banking Apps</span>
+        <span class="skill-item highlight">Anti-Reverse Engineering</span>
+        <span class="skill-item">RESTful API Integration</span>
+        <span class="skill-item">Performance Optimization</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Professional Skills</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Team Leadership</span>
+        <span class="skill-item highlight">Client Communication</span>
+        <span class="skill-item highlight">Project Management</span>
+        <span class="skill-item highlight">Code Review</span>
+        <span class="skill-item">Technical Documentation</span>
+        <span class="skill-item">Problem Solving</span>
+      </div>
+    </div>
+
+    <div class="skills-section">
+      <div class="skills-title">Domain Expertise</div>
+      <div class="skills-list">
+        <span class="skill-item highlight">Native Android Development</span>
+        <span class="skill-item highlight">Material Design</span>
+        <span class="skill-item highlight">Financial Data Protection</span>
+        <span class="skill-item highlight">B2B Applications</span>
+        <span class="skill-item">Google Play Store</span>
+        <span class="skill-item">Enterprise Integration</span>
+        <span class="skill-item">Scalable Architecture</span>
+      </div>
+    </div>
+  </div>
+
+  <div class="modal-overlay" id="modal">
+    <img src="raju_profile_image.png" alt="Raju Shingadiya">
+    <div class="modal-chips">
+      <a class="chip" href="tel:+916353321951">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07 19.5 19.5 0 0 1-6-6 19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 4.11 2h3a2 2 0 0 1 2 1.72 12.84 12.84 0 0 0 .7 2.81 2 2 0 0 1-.45 2.11L8.09 9.91a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45 12.84 12.84 0 0 0 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
+        Call
+      </a>
+      <a class="chip" href="mailto:raju348636@gmail.com">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
+        Email
+      </a>
+      <a class="chip" href="https://github.com/rajumark" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+        GitHub
+      </a>
+      <a class="chip" href="https://in.linkedin.com/in/raju-shingadiya-963807b9" target="_blank" rel="noopener noreferrer">
+        <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-2-2 2 2 0 0 0-2 2v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></svg>
+        LinkedIn
+      </a>
+    </div>
+  </div>
+
+  <script>
+    function measureText(text) {
+      const el = document.createElement('span');
+      el.textContent = text;
+      el.style.fontFamily = 'Comfortaa, Arial, sans-serif';
+      el.style.fontSize = '13px';
+      el.style.fontWeight = '500';
+      el.style.visibility = 'hidden';
+      el.style.whiteSpace = 'nowrap';
+      document.body.appendChild(el);
+      const w = el.offsetWidth;
+      document.body.removeChild(el);
+      return w;
+    }
+
+    document.querySelectorAll('.nav-item').forEach(item => {
+      if (item.classList.contains('active')) {
+        const text = item.childNodes[0].nodeValue.trim();
+        item.querySelector('.indicator').style.width = measureText(text) + 'px';
+      }
+    });
+
+    function openModal() {
+      document.getElementById('modal').classList.add('open');
+    }
+    document.querySelector('.avatar').addEventListener('click', openModal);
+    document.querySelector('.name').addEventListener('click', openModal);
+    document.getElementById('modal').addEventListener('click', () => {
+      document.getElementById('modal').classList.remove('open');
+    });
+  </script>
+</body>
+</html>
