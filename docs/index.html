@@ -10,11 +10,25 @@
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
     html { scroll-behavior: smooth; }
-    body {
-      position: relative;
-      min-height: 100vh;
-      overflow-x: hidden;
-      background-color: #fff;
+      * { cursor: none; }
+      #custom-cursor {
+        position: fixed;
+        width: 32px;
+        height: 32px;
+        background: url('images/androiddoelicon.png') no-repeat center/contain;
+        pointer-events: none;
+        z-index: 99999;
+        transition: transform 100ms ease;
+        transform: rotate(0deg);
+        will-change: transform;
+        opacity: 0;
+      }
+
+      body {
+        position: relative;
+        min-height: 100vh;
+        overflow-x: hidden;
+        background-color: #fff;
       color: #333;
       font-family: Comfortaa, Arial, sans-serif;
       font-size: 13px;
@@ -684,6 +698,7 @@
   </style>
 </head>
 <body>
+  <div id="custom-cursor"></div>
   <div class="header">
     <div class="profile">
       <img class="avatar" src="raju_profile_small_image.png" alt="Raju Shingadiya">
@@ -1135,6 +1150,21 @@
     `;
 
     document.getElementById('aosp-container').innerHTML = aospHTML;
+
+    (function() {
+      const el = document.getElementById('custom-cursor');
+      let prevX = 0, shown = false;
+      document.addEventListener('mousemove', e => {
+        if (!shown) { el.style.opacity = '1'; shown = true; }
+        el.style.left = (e.clientX - 16) + 'px';
+        el.style.top = (e.clientY - 16) + 'px';
+        const dx = e.clientX - prevX;
+        if (Math.abs(dx) > 2) {
+          el.style.transform = dx < 0 ? 'rotate(-90deg)' : 'rotate(0deg)';
+        }
+        prevX = e.clientX;
+      });
+    })();
   </script>
 </body>
 </html>
