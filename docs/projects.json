@@ -10,7 +10,8 @@
     { "icon": "images/apps_logo_screenshots/advancedentry.jpg", "title": "Advanced Entry", "link": "https://advancedentry.com/" }
   ],
   "desktop": [
-    { "icon": "images/apps_logo_screenshots/porpita.png", "title": "Porpita", "link": "https://rajumark.github.io/porpita/" }
+    { "icon": "images/apps_logo_screenshots/porpita.png", "title": "Porpita", "link": "https://rajumark.github.io/porpita/" },
+    { "icon": "images/apps_logo_screenshots/newzero.svg", "title": "Newzero", "link": "https://rajumark.github.io/Newzero/", "subtitle": "KMP" }
   ],
   "ai": [
     { "icon": "images/apps_logo_screenshots/localchat.svg", "title": "Local Chat", "link": "https://github.com/rajumark/localchat" },
