@@ -180,6 +180,19 @@
       color: #777;
       margin-bottom: 28px;
     }
+    .about-wrap {
+      display: flex;
+      gap: 32px;
+      align-items: flex-start;
+    }
+    .about-image {
+      width: 320px;
+      height: 320px;
+      border-radius: 50%;
+      object-fit: cover;
+      flex-shrink: 0;
+    }
+    .about-content { flex: 1; min-width: 0; }
     .about-text {
       font-size: 13px;
       color: #444;
@@ -248,6 +261,16 @@
     .app-icon-wrap {
       position: relative;
       display: inline-block;
+    }
+    .app-label {
+      font-size: 9px;
+      font-weight: 600;
+      color: var(--label-color);
+      background: color-mix(in srgb, var(--label-color) 12%, transparent);
+      padding: 2px 7px;
+      border-radius: 8px;
+      line-height: 1.4;
+      margin-top: 4px;
     }
     .app-badge {
       position: absolute;
@@ -518,6 +541,64 @@
       display: block;
     }
 
+    /* Certificates section */
+    .certs-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 24px;
+    }
+    .cert-card {
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      overflow: hidden;
+      transition: box-shadow 0.15s;
+    }
+    .cert-card:hover {
+      box-shadow: 0 4px 16px rgba(0,0,0,0.06);
+    }
+    .cert-image {
+      width: 100%;
+      height: auto;
+      display: block;
+      cursor: pointer;
+    }
+    .cert-info {
+      padding: 16px;
+    }
+    .cert-title {
+      font-size: 14px;
+      font-weight: 600;
+      color: #333;
+      margin-bottom: 4px;
+    }
+    .cert-issuer {
+      font-size: 12px;
+      color: #888;
+    }
+    .cert-modal {
+      position: fixed;
+      inset: 0;
+      background: rgba(0,0,0,0.8);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      opacity: 0;
+      pointer-events: none;
+      transition: opacity 0.2s;
+      z-index: 2000;
+      padding: 24px;
+    }
+    .cert-modal.open {
+      opacity: 1;
+      pointer-events: auto;
+    }
+    .cert-modal img {
+      max-width: 100%;
+      max-height: 90vh;
+      border-radius: 8px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.4);
+    }
+
     /* Skills section */
     .skills-section { margin-bottom: 28px; }
     .skills-title {
@@ -668,6 +749,16 @@
       .aosp-images {
         flex-direction: column;
       }
+      .about-wrap {
+        flex-direction: column;
+        align-items: center;
+        text-align: center;
+      }
+      .about-image {
+        width: 240px;
+        height: 240px;
+        margin-bottom: 8px;
+      }
       .aosp-images img {
         height: auto;
         width: 100%;
@@ -708,6 +799,7 @@
       <a class="nav-item" href="#section-about">About</a>
       <a class="nav-item" href="#section-projects">Projects</a>
       <a class="nav-item" href="#section-experience">Experience</a>
+      <a class="nav-item" href="#section-certificates">Certificates</a>
       <a class="nav-item" href="#section-skills">Skills</a>
       <a class="nav-item" href="#section-contact">Contact me</a>
       <a class="nav-resume" href="https://raw.githubusercontent.com/rajumark/rajumark.github.io/master/source_information/Raju%20Shingadiya%20Android-Resume.pdf" target="_blank" rel="noopener noreferrer">
@@ -719,19 +811,24 @@
 
   <div class="content">
     <section id="section-about">
-      <div class="greeting">Hi, I'm Raju</div>
-      <div class="sub">Android developer with 8+ years of experience building production-grade mobile applications.</div>
-      <p class="about-text">I specialize in native Android development (Kotlin/Java), AOSP firmware customization, and Kotlin Multiplatform. Over the years I've shipped 20+ apps with over 500K cumulative downloads across finance, logistics, and consumer domains.</p>
-      <p class="about-text">Beyond standard app development, I have deep experience with system-level Android — custom ROMs, kiosk solutions, secure banking applications, and anti-reverse engineering techniques. I prefer clean architecture, modular code, and building systems that scale without unnecessary complexity.</p>
-      <ul class="highlights">
-        <li>20+ production Android apps shipped</li>
-        <li>500K+ total downloads</li>
-        <li>AOSP firmware from Android 11 to 15</li>
-        <li>Custom ROM & kiosk solutions</li>
-        <li>Secure banking & fintech apps</li>
-        <li>Anti-reverse engineering expertise</li>
-      </ul>
-      <div class="closing">Based in Ahmedabad, India — open to remote collaboration worldwide.</div>
+      <div class="about-wrap">
+        <img class="about-image" src="raju_profile_image.png" alt="Raju Shingadiya" loading="lazy">
+        <div class="about-content">
+          <div class="greeting">Hi, I'm Raju</div>
+          <div class="sub">Android developer with 8+ years of experience building production-grade mobile applications.</div>
+          <p class="about-text">I specialize in native Android development (Kotlin/Java), AOSP firmware customization, and Kotlin Multiplatform. Over the years I've shipped 20+ apps with over 500K cumulative downloads across finance, logistics, and consumer domains.</p>
+          <p class="about-text">Beyond standard app development, I have deep experience with system-level Android — custom ROMs, kiosk solutions, secure banking applications, and anti-reverse engineering techniques. I prefer clean architecture, modular code, and building systems that scale without unnecessary complexity.</p>
+          <ul class="highlights">
+            <li>20+ production Android apps shipped</li>
+            <li>500K+ total downloads</li>
+            <li>AOSP firmware from Android 11 to 15</li>
+            <li>Custom ROM & kiosk solutions</li>
+            <li>Secure banking & fintech apps</li>
+            <li>Anti-reverse engineering expertise</li>
+          </ul>
+          <div class="closing">Based in Ahmedabad, India — open to remote collaboration worldwide.</div>
+        </div>
+      </div>
     </section>
 
     <section id="section-projects">
@@ -860,6 +957,19 @@
             <div class="card-map">
               <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d14768.465615148247!2d70.7784111!3d22.27358!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x3959ca12788a78cd%3A0xfbf7de7dc8bd788f!2suBrain%20Studios%20Pvt.%20Ltd.!5e0!3m2!1sen!2sin!4v1782795460311!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
             </div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section id="section-certificates">
+      <div class="section-title">Certificates</div>
+      <div class="certs-grid">
+        <div class="cert-card">
+          <img class="cert-image" src="images/udemy_modern_android_certificate.jpg" alt="Udemy Modern Android Development Certificate" loading="lazy" onclick="openCertModal(this.src)">
+          <div class="cert-info">
+            <div class="cert-title">Modern Android App Development</div>
+            <div class="cert-issuer">Udemy</div>
           </div>
         </div>
       </div>
@@ -1022,6 +1132,10 @@
     </section>
   </div>
 
+  <div class="cert-modal" id="certModal" onclick="this.classList.remove('open')">
+    <img id="certModalImg" src="" alt="Certificate">
+  </div>
+
   <div class="modal-overlay" id="modal">
     <img src="raju_profile_image.png" alt="Raju Shingadiya">
     <div class="modal-chips">
@@ -1045,6 +1159,11 @@
   </div>
 
   <script>
+    function openCertModal(src) {
+      document.getElementById('certModalImg').src = src;
+      document.getElementById('certModal').classList.add('open');
+    }
+
     function openModal() {
       document.getElementById('modal').classList.add('open');
     }
@@ -1067,7 +1186,7 @@
         { icon: "images/apps_logo_screenshots/advancedentry.jpg", title: "Advanced Entry", link: "https://advancedentry.com/" }
       ],
       desktop: [
-        { icon: "images/apps_logo_screenshots/porpita.png", title: "Porpita", link: "https://rajumark.github.io/porpita/", badge: "984", hint: "984 Downloads" }
+        { icon: "images/apps_logo_screenshots/porpita.png", title: "Porpita", link: "https://rajumark.github.io/porpita/", badge: "984", hint: "984 Downloads", label: "Flutter", labelColor: "#02569B" }
       ],
       ai: [
         { icon: "images/apps_logo_screenshots/localchat.svg", title: "Local Chat", link: "https://github.com/rajumark/localchat", badge: "Open Source", hint: "Open Source Project" },
@@ -1085,6 +1204,7 @@
             ${app.badge ? `<span class="app-badge" title="${app.hint || app.badge}">${app.badge}</span>` : ''}
           </div>
           <span class="app-title">${app.title}</span>
+          ${app.label ? `<span class="app-label" style="--label-color:${app.labelColor || '#777'}">${app.label}</span>` : ''}
         </a>
       `).join('');
     }
