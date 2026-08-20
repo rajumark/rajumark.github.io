@@ -69,6 +69,10 @@
       color: #1a8a3f;
     }
 
+    @keyframes resume-glow {
+      0%, 100% { box-shadow: 0 0 4px rgba(255,255,255,0.3), 0 0 8px rgba(26,138,63,0.2); }
+      50% { box-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 16px rgba(26,138,63,0.4); }
+    }
     .nav-resume {
       display: inline-flex;
       align-items: center;
@@ -76,14 +80,20 @@
       padding: 8px 20px;
       background: #1a8a3f;
       color: #fff !important;
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 20px;
       font-family: Comfortaa, Arial, sans-serif;
       font-size: 13px;
       font-weight: 500;
       text-decoration: none;
+      animation: resume-glow 2s ease-in-out infinite;
       transition: opacity 0.2s;
     }
-    .nav-resume:hover { opacity: 0.85; }
+    .nav-resume:hover {
+      opacity: 0.9;
+      transform: translateY(2px);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(26,138,63,0.2);
+    }
     .nav-resume .indicator { display: none; }
 
     .nav-item .indicator {

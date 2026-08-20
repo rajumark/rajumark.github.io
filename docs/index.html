@@ -88,6 +88,10 @@
     }
     .nav-item:hover { color: #1a8a3f; }
 
+    @keyframes resume-glow {
+      0%, 100% { box-shadow: 0 0 4px rgba(255,255,255,0.3), 0 0 8px rgba(26,138,63,0.2); }
+      50% { box-shadow: 0 0 8px rgba(255,255,255,0.6), 0 0 16px rgba(26,138,63,0.4); }
+    }
     .nav-resume {
       display: inline-flex;
       align-items: center;
@@ -95,14 +99,20 @@
       padding: 8px 20px;
       background: #1a8a3f;
       color: #fff !important;
+      border: 1px solid rgba(255,255,255,0.3);
       border-radius: 20px;
       font-family: Comfortaa, Arial, sans-serif;
       font-size: 13px;
       font-weight: 500;
       text-decoration: none;
+      animation: resume-glow 2s ease-in-out infinite;
       transition: opacity 0.2s;
     }
-    .nav-resume:hover { opacity: 0.85; }
+    .nav-resume:hover {
+      opacity: 0.9;
+      transform: translateY(2px);
+      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(26,138,63,0.2);
+    }
 
     .modal-overlay {
       position: fixed;
@@ -441,6 +451,7 @@
     .dot-purple { background: #9B59B6; }
     .dot-yellow { background: #F1C40F; }
     .dot-beige { background: #C4B89A; }
+    .dot-blue { background: #3498DB; }
 
     .card {
       border-radius: 16px;
@@ -852,21 +863,46 @@
       <div class="cards-grid">
         <div class="timeline-line"></div>
         <div class="timeline-card">
+          <div class="timeline-dot dot-blue"></div>
+          <div class="card">
+            <div class="card-body">
+              <img class="card-logo" src="images/companies_logos/infocusp_logo.png" alt="Infocusp Innovations">
+              <div class="card-header">
+                <span class="card-role">Android Analyst - 2</span>
+                <span class="card-date">Sep 2025 - Present</span>
+              </div>
+              <div class="card-company">Infocusp Innovations</div>
+              <div class="card-location">Ahmedabad, Gujarat, India</div>
+              <ul class="card-points">
+                <li>Played a pivotal role in shaping agent behaviors and optimizing the AI pipeline for Android app generation</li>
+                <li>Built quality assessment datasets and automated evaluation frameworks to benchmark LLMs on Android development</li>
+                <li>Enhanced security, performance, and data flow for personal finance management app</li>
+              </ul>
+              <div class="card-links">
+                <a href="https://www.infocusp.com/" target="_blank">infocusp.com ↗</a>
+                <a href="https://www.google.com/maps/place/Infocusp+Innovations/@23.0312891,72.4649134,3a,75y,90t/data=!3m8!1e2!3m6!1sCIHM0ogKEICAgIDZzcSltAE!2e10!3e12!6shttps:%2F%2Flh3.googleusercontent.com%2Fgps-cs-s%2FAHRPTWkdjp6nsS_QCF5JNBkQVpCYlCIXnsgAGGKSM3AvR-9z-_Ng9XWnsv4URtvJNI-Q5svDCa-oPxN1ql43NE0lGcEfgntjmLlmEHeqb77Uv0Oa_hmFf0Hk24kzsMXeIF0zJFcZgwC7Ow%3Dw152-h86-k-no!7i4000!8i2252!4m7!3m6!1s0x395e9ba7fe4e03dd:0x3cce9121bdc08085!8m2!3d23.0311816!4d72.4647517!10e5!16s%2Fg%2F11cn8_ctmv?entry=ttu&g_ep=EgoyMDI2MDgxNi4wIKXMDSoASAFQAw%3D%3D" target="_blank"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M23 19a2 2 0 0 1-2 2H3a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h4l2-3h6l2 3h4a2 2 0 0 1 2 2z"/><circle cx="12" cy="13" r="4"/></svg> Photos</a>
+              </div>
+            </div>
+            <div class="card-map">
+              <iframe src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d3672.316454007479!2d72.4647517!3d23.0311816!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x395e9ba7fe4e03dd%3A0x3cce9121bdc08085!2sInfocusp%20Innovations!5e0!3m2!1sen!2sin!4v1782795778135!5m2!1sen!2sin" loading="lazy" referrerpolicy="strict-origin-when-cross-origin"></iframe>
+            </div>
+          </div>
+        </div>
+        <div class="timeline-card">
           <div class="timeline-dot dot-green"></div>
           <div class="card">
             <div class="card-body">
               <img class="card-logo" src="images/companies_logos/evincedev_logo.jpg" alt="Evince Development">
               <div class="card-header">
-                <span class="card-role">Lead Android Developer</span>
-                <span class="card-date">Jan 2023 - Present</span>
+                <span class="card-role">Android Developer</span>
+                <span class="card-date">Jan 2023 - Aug 2025</span>
               </div>
               <div class="card-company">Evince Development (CMMI Level 3 Certified)</div>
-              <div class="card-location">Ahmedabad, Gujarat</div>
+              <div class="card-location">Ahmedabad, Gujarat, India</div>
               <ul class="card-points">
-                <li>Delivered 20 AOSP Android apps, 2 firmware builds, and 4 custom kiosk device solutions</li>
-                <li>Handled all client communication to ensure smooth project execution</li>
-                <li>Developed cross-platform UI with Kotlin Multiplatform & Compose UI</li>
-                <li>Managed a 2-person team across multiple parallel projects</li>
+                <li>Engineered an Android LLM evaluation pipeline to benchmark model capabilities</li>
+                <li>Enhanced security, navigation, and user experience for the personal finance app</li>
+                <li>Optimized an AI vibe-coding platform, boosting app quality and system stability by resolving key bugs</li>
               </ul>
               <div class="card-links">
                 <a href="https://evincedev.com/" target="_blank">evincedev.com ↗</a>
