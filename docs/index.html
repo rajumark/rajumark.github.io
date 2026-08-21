@@ -106,12 +106,13 @@
       font-weight: 500;
       text-decoration: none;
       animation: resume-glow 2s ease-in-out infinite;
-      transition: opacity 0.2s;
+      transition: transform 0.15s cubic-bezier(0.25, 0.46, 0.45, 0.94), box-shadow 0.3s ease;
+      cursor: pointer;
+      position: relative;
+      will-change: transform;
     }
     .nav-resume:hover {
-      opacity: 0.9;
-      transform: translateY(2px);
-      box-shadow: inset 0 2px 4px rgba(0,0,0,0.3), 0 1px 2px rgba(26,138,63,0.2);
+      box-shadow: 0 0 30px rgba(26,138,63,0.8), 0 0 60px rgba(26,138,63,0.4);
     }
 
     .modal-overlay {
@@ -1313,8 +1314,23 @@
 
     (function() {
       const el = document.getElementById('custom-cursor');
+      const resumeBtn = document.querySelector('.nav-resume');
       let prevX = 0, shown = false;
+      let mouseX = 0, mouseY = 0;
+      let btnCenterX = 0, btnCenterY = 0;
+      let isHovering = false;
+
+      function updateBtnCenter() {
+        if (!resumeBtn) return;
+        const rect = resumeBtn.getBoundingClientRect();
+        btnCenterX = rect.left + rect.width / 2;
+        btnCenterY = rect.top + rect.height / 2;
+      }
+
       document.addEventListener('mousemove', e => {
+        mouseX = e.clientX;
+        mouseY = e.clientY;
+
         if (!shown) { el.style.opacity = '1'; shown = true; }
         el.style.left = (e.clientX - 16) + 'px';
         el.style.top = (e.clientY - 16) + 'px';
@@ -1323,7 +1339,30 @@
           el.style.transform = dx < 0 ? 'rotate(-90deg)' : 'rotate(0deg)';
         }
         prevX = e.clientX;
+
+        if (!resumeBtn) return;
+        updateBtnCenter();
+        const dist = Math.sqrt((e.clientX - btnCenterX) ** 2 + (e.clientY - btnCenterY) ** 2);
+
+        if (dist < 150) {
+          isHovering = true;
+          const angle = Math.atan2(e.clientY - btnCenterY, e.clientX - btnCenterX);
+          const pull = Math.min((150 - dist) / 150, 1) * 15;
+          const moveX = Math.cos(angle) * pull;
+          const moveY = Math.sin(angle) * pull;
+          resumeBtn.style.transform = `translate(${moveX}px, ${moveY}px)`;
+        } else if (isHovering) {
+          isHovering = false;
+          resumeBtn.style.transform = 'translate(0, 0)';
+        }
       });
+
+      if (resumeBtn) {
+        resumeBtn.addEventListener('mouseleave', () => {
+          resumeBtn.style.transform = 'translate(0, 0)';
+          isHovering = false;
+        });
+      }
     })();
   </script>
 </body>
