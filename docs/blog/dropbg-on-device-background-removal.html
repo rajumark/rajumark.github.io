@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>DropBG — background removal without the upload — Raju Shingadiya</title>
+  <meta name="description" content="DropBG runs RMBG-1.4 through ONNX Runtime with XNNPACK on Android. A 42 MB model, 1-2 seconds per image, and your pictures never leave the device.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="DropBG, background removal, RMBG-1.4, ONNX Runtime, XNNPACK, Android, on-device AI, alpha matting, Jetpack Compose">
+  <link rel="canonical" href="https://rajumark.github.io/blog/dropbg-on-device-background-removal.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="DropBG — on-device background removal for Android">
+  <meta property="og:description" content="DropBG runs RMBG-1.4 through ONNX Runtime with XNNPACK on Android. A 42 MB model, 1-2 seconds per image, and your pictures never leave the device.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/dropbg-on-device-background-removal.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/dropbg-after.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="DropBG — on-device background removal for Android">
+  <meta name="twitter:description" content="DropBG runs RMBG-1.4 through ONNX Runtime with XNNPACK on Android. A 42 MB model, 1-2 seconds per image, and your pictures never leave the device.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/dropbg-after.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "DropBG: cutting out backgrounds without sending anyone your photos",
+    "description": "DropBG runs RMBG-1.4 through ONNX Runtime with XNNPACK on Android. A 42 MB model, 1-2 seconds per image, and your pictures never leave the device.",
+    "image": "https://rajumark.github.io/blog/images/dropbg-after.jpg",
+    "datePublished": "2026-05-16",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/dropbg-on-device-background-removal.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">16 May 2026 · 9 min read</div>
+        <h1>DropBG: cutting out backgrounds without sending anyone your photos</h1>
+        <p class="post-standfirst">Every background remover wants your image on their server and your card on file. This one is 42 MB, runs on the phone in about a second, and costs nothing.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/dropbg-after.jpg" alt="A subject cleanly cut out from its background by DropBG" loading="eager">
+        <figcaption>RMBG-1.4 output, generated on-device in roughly a second</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/DropBG" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/DropBG/blob/main/app/src/main/java/raju/shingadiya/dropbg/inference/BackgroundRemover.kt" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          The inference engine
+        </a>
+      </div>
+
+      <p>Background removal is one of those tasks that got quietly good a couple of years ago and then got quietly monetised. The tools that work well are web services: upload, wait, get a watermarked preview, pay to download it at full resolution. The free ones cap you at a few images a day.</p>
+
+      <p>None of that is a technical necessity. The models that do this are small. <a href="https://huggingface.co/briaai/RMBG-1.4" target="_blank" rel="noopener noreferrer">RMBG-1.4</a> quantised to ONNX is 42 MB &mdash; smaller than most games' splash screen assets. It runs on a phone CPU in about a second. The upload step exists because it's where the business model lives, not because the phone can't do it.</p>
+
+      <p>So DropBG does it on the phone.</p>
+
+      <div class="compare">
+        <figure>
+          <img src="images/dropbg-before.jpg" alt="Original photograph with its background intact" loading="lazy">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="images/dropbg-after.jpg" alt="The same photograph with the background removed to transparency" loading="lazy">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+
+      <h2>The numbers</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>Model (quantised ONNX)</td><td>42 MB</td></tr>
+            <tr><td>Model load, cold</td><td>~1&ndash;3 s</td></tr>
+            <tr><td>Inference at 1024&times;1024</td><td>~1&ndash;2 s</td></tr>
+            <tr><td>APK (debug)</td><td>88 MB</td></tr>
+            <tr><td>Minimum</td><td>Android 8.0, API 26</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>That's on a mid-range arm64 device. Compared to Footprints &mdash; my 507 MB language model experiment &mdash; this one is almost polite.</p>
+
+      <h2>How it works</h2>
+
+      <p>The model is a segmentation network. It takes an image and returns a single-channel mask: for every pixel, how confident it is that the pixel belongs to the foreground. Everything else is plumbing.</p>
+
+      <p><a href="https://github.com/rajumark/DropBG/blob/main/app/src/main/java/raju/shingadiya/dropbg/inference/BackgroundRemover.kt" target="_blank" rel="noopener noreferrer"><code>BackgroundRemover.kt</code></a> does this:</p>
+
+      <ol>
+        <li>Decode the picked image, then <strong>fix its EXIF orientation</strong> (more on that below).</li>
+        <li>Resize to 1024&times;1024 and normalise each channel to roughly <code>-0.5..0.5</code>, laid out as a planar <code>1&times;3&times;1024&times;1024</code> tensor.</li>
+        <li>Run it through <a href="https://onnxruntime.ai" target="_blank" rel="noopener noreferrer">ONNX Runtime</a> with 4 intra-op threads.</li>
+        <li>Normalise the raw output to <code>0..255</code> and build a greyscale mask bitmap.</li>
+        <li>Scale the mask back up to the photo's real dimensions.</li>
+        <li>Draw the original, then composite the mask with <code>PorterDuff.Mode.DST_IN</code>.</li>
+      </ol>
+
+      <p>That last step is the neat one and it's pure Android, no ML involved. <code>DST_IN</code> keeps the destination pixels only where the source has alpha &mdash; so drawing a greyscale mask over the photo in that mode punches the background out to transparency in a single hardware-accelerated canvas operation. No per-pixel alpha loop. The graphics stack has done this since forever; it just isn't the first tool people reach for.</p>
+
+      <div class="callout">
+        <p><strong>Why the mask is normalised rather than thresholded.</strong> The model's raw output isn't bounded, so the engine finds the min and max and rescales into <code>0..255</code>. That keeps the intermediate values instead of forcing every pixel to fully-in or fully-out &mdash; which is what gives you soft edges on hair and fur rather than a cardboard cutout.</p>
+      </div>
+
+      <h3>EXIF orientation, the bug that gets everyone</h3>
+
+      <p>Phone cameras frequently store the sensor image unrotated and record the intended rotation in an EXIF tag. <code>BitmapFactory.decodeStream</code> ignores that tag entirely.</p>
+
+      <p>So without correction, a portrait photo arrives sideways. The model then does its job perfectly on a sideways image, and you get a beautifully segmented result that's rotated 90 degrees. It looks like a model failure and it isn't one.</p>
+
+      <p><code>correctOrientation()</code> reads the tag and applies a <code>Matrix</code> before anything else touches the bitmap &mdash; all eight cases, including the flips and transposes nobody remembers exist. Boring code, and the difference between a working app and a confusing one.</p>
+
+      <h2>The app</h2>
+
+      <div class="shots">
+        <figure>
+          <img src="images/dropbg-screen-idle.jpg" alt="DropBG idle screen prompting for an image" loading="lazy">
+          <figcaption>Pick an image</figcaption>
+        </figure>
+        <figure>
+          <img src="images/dropbg-screen-result.jpg" alt="DropBG result screen showing the cutout" loading="lazy">
+          <figcaption>Result, with before/after toggle</figcaption>
+        </figure>
+        <figure>
+          <img src="images/dropbg-screen-home-history.jpg" alt="DropBG history of previously processed images" loading="lazy">
+          <figcaption>History</figcaption>
+        </figure>
+      </div>
+
+      <p>A <code>sealed class UiState</code> drives everything &mdash; Idle, ImageSelected, Processing, Done, Error &mdash; which means the UI can't get into a state the ViewModel didn't intend. For an app whose core action is a slow async operation that can fail, making the states explicit and exhaustive was worth more than any other structural decision.</p>
+
+      <p>The before/after toggle is instant because both bitmaps are already in memory. Save writes to the gallery, share opens the system sheet. That's it.</p>
+
+      <h2>What it's bad at</h2>
+
+      <p>Fine hair against a busy background still produces halos. Semi-transparent objects &mdash; glass, smoke, veils &mdash; confuse it, because the model outputs one confidence value per pixel and genuine transparency isn't really representable that way. Very small subjects lose detail to the 1024&times;1024 downscale.</p>
+
+      <p>The cloud tools are better at these edge cases, and they're better because they run much larger models on much larger hardware. I'm not going to pretend otherwise. What I'll claim is that for the ordinary case &mdash; a person, a product, a pet, reasonably lit &mdash; the difference is small enough that the privacy and the zero cost win comfortably.</p>
+
+      <h2>The wider point</h2>
+
+      <p>DropBG took a weekend, and most of that was UI. The model already existed, ONNX Runtime already runs on Android, and the compositing is a stock canvas call.</p>
+
+      <p>That's the part worth noticing. A whole category of paid web service is, technically, a 42 MB file and a few hundred lines of Kotlin. The infrastructure isn't the hard part any more &mdash; it hasn't been for a while.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/DropBG" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Doing on-device image work and hitting something odd? <a href="../index.html#section-contact">Get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

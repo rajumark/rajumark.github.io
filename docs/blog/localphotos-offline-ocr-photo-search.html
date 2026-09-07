@@ -1,0 +1,202 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalPhotos — searching your photos by the text inside them — Raju Shingadiya</title>
+  <meta name="description" content="LocalPhotos runs ML Kit OCR across your gallery and indexes the results in a Room FTS4 table, so you can find a screenshot by typing what it said. No uploads.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="LocalPhotos, OCR, ML Kit Text Recognition, Room FTS4, full-text search, Android, Jetpack Compose, offline, Paging 3, Koin">
+  <link rel="canonical" href="https://rajumark.github.io/blog/localphotos-offline-ocr-photo-search.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LocalPhotos — offline OCR photo search for Android">
+  <meta property="og:description" content="LocalPhotos runs ML Kit OCR across your gallery and indexes the results in a Room FTS4 table, so you can find a screenshot by typing what it said. No uploads.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/localphotos-offline-ocr-photo-search.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/localphotos-1.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LocalPhotos — offline OCR photo search for Android">
+  <meta name="twitter:description" content="LocalPhotos runs ML Kit OCR across your gallery and indexes the results in a Room FTS4 table, so you can find a screenshot by typing what it said. No uploads.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/localphotos-1.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "LocalPhotos: searching pictures by the words inside them, offline",
+    "description": "LocalPhotos runs ML Kit OCR across your gallery and indexes the results in a Room FTS4 table, so you can find a screenshot by typing what it said. No uploads.",
+    "image": "https://rajumark.github.io/blog/images/localphotos-1.jpg",
+    "datePublished": "2026-04-18",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/localphotos-offline-ocr-photo-search.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">18 April 2026 · 8 min read</div>
+        <h1>LocalPhotos: searching pictures by the words inside them, offline</h1>
+        <p class="post-standfirst">I knew I had screenshotted that address. I could not find it. Scrolling through four thousand photos is not a search feature.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/localphotos-1.jpg" alt="LocalPhotos showing a grid of photos with a text search bar" loading="eager">
+        <figcaption>Every photo indexed by the text inside it, on-device</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localphotos" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <p>My camera roll is mostly screenshots. Addresses, order numbers, WiFi passwords, a recipe someone posted, a bank reference, the seat number on a ticket. I screenshot things instead of writing them down, and then I lose them, because a gallery sorts by date and I have no idea what date it was.</p>
+
+      <p>Google Photos solves this &mdash; it reads the text in your images and lets you search it. It also means your entire photo library lives on someone else's disk, indexed and machine-readable.</p>
+
+      <p>The capability doesn't require the upload. <a href="https://developers.google.com/ml-kit/vision/text-recognition/v2" target="_blank" rel="noopener noreferrer">ML Kit Text Recognition v2</a> runs on the device. So LocalPhotos does the same thing with nothing leaving the phone.</p>
+
+      <h2>What it does</h2>
+
+      <p>It walks your gallery, runs OCR on each image, stores the extracted text in a local database, and gives you a search box. Type "chicken" and you get the recipe screenshot. Type a street name and you get the map you saved eight months ago.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/localphotos-1.jpg" alt="LocalPhotos search screen with photo grid" loading="lazy">
+          <figcaption>Search by text content</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localphotos-2.jpg" alt="LocalPhotos filtered results" loading="lazy">
+          <figcaption>Filter to photos with text</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localphotos-3.jpg" alt="LocalPhotos full screen viewer showing extracted text" loading="lazy">
+          <figcaption>Full screen, with the text it found</figcaption>
+        </figure>
+      </div>
+
+      <p>There's a "With text" filter, because a surprising fraction of any gallery is photos with no words in them at all and hiding those makes the grid much more useful. Favourites, a full-screen viewer that shows you exactly what the OCR extracted, and automatic detection of new photos so the index stays current.</p>
+
+      <h2>The interesting part is the database</h2>
+
+      <p>OCR is the easy half &mdash; ML Kit does it and it's genuinely good. The half that decides whether the app is usable is search.</p>
+
+      <p>A naive implementation stores the text in a column and runs <code>LIKE '%query%'</code>. That works at a hundred photos and falls over at a few thousand, because every search is a full table scan over a lot of text.</p>
+
+      <p>LocalPhotos uses <a href="https://developer.android.com/reference/androidx/room/Fts4" target="_blank" rel="noopener noreferrer">Room with FTS4</a> &mdash; SQLite's full-text search. It builds an inverted index: instead of storing text and scanning it, it stores which words appear in which rows. Searching becomes a lookup rather than a scan, and stays fast as the library grows.</p>
+
+      <div class="callout">
+        <p><strong>Why this matters more than it sounds.</strong> The whole value of the app is typing a word and getting an answer immediately. A search that takes two seconds feels broken even when it returns the right result &mdash; you stop trusting it and go back to scrolling. FTS4 is a one-line annotation in Room and it's the difference between a demo and something I actually use.</p>
+      </div>
+
+      <h2>Not melting the phone</h2>
+
+      <p>The unglamorous problem: OCR on a few thousand photos is a lot of work, and if you do it naively the app freezes, the battery drains, and Android kills you.</p>
+
+      <p>So indexing is batched &mdash; one or two images at a time &mdash; rather than dispatched all at once. It's slower in wall-clock terms and completely invisible to the user, which is the correct trade. The UI stays responsive, you can search whatever has been indexed so far, and the rest fills in behind you.</p>
+
+      <p>Thumbnails are cached separately, so the grid scrolls at full speed regardless of what the indexer is doing.</p>
+
+      <h2>The stack</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Concern</th><th>Choice</th></tr></thead>
+          <tbody>
+            <tr><td>OCR</td><td>ML Kit Text Recognition v2, on-device</td></tr>
+            <tr><td>Storage &amp; search</td><td>Room with FTS4</td></tr>
+            <tr><td>UI</td><td>Jetpack Compose, Material 3</td></tr>
+            <tr><td>Images</td><td>Coil</td></tr>
+            <tr><td>Lists</td><td>Paging 3</td></tr>
+            <tr><td>DI</td><td>Koin</td></tr>
+            <tr><td>Architecture</td><td>MVVM with a repository layer</td></tr>
+            <tr><td>Minimum</td><td>Android 8.0, API 26</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Paging 3 rather than loading the gallery into a list, because a gallery is exactly the case it was designed for &mdash; you cannot hold thousands of photo records and their thumbnails in memory and expect to survive.</p>
+
+      <h2>What it gets wrong</h2>
+
+      <p>OCR quality is the ceiling. Clean screenshots are near-perfect; handwriting, stylised fonts, low light and heavy skew are much weaker. The app is only as good as what ML Kit reads, and when the text comes back garbled the search simply can't find it.</p>
+
+      <p>The first index of a large gallery takes a while. That's inherent &mdash; it's genuinely doing OCR on every image &mdash; but it means the app is least impressive in the first ten minutes, which is exactly when someone decides whether to keep it.</p>
+
+      <p>It also only indexes what the gallery exposes. Images inside other apps' private storage are invisible to it, which is Android working correctly, but it means the odd screenshot saved somewhere unusual won't show up.</p>
+
+      <h2>Why build it</h2>
+
+      <p>Because the feature is good and the price shouldn't be your entire photo library. On-device OCR is fast, free and built into the platform. The only thing the cloud version adds is the cloud.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localphotos" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Got a gallery full of screenshots you can never find? <a href="../index.html#section-contact">Say hello</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

@@ -1,0 +1,197 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalDocuments — a document scanner with no camera permission — Raju Shingadiya</title>
+  <meta name="description" content="LocalDocuments uses the ML Kit Document Scanner API to scan, clean and export documents to PDF - without the app ever requesting the camera permission.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="LocalDocuments, document scanner, ML Kit Document Scanner API, Android, PDF, Jetpack Compose, Kotlin, privacy, no camera permission">
+  <link rel="canonical" href="https://rajumark.github.io/blog/localdocuments-android-document-scanner.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LocalDocuments — an Android document scanner needing no camera permission">
+  <meta property="og:description" content="LocalDocuments uses the ML Kit Document Scanner API to scan, clean and export documents to PDF - without the app ever requesting the camera permission.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/localdocuments-android-document-scanner.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/localdocuments-1.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LocalDocuments — an Android document scanner needing no camera permission">
+  <meta name="twitter:description" content="LocalDocuments uses the ML Kit Document Scanner API to scan, clean and export documents to PDF - without the app ever requesting the camera permission.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/localdocuments-1.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "LocalDocuments: a scanner app that never asks for your camera",
+    "description": "LocalDocuments uses the ML Kit Document Scanner API to scan, clean and export documents to PDF - without the app ever requesting the camera permission.",
+    "image": "https://rajumark.github.io/blog/images/localdocuments-1.jpg",
+    "datePublished": "2026-03-22",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/localdocuments-android-document-scanner.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">22 March 2026 · 7 min read</div>
+        <h1>LocalDocuments: a scanner app that never asks for your camera</h1>
+        <p class="post-standfirst">Scanner apps are a notorious category &mdash; free, ad-stuffed, and quietly holding the camera permission plus your documents. This one holds neither.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/localdocuments-1.jpg" alt="LocalDocuments scanning interface on Android" loading="eager">
+        <figcaption>Edge detection, cleanup and PDF export &mdash; with an empty permission list</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localdocuments" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/localdocuments/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Releases
+        </a>
+      </div>
+
+      <p>Document scanner apps are one of the worst neighbourhoods on the Play Store. The category is full of free apps stacked with ads, watermarks on the free tier, subscriptions to remove them, and a permission list that includes the camera, storage, and often a good deal more. You're scanning your passport, your tenancy agreement, your medical forms &mdash; and handing an unknown developer camera access to do it.</p>
+
+      <p>LocalDocuments came out of a specific realisation: <strong>you don't need the camera permission to build a scanner</strong>.</p>
+
+      <div class="callout">
+        <p><strong>How that works.</strong> The <a href="https://developers.google.com/ml-kit/vision/doc-scanner" target="_blank" rel="noopener noreferrer">ML Kit Document Scanner API</a> doesn't give you a camera feed to draw. It hands the whole capture flow to Google Play Services, which runs the camera in <em>its own</em> process, does the edge detection and cleanup there, and returns finished images to your app. The camera is never opened by your code, so your app never needs the permission. You get the scans; you never get the camera.</p>
+      </div>
+
+      <p>That's an unusually clean privacy property. It isn't a promise in a policy document &mdash; the app genuinely cannot look through the lens, because the API is structured so it never has to.</p>
+
+      <h2>What it does</h2>
+
+      <p>Point it at a document. It detects the edges automatically, captures when the framing is right, corrects the perspective and rotation, and lets you clean the result up &mdash; filters, shadow removal, and ML Kit's rather good "erase stains and fingers" pass that takes out the thumb holding the page down.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/localdocuments-1.jpg" alt="LocalDocuments capture screen with edge detection" loading="lazy">
+          <figcaption>Capture with edge detection</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localdocuments-2.jpg" alt="LocalDocuments editing and filter screen" loading="lazy">
+          <figcaption>Clean up and filter</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localdocuments-3.jpg" alt="LocalDocuments document list with exported files" loading="lazy">
+          <figcaption>Multi-page, exported as PDF</figcaption>
+        </figure>
+      </div>
+
+      <p>Multi-page scanning with a configurable page limit, import from the gallery for photos you already took, and export to JPEG or a multi-page PDF. No watermark, no page cap, no subscription.</p>
+
+      <h2>The stack</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Concern</th><th>Choice</th></tr></thead>
+          <tbody>
+            <tr><td>Scanning</td><td>ML Kit Document Scanner API 16.0.0-beta1</td></tr>
+            <tr><td>Language</td><td>Kotlin 2.0.21</td></tr>
+            <tr><td>UI</td><td>Jetpack Compose, Material 3</td></tr>
+            <tr><td>Images</td><td>Coil 2.7.0</td></tr>
+            <tr><td>Architecture</td><td>Single activity, ViewModel + StateFlow</td></tr>
+            <tr><td>Build</td><td>Gradle 8.12, AGP 8.7.3</td></tr>
+            <tr><td>Minimum</td><td>Android 8.0 (API 26), targets 35</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The app itself is small, and that's the point. Almost all the difficult work &mdash; the edge detection, the perspective correction, the shadow and blemish removal &mdash; happens inside Play Services. My code launches the scanner, receives the results, and handles the library and export.</p>
+
+      <p>Writing less code was the correct engineering decision here. A hand-rolled scanner would mean CameraX, my own edge detection, my own perspective transform, and a permission I didn't want &mdash; to end up worse than the thing already on the device.</p>
+
+      <h2>The trade-offs, plainly</h2>
+
+      <p><strong>It requires Google Play Services.</strong> This is the real cost. No Play Services &mdash; a de-Googled ROM, some devices outside the Play ecosystem &mdash; and the app cannot work at all, because the entire scanning capability lives there. For a project whose pitch is user autonomy, depending on a Google component is a genuine tension and I'm not going to paper over it.</p>
+
+      <p><strong>Models download on demand.</strong> Play Services pulls the scanner models and caches them locally, so the very first scan may need a connection even though every scan after it doesn't.</p>
+
+      <p><strong>It needs about 1.7 GB of RAM.</strong> That rules out the low end.</p>
+
+      <p><strong>The API is still beta.</strong> <code>16.0.0-beta1</code> means the surface can change.</p>
+
+      <p>What I'd say in its defence: the alternative isn't a perfect independent scanner, it's one of the ad-supported apps that wants the camera and uploads your documents. Against that, a thin wrapper over a component already on the device &mdash; one that keeps images local and needs no permissions &mdash; is a straightforwardly better deal.</p>
+
+      <h2>The general lesson</h2>
+
+      <p>The thing I took from this project is that <strong>permissions are often a design choice, not a requirement</strong>. It's easy to reach for <code>CAMERA</code> because scanning obviously involves a camera. But the platform offered a route where the capture happens somewhere else and I only receive the result &mdash; and that route removed the permission entirely.</p>
+
+      <p>Worth asking on any feature that seems to demand a scary permission: is there a system component that will do the sensitive part for me and hand back only what I actually need?</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localdocuments" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Know a permission that could be designed away like this? <a href="../index.html#section-contact">I&rsquo;d like to hear it</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

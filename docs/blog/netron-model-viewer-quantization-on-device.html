@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Netron for quantization and on-device models — Raju Shingadiya</title>
+  <meta name="description" content="What Netron is, and how I use it to check quantization, tensor dtypes, scale and zero-point, and delegate compatibility before shipping a model into an Android app.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Netron, model viewer, TFLite, LiteRT, quantization, int8, ONNX, ExecuTorch, GGUF, on-device ML, Android, NNAPI, delegate">
+  <link rel="canonical" href="https://rajumark.github.io/blog/netron-model-viewer-quantization-on-device.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Netron for quantization and on-device model work">
+  <meta property="og:description" content="How I use Netron to verify quantization, tensor dtypes and delegate compatibility before a model ships into an Android app.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/netron-model-viewer-quantization-on-device.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/netron-hero.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Netron for quantization and on-device model work">
+  <meta name="twitter:description" content="Verifying quantization and delegate compatibility before shipping a model on device.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/netron-hero.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Netron: the model viewer I open before every on-device deployment",
+    "description": "Using Netron to inspect quantization, tensor dtypes, scale and zero-point, and delegate compatibility for on-device models.",
+    "image": "https://rajumark.github.io/blog/images/netron-hero.jpg",
+    "datePublished": "2026-08-08",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/netron-model-viewer-quantization-on-device.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">8 August 2026 · 10 min read</div>
+        <h1>Netron: the model viewer I open before every on-device deployment</h1>
+        <p class="post-standfirst">A quantized model that loads without an error is not the same as a quantized model that's actually quantized. Netron is how I check.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/netron-hero.jpg" alt="A circuit board pattern forming the shape of a brain" loading="eager">
+        <figcaption>Photo by Steve A Johnson on <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer">Unsplash</a></figcaption>
+      </figure>
+
+      <p>The first time I shipped an on-device model into an Android app, I did everything the guide told me to. Ran post-training quantization, got a <code>.tflite</code> file that was roughly a quarter the size of the original, dropped it in <code>assets/</code>, wired up the interpreter, and it worked. Inference time barely moved. I spent two days assuming the phone was thermally throttling.</p>
+
+      <p>It wasn't. Half the graph had silently stayed in float32, because a couple of ops in the middle didn't have integer kernels and the converter had quietly inserted quantize/dequantize pairs around them. Nothing failed. Nothing warned me. The file was smaller and the compute was the same.</p>
+
+      <p>I found it by opening the model in <a href="https://github.com/lutzroeder/netron" target="_blank" rel="noopener noreferrer">Netron</a> and looking at it. Ten minutes. Since then it's the first thing I do with any model that's going on a device.</p>
+
+      <h2>What Netron is</h2>
+
+      <p>Netron is a viewer for neural network and machine learning models, written by Lutz Roeder. You give it a model file, it renders the graph — every node, every tensor, every attribute — and lets you click through it.</p>
+
+      <p>That's it. It doesn't train, convert, optimise or run anything. It's a read-only window into a binary you'd otherwise be treating as a black box, and that turns out to be enormously useful when the thing you're debugging is the model itself rather than your code around it.</p>
+
+      <p>The format coverage is what makes it practical. It handles ONNX, TensorFlow Lite, PyTorch, torch.export, ExecuTorch, TorchScript, TensorFlow, Core ML, OpenVINO, Keras, Caffe, Darknet, Safetensors and NumPy, with experimental support for MLIR, JAX, GGUF, RKNN, ncnn, MNN, PaddlePaddle and scikit-learn.</p>
+
+      <p>For on-device work that list is almost exactly the set of formats you touch. TFLite and ExecuTorch for Android, Core ML for iOS, ONNX as the interchange format everything passes through, GGUF if you're putting an LLM on the phone, and ncnn / MNN / RKNN if you're on a vendor runtime.</p>
+
+      <h2>Getting it running</h2>
+
+      <p>Four ways, and I use three of them regularly.</p>
+
+      <p><strong>Browser</strong> — <a href="https://netron.app" target="_blank" rel="noopener noreferrer">netron.app</a>. Drag the file in. Fastest option for something quick. I don't use it for client models on principle, and neither should you if the model isn't yours to share.</p>
+
+      <p><strong>Desktop app</strong> — what I actually use day to day:</p>
+
+      <pre><code># macOS
+brew install --cask netron
+
+# Windows
+winget install -s winget netron</code></pre>
+
+      <p>Linux gets a <code>.deb</code> or <code>.rpm</code> from the releases page.</p>
+
+      <p><strong>Python</strong> — this is the one worth knowing about, because it hooks into a conversion script:</p>
+
+      <pre><code>pip install netron
+
+# from the shell
+netron model.tflite</code></pre>
+
+      <p>Or from inside the script that just produced the model:</p>
+
+      <pre><code>import netron
+netron.start('model_int8.tflite')</code></pre>
+
+      <p>I put that behind a flag at the end of my conversion pipeline. Convert, then look at what came out, immediately, before it gets committed. Catching a bad conversion at the moment it happens is much cheaper than catching it after the APK is built.</p>
+
+      <figure>
+        <img src="images/netron-code.jpg" alt="Colourful source code filling a computer screen at an angle" loading="lazy">
+        <figcaption>Photo by Ali Shah Lakhani on <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer">Unsplash</a></figcaption>
+      </figure>
+
+      <h2>Where it earns its keep: quantization</h2>
+
+      <p>This is the whole reason I care about the tool.</p>
+
+      <p>Quantization is a lossy transformation applied by a converter that makes a lot of decisions on your behalf and reports almost none of them. You hand it a float model and a representative dataset, it hands you back a file. Whether that file is actually integer end to end, what the ranges look like, whether ops got fused the way you expected — none of that is in the output log. It's in the graph.</p>
+
+      <h3>Is the model actually quantized</h3>
+
+      <p>Click any tensor in Netron and the properties panel shows its type. In a properly full-integer TFLite model, the weights and activations show as <code>int8</code> or <code>uint8</code>, and the quantization parameters — <strong>scale</strong> and <strong>zero point</strong> — are listed alongside them.</p>
+
+      <p>What you're looking for is what I missed the first time: a run of <code>QUANTIZE</code> and <code>DEQUANTIZE</code> nodes sitting in the middle of the graph. Every one of those is a conversion back to float and out again, which means the op between them is running in float, which means you paid the accuracy cost of quantization and got none of the speed.</p>
+
+      <p>A handful at the input and output boundary is normal and expected. A cluster in the middle of your backbone is a bug.</p>
+
+      <h3>Reading scale and zero point</h3>
+
+      <p>These two numbers are how an int8 value maps back to a real one:</p>
+
+      <pre><code>real_value = (int8_value - zero_point) * scale</code></pre>
+
+      <p>Netron shows them per tensor, and for weights it'll show per-channel scales where the converter used them. Two things I check:</p>
+
+      <ul>
+        <li><strong>The input and output tensors.</strong> You need these exact numbers in your Android code to feed the interpreter correctly. Getting them from the model file rather than hardcoding what you think they are has saved me from a very stupid class of bug — where the model is fine and the preprocessing is silently wrong, so accuracy is bad but not obviously broken.</li>
+        <li><strong>Absurd scale values.</strong> If a layer's scale is enormous relative to its neighbours, the calibration dataset probably didn't represent that layer's real activation range. That's usually the layer where accuracy is dying.</li>
+      </ul>
+
+      <div class="callout">
+        <p><strong>Per-tensor vs per-channel matters.</strong> Weight quantization per output channel keeps far more accuracy than a single scale across the whole tensor, especially for depthwise convolutions. Netron shows you which one you got. If you asked for per-channel and see one scale value, your converter didn't do what you asked.</p>
+      </div>
+
+      <h3>Did the fusion happen</h3>
+
+      <p>Conversion is supposed to fold BatchNorm into the preceding convolution and fuse activations into the op. When it works, you see a single <code>CONV_2D</code> node with <code>fused_activation_function: RELU6</code> in its attributes. When it doesn't, you see conv, then a separate mul, then an add, then a relu — four dispatches where there should be one.</p>
+
+      <p>This usually means something upstream in the export was unusual. It's a five-second check in Netron and a long afternoon to discover by profiling.</p>
+
+      <h2>Where it earns its keep: getting a model onto a device</h2>
+
+      <h3>Knowing your input and output signature</h3>
+
+      <p>Before I write a single line of inference code I open the model and note down, for every input and output: name, shape, dtype, and quantization params.</p>
+
+      <p>NHWC or NCHW. Whether the batch dimension is 1 or dynamic. Whether the model expects <code>[0,255]</code> uint8 or normalised float. How many outputs there actually are and in what order — detection models in particular often have four output tensors and the ordering is not always what the docs claim.</p>
+
+      <p>Reading it off the graph takes two minutes and removes all the guesswork from the Kotlin side.</p>
+
+      <h3>Checking delegate and accelerator compatibility</h3>
+
+      <p>This is the one that most directly affects whether your model runs fast on a phone. GPU delegates, NNAPI, NPU runtimes — they all support a subset of operators, and anything outside that subset falls back to CPU.</p>
+
+      <p>The fallback isn't just slower. If the unsupported op sits in the middle of the graph, execution has to bounce off the accelerator, run on CPU, and come back, and the transfer cost can make the whole thing slower than pure CPU would have been.</p>
+
+      <p>So I list the operators in the graph and compare against the delegate's supported set. If there's one odd op — a custom layer, an exotic resize mode, a <code>gather</code> nobody needed — it's often possible to replace it at the model level and unlock the accelerator for the entire network. Netron is how you find that op.</p>
+
+      <h3>Sizing before shipping</h3>
+
+      <p>The properties panel shows weight tensor shapes and types, which tells you where the file size actually lives. Nine times out of ten it's one or two large dense layers at the head, and it's worth knowing that before you argue with someone about the APK size budget.</p>
+
+      <h3>Working with GGUF and on-device LLMs</h3>
+
+      <p>The GGUF support is experimental but good enough for what I need it for: checking which quantization scheme a downloaded model actually uses. There's a real difference between Q4_K_M and Q8_0 in both memory footprint and quality, and filenames on model hubs are not always accurate. Open it, look at the tensor types, believe the file rather than its name.</p>
+
+      <h3>Comparing before and after</h3>
+
+      <p>My most common actual workflow is two windows side by side. Original float model on the left, converted or quantized model on the right. Walk the graph and see what changed — what got fused, what got split, what got inserted, what disappeared.</p>
+
+      <p>Every conversion tool transforms the graph in ways it doesn't document. Seeing both versions at once is the only reliable way I've found to know what a converter actually did to my model.</p>
+
+      <h2>What it won't do</h2>
+
+      <p>Being fair about the limits, because I've seen people expect too much of it:</p>
+
+      <ul>
+        <li>It's static. No profiling, no per-layer latency, no memory numbers. For that you need the runtime's own benchmark tooling.</li>
+        <li>It won't tell you whether accuracy dropped. Only your eval set does that. Netron explains <em>why</em> it dropped, once you already know it did.</li>
+        <li>Very large graphs get sluggish and hard to navigate. Transformer models with hundreds of repeated blocks are a lot of scrolling.</li>
+        <li>Experimental formats are exactly that. Some fields don't render, and you'll occasionally need a format-specific tool for the last detail.</li>
+      </ul>
+
+      <p>None of that bothers me much, because it does the one thing I need it to do and does it instantly.</p>
+
+      <h2>The short version</h2>
+
+      <p>If you're putting models on phones, the gap between "the converter ran" and "the model is correct and fast" is wider than the tutorials suggest, and almost everything in that gap is visible in the graph. Netron is free, installs in one command, and turns a binary you were trusting on faith into something you can actually check.</p>
+
+      <p>Convert your model, open it, and look at it before you ship it. That's the whole habit.</p>
+
+      <hr>
+
+      <p><a href="https://github.com/lutzroeder/netron" target="_blank" rel="noopener noreferrer">github.com/lutzroeder/netron</a> · <a href="https://netron.app" target="_blank" rel="noopener noreferrer">netron.app</a></p>
+
+      <div class="post-footer">
+        Doing on-device ML on Android and hitting something strange? <a href="../index.html#section-contact">Get in touch</a> — I like these problems.
+      </div>
+
+      <a class="back-link" href="index.html">← All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

@@ -1,0 +1,223 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Newzero — one RSS reader for five platforms — Raju Shingadiya</title>
+  <meta name="description" content="Newzero is an RSS and Atom reader built with Kotlin Multiplatform and Compose Multiplatform, running natively on Android, iOS, macOS, Windows and Linux.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Newzero, Kotlin Multiplatform, Compose Multiplatform, KMP, RSS reader, Atom, Ktor, Redux, Coil, offline cache">
+  <link rel="canonical" href="https://rajumark.github.io/blog/newzero-kotlin-multiplatform-rss-reader.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Newzero — a Kotlin Multiplatform RSS reader">
+  <meta property="og:description" content="Newzero is an RSS and Atom reader built with Kotlin Multiplatform and Compose Multiplatform, running natively on Android, iOS, macOS, Windows and Linux.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/newzero-kotlin-multiplatform-rss-reader.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/newzero-desktop-dark.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Newzero — a Kotlin Multiplatform RSS reader">
+  <meta name="twitter:description" content="Newzero is an RSS and Atom reader built with Kotlin Multiplatform and Compose Multiplatform, running natively on Android, iOS, macOS, Windows and Linux.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/newzero-desktop-dark.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Newzero: one codebase, five platforms, no tracking",
+    "description": "Newzero is an RSS and Atom reader built with Kotlin Multiplatform and Compose Multiplatform, running natively on Android, iOS, macOS, Windows and Linux.",
+    "image": "https://rajumark.github.io/blog/images/newzero-desktop-dark.jpg",
+    "datePublished": "2026-01-10",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/newzero-kotlin-multiplatform-rss-reader.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">10 January 2026 · 9 min read</div>
+        <h1>Newzero: one codebase, five platforms, no tracking</h1>
+        <p class="post-standfirst">RSS never died, it just stopped being a business. That turns out to make it a very good thing to build on.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/newzero-desktop-dark.jpg" alt="Newzero running on desktop in dark mode, showing a feed of articles" loading="eager">
+        <figcaption>Newzero on desktop &mdash; same Kotlin as the Android and iOS builds</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/Newzero/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Newzero" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <p>Every few years someone declares RSS dead. It isn't &mdash; it's just unmonetisable, which in this industry looks similar from the outside. Nobody can inject an ad into an XML feed you fetch yourself, and nobody can build an engagement algorithm on top of a list you control.</p>
+
+      <p>That's precisely why it's pleasant. You choose the sources, you get everything they publish in order, and nothing decides what you should have wanted instead.</p>
+
+      <p>Newzero is my reader for it, and it was also the excuse I wanted to find out whether <a href="https://www.jetbrains.com/kotlin-multiplatform/" target="_blank" rel="noopener noreferrer">Kotlin Multiplatform</a> plus <a href="https://www.jetbrains.com/compose-multiplatform/" target="_blank" rel="noopener noreferrer">Compose Multiplatform</a> can genuinely carry a real app across five targets. Short answer: yes, more completely than I expected.</p>
+
+      <h2>Five platforms, one codebase</h2>
+
+      <p>Android 8+, iOS 16+, macOS, Windows and Linux. Not five ports &mdash; one shared codebase with the UI written once in Compose.</p>
+
+      <div class="compare">
+        <figure>
+          <img src="images/newzero-desktop-light.jpg" alt="Newzero desktop in light mode" loading="lazy">
+          <figcaption>Desktop, light</figcaption>
+        </figure>
+        <figure>
+          <img src="images/newzero-desktop-dark.jpg" alt="Newzero desktop in dark mode" loading="lazy">
+          <figcaption>Desktop, dark</figcaption>
+        </figure>
+      </div>
+
+      <div class="compare">
+        <figure>
+          <img src="images/newzero-android.jpg" alt="Newzero running on Android" loading="lazy">
+          <figcaption>Android</figcaption>
+        </figure>
+        <figure>
+          <img src="images/newzero-iphone.jpg" alt="Newzero running on iPhone" loading="lazy">
+          <figcaption>iOS</figcaption>
+        </figure>
+      </div>
+
+      <p>The thing that still surprises me is that the iOS build is Compose too &mdash; not SwiftUI with a shared business layer, which is the more common KMP arrangement. The screens you see on the iPhone are the same Kotlin composables as the ones on Linux.</p>
+
+      <p>That's the part of the KMP pitch I was most sceptical about, and it's the part that held up best.</p>
+
+      <h2>The stack</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Concern</th><th>Choice</th></tr></thead>
+          <tbody>
+            <tr><td>Language</td><td>Kotlin 2.3.21</td></tr>
+            <tr><td>UI</td><td>Compose Multiplatform 1.11.0, Material 3</td></tr>
+            <tr><td>Networking</td><td>Ktor 3.4.3</td></tr>
+            <tr><td>Feed parsing</td><td>xmlutil via Ktor XML content negotiation</td></tr>
+            <tr><td>Images</td><td>Coil 3</td></tr>
+            <tr><td>DI</td><td>Koin</td></tr>
+            <tr><td>Persistence</td><td>multiplatform-settings</td></tr>
+            <tr><td>Background sync</td><td>WorkManager (Android)</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Parsing deserves a note. RSS and Atom are different formats that do the same job, and most readers handle this with two parsers and a pile of branching. Newzero registers both through Ktor's XML content negotiation and normalises them into one internal model at the boundary. Everything above that layer stops caring which format a feed used, which removes an entire category of bug from the rest of the app.</p>
+
+      <h2>Redux, in Compose</h2>
+
+      <p>State is handled with a Redux-style unidirectional flow &mdash; sealed <code>Action</code> and <code>Effect</code> classes, one reducer, one state object.</p>
+
+      <p>I don't reach for this on every project; on a small screen it's ceremony. It earned its place here because of the platform count. When state transitions live in a reducer that's just a function from state and action to new state, they're identical on every platform by construction &mdash; and testable without a UI at all. The alternative, state scattered through composables and view models, is exactly where cross-platform apps drift apart into five subtly different behaviours.</p>
+
+      <p>Sealed classes make it pleasant in Kotlin specifically: the compiler tells you when a <code>when</code> block has stopped being exhaustive, so adding an action forces you to handle it everywhere it matters.</p>
+
+      <h2>Offline, in two tiers</h2>
+
+      <p>There's an in-memory cache and a disk cache. Memory answers instantly while you scroll; disk survives a restart and means opening the app on a train shows you everything from the last sync rather than a spinner and an error.</p>
+
+      <p>A reader that's useless without a connection has misunderstood the point. Fetching happens when there's network; reading should always work.</p>
+
+      <p>On Android, WorkManager handles background sync so articles are already there when you open it. The desktop and iOS builds sync on launch and on demand &mdash; each platform's background execution model is different enough that this is one of the few places the shared code deliberately doesn't try to be identical.</p>
+
+      <h2>Where multiplatform got in the way</h2>
+
+      <p>Being fair about it, because "write once, run everywhere" is never the whole story.</p>
+
+      <p><strong>Platform-specific work still exists.</strong> Background sync, file paths, and system theme detection all needed per-platform implementations. KMP gives you <code>expect</code>/<code>actual</code> for this, and it's clean, but it isn't free.</p>
+
+      <p><strong>Desktop input is not touch input.</strong> Compose gives you the same widgets everywhere, which is not the same as the right interaction everywhere. Hover states, right-click, keyboard navigation and scroll behaviour all needed separate attention. A tap target sized for a thumb looks strange under a mouse cursor.</p>
+
+      <p><strong>Build times.</strong> Compiling for five targets is exactly as slow as it sounds. Day-to-day you build one, but CI feels it.</p>
+
+      <p><strong>The ecosystem thins out fast.</strong> Ktor, Coil and Koin all support KMP properly. Plenty of libraries don't, and discovering that after you've designed around one is a bad afternoon.</p>
+
+      <p>None of these made me regret the choice. Five native apps from one codebase is still an enormous saving; I just don't want to pretend the multiplier is free.</p>
+
+      <h2>What it doesn't have</h2>
+
+      <p>No accounts. No sync service. No recommendations. No tracking, no ads, no subscription. MIT licensed.</p>
+
+      <p>Some of that is principle and some is that I didn't want to run a server. But the absence is the feature: your feed list is yours, on your device, and the app's only job is to fetch what you asked for and get out of the way.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/Newzero/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Newzero" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Building with Kotlin Multiplatform, or want to argue about Redux in Compose? <a href="../index.html#section-contact">Get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

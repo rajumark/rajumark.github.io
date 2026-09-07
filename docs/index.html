@@ -4,7 +4,7 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Raju Shingadiya — Senior Android Engineer | AOSP, Kotlin, KMP</title>
-  <meta name="description" content="Raju Shingadiya — Senior Android Engineer with 8+ years shipping production Android apps (500K+ downloads), AOSP firmware (Android 11–15), custom ROM &amp; kiosk solutions, secure fintech apps, and Kotlin Multiplatform. Based in Ahmedabad, India; open to remote.">
+  <meta name="description" content="Raju Shingadiya — Senior Android Engineer. 8+ years, 20+ Android apps in Kotlin/Java (500K+ downloads), AOSP firmware, custom ROM &amp; kiosk, secure fintech. Ahmedabad, India; open to remote.">
   <meta name="author" content="Raju Shingadiya">
   <meta name="keywords" content="Raju Shingadiya, Senior Android Engineer, Android Developer, AOSP, Kotlin, Kotlin Multiplatform, KMP, Jetpack Compose, custom ROM, kiosk, fintech, Ahmedabad">
   <link rel="canonical" href="https://rajumark.github.io/">
@@ -13,13 +13,13 @@
 
   <meta property="og:type" content="profile">
   <meta property="og:title" content="Raju Shingadiya — Senior Android Engineer">
-  <meta property="og:description" content="8+ years shipping production Android apps (500K+ downloads), AOSP firmware (Android 11–15), custom ROM &amp; kiosk solutions, secure fintech apps, and Kotlin Multiplatform.">
+  <meta property="og:description" content="8+ years, 20+ Android apps in Kotlin/Java (500K+ downloads). AOSP firmware, custom ROMs, kiosk builds, and hardened fintech apps.">
   <meta property="og:url" content="https://rajumark.github.io/">
   <meta property="og:image" content="https://rajumark.github.io/raju_profile_image.jpg">
   <meta property="og:site_name" content="Raju Shingadiya">
   <meta name="twitter:card" content="summary_large_image">
   <meta name="twitter:title" content="Raju Shingadiya — Senior Android Engineer">
-  <meta name="twitter:description" content="8+ years: production Android apps (500K+ downloads), AOSP firmware, custom ROM &amp; kiosk, secure fintech, Kotlin Multiplatform.">
+  <meta name="twitter:description" content="8+ years, 20+ Android apps (500K+ downloads). AOSP firmware, custom ROMs, kiosk builds, hardened fintech apps.">
   <meta name="twitter:image" content="https://rajumark.github.io/raju_profile_image.jpg">
 
   <script type="application/ld+json">
@@ -739,6 +739,65 @@
       min-width: 60px;
     }
 
+    /* Blog card */
+    .blog-card {
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      gap: 24px;
+      flex-wrap: wrap;
+      border: 1px solid #e0e0e0;
+      border-radius: 16px;
+      padding: 24px 28px;
+      text-decoration: none;
+      color: inherit;
+      transition: box-shadow 0.15s, border-color 0.15s;
+    }
+    .blog-card:hover {
+      border-color: #1a8a3f;
+      box-shadow: 0 2px 12px rgba(0, 0, 0, 0.06);
+    }
+    .blog-card-text { flex: 1 1 320px; }
+    .blog-card-eyebrow {
+      display: inline-flex;
+      align-items: center;
+      gap: 6px;
+      font-size: 11px;
+      font-weight: 500;
+      letter-spacing: 0.06em;
+      text-transform: uppercase;
+      color: #1a8a3f;
+      margin-bottom: 8px;
+    }
+    .blog-card-title {
+      font-size: 17px;
+      font-weight: 500;
+      color: #222;
+      margin-bottom: 6px;
+    }
+    .blog-card-desc {
+      font-size: 13px;
+      color: #777;
+      line-height: 1.6;
+    }
+    .blog-card-cta {
+      display: inline-flex;
+      align-items: center;
+      gap: 8px;
+      flex-shrink: 0;
+      border: 1px solid #1a8a3f;
+      border-radius: 999px;
+      padding: 9px 20px;
+      color: #1a8a3f;
+      font-size: 13px;
+      font-weight: 500;
+      transition: background 0.15s, color 0.15s;
+    }
+    .blog-card:hover .blog-card-cta {
+      background: #1a8a3f;
+      color: #fff;
+    }
+
     @media (max-width: 768px) {
       .header {
         flex-wrap: wrap;
@@ -782,6 +841,14 @@
         height: 160px;
       }
       .greeting { font-size: 20px; }
+      .blog-card {
+        padding: 20px;
+        gap: 16px;
+      }
+      .blog-card-cta {
+        width: 100%;
+        justify-content: center;
+      }
       .app-grid {
         grid-template-columns: repeat(auto-fill, minmax(110px, 1fr));
         gap: 12px;
@@ -844,6 +911,7 @@
       <a class="nav-item" href="#section-experience">Experience</a>
       <a class="nav-item" href="#section-certificates">Certificates</a>
       <a class="nav-item" href="#section-skills">Skills</a>
+      <a class="nav-item" href="blog/index.html" target="_blank" rel="noopener">Blog</a>
       <a class="nav-item" href="#section-contact">Contact me</a>
     </div>
   </div>
@@ -854,16 +922,13 @@
         <img class="about-image" src="raju_profile_image.jpg" alt="Raju Shingadiya" loading="lazy">
         <div class="about-content">
           <h1 class="greeting">Raju Shingadiya</h1>
-          <div class="sub">Senior Android Engineer · 8+ years building native Android, AOSP firmware &amp; Kotlin Multiplatform apps</div>
-          <p class="about-text">I specialize in native Android development (Kotlin/Java), AOSP firmware customization, and Kotlin Multiplatform. Over 8 years I've shipped 20+ production apps across finance, logistics, and consumer domains — my lead app, Tileswale, has 500K+ downloads on the Play Store.</p>
-          <p class="about-text">Beyond standard app development, I have deep experience with system-level Android — custom ROMs, kiosk solutions, secure banking applications, and anti-reverse engineering techniques. I prefer clean architecture, modular code, and building systems that scale without unnecessary complexity.</p>
+          <div class="sub">Senior Android Engineer · Native Android, AOSP &amp; Kotlin Multiplatform</div>
+          <p class="about-text">8+ years and 20+ production apps in Kotlin/Java — my lead app, Tileswale, has 500K+ downloads. I work past the app layer too: AOSP firmware, custom ROMs, kiosk builds, and hardened fintech apps.</p>
           <ul class="highlights">
-            <li>20+ production Android apps shipped</li>
-            <li>500K+ downloads on lead app (Tileswale)</li>
-            <li>AOSP firmware from Android 11 to 15</li>
-            <li>Custom ROM & kiosk solutions</li>
-            <li>Secure banking & fintech apps</li>
-            <li>Anti-reverse engineering expertise</li>
+            <li>20+ apps shipped · 500K+ downloads</li>
+            <li>AOSP firmware, Android 11–15</li>
+            <li>Custom ROM &amp; kiosk solutions</li>
+            <li>Secure fintech &amp; anti-reverse engineering</li>
           </ul>
           <div class="closing">Based in Ahmedabad, India — open to remote collaboration worldwide.</div>
         </div>
@@ -1194,6 +1259,23 @@
       <div class="contact-right">
         <img src="images/qrcode.png" alt="QR Code">
       </div>
+    </section>
+
+    <section id="section-blog">
+      <a class="blog-card" href="blog/index.html" target="_blank" rel="noopener">
+        <div class="blog-card-text">
+          <span class="blog-card-eyebrow">
+            <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:13px;height:13px"><path d="M4 19.5A2.5 2.5 0 0 1 6.5 17H20"/><path d="M6.5 2H20v20H6.5A2.5 2.5 0 0 1 4 19.5v-15A2.5 2.5 0 0 1 6.5 2z"/></svg>
+            Blog
+          </span>
+          <div class="blog-card-title">Where I dump my brain</div>
+          <p class="blog-card-desc">Android tooling, AOSP, GPU profiling, on-device ML &mdash; and the bug that ate three days of my life before turning out to be one wrong flag. Half useful notes, half me thinking out loud at 2am.</p>
+        </div>
+        <span class="blog-card-cta">
+          Read the blog
+          <svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" style="width:14px;height:14px"><path d="M18 13v6a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V8a2 2 0 0 1 2-2h6"/><polyline points="15 3 21 3 21 9"/><line x1="10" y1="14" x2="21" y2="3"/></svg>
+        </span>
+      </a>
     </section>
   </div>
 

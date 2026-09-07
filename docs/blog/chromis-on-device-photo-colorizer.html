@@ -1,0 +1,264 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chromis — an offline photo colorizer for Android — Raju Shingadiya</title>
+  <meta name="description" content="Chromis colorizes black and white photos on your Android phone with a 129 MB DDColor model running through ONNX Runtime. No servers, no uploads, and no INTERNET permission in the manifest.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Chromis, photo colorization, DDColor, ONNX Runtime, Android, on-device AI, edge AI, OpenCV, Jetpack Compose, CIE Lab, offline AI">
+  <link rel="canonical" href="https://rajumark.github.io/blog/chromis-on-device-photo-colorizer.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Chromis — an offline photo colorizer for Android">
+  <meta property="og:description" content="A 129 MB neural network that brings black and white photos back to life, running entirely on the phone. No cloud, no uploads, no INTERNET permission.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/chromis-on-device-photo-colorizer.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/chromis-photo3-colorized.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Chromis — an offline photo colorizer for Android">
+  <meta name="twitter:description" content="Colorizing black and white photos entirely on-device, with no network permission at all.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/chromis-photo3-colorized.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Chromis: I put a colorization model on a phone and cut the network cable",
+    "description": "Building an offline black and white photo colorizer for Android with DDColor, ONNX Runtime and OpenCV.",
+    "image": "https://rajumark.github.io/blog/images/chromis-photo3-colorized.jpg",
+    "datePublished": "2026-09-05",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/chromis-on-device-photo-colorizer.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">5 September 2026 · 11 min read</div>
+        <h1>Chromis: I put a colorization model on a phone and cut the network cable</h1>
+        <p class="post-standfirst">Old family photos are the last thing you should be uploading to a stranger's server. So I built a colorizer that physically cannot &mdash; the app ships without the INTERNET permission.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/chromis-photo3-colorized.jpg" alt="A 1950s black and white photograph of a woman beside a car, colorized by Chromis" loading="eager">
+        <figcaption>Colorized on a phone, in a few seconds, with no network connection</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/Chromis/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Chromis" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Chromis/blob/main/app/src/main/java/raju/shingadiya/chromis/engine/DDColorEngine.kt" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          The inference engine
+        </a>
+      </div>
+
+      <h2>Why bother, when the web is full of these</h2>
+
+      <p>Search for a photo colorizer and you'll find fifty of them. Almost all work the same way: you upload your picture, a GPU somewhere else does the work, you get an image back. Fine for a meme. Considerably less fine for the shoebox of family photographs my relatives keep asking me to "fix on the computer".</p>
+
+      <p>Those images are the definition of data you don't hand over casually. There's no way to know how long a server keeps them, what gets logged, or what a terms-of-service change next year will decide it's allowed to do with them. And the honest answer to "is it safe?" is that you're trusting a privacy policy, which is a document, not a guarantee.</p>
+
+      <p>So the goal for Chromis was narrow and slightly stubborn: do the whole thing on the phone. Not "mostly offline". Not "we only send anonymized data". Offline in the sense that the network stack is not available to the app at all.</p>
+
+      <div class="callout">
+        <p><strong>The line I'm proudest of is one that isn't there.</strong> There is no <code>android.permission.INTERNET</code> in <a href="https://github.com/rajumark/Chromis/blob/main/app/src/main/AndroidManifest.xml" target="_blank" rel="noopener noreferrer">the manifest</a>. Android won't grant a socket to an app that never declared it, so the app cannot phone home even if I wanted it to, even if a dependency tried. It's not a promise about my intentions &mdash; it's a property of the build, and you can verify it in about thirty seconds with <code>aapt dump permissions</code>.</p>
+      </div>
+
+      <h2>What it does</h2>
+
+      <p>Pick a black and white photo. Wait a few seconds. Get it back in colour. Hold your finger on the screen to see the original underneath, lift it to see the colour again &mdash; that comparison gesture ended up being the thing people actually play with.</p>
+
+      <div class="compare">
+        <figure>
+          <img src="images/chromis-photo3-original.jpg" alt="Original black and white photograph of a woman standing beside a vintage car" loading="lazy">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chromis-photo3-colorized.jpg" alt="The same photograph after colorization, showing a red car, green trees and blue sky" loading="lazy">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+
+      <p>What sells it for me in that pair isn't the car. It's the grass and the trees in the background, which the model has separated from the road surface without anyone telling it where the edges are, and the skin tones, which are the fastest thing to get wrong and the first thing your eye catches.</p>
+
+      <div class="compare">
+        <figure>
+          <img src="images/chromis-photo1-original.jpg" alt="Original black and white portrait photograph" loading="lazy">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chromis-photo1-colorized.jpg" alt="The same portrait after colorization" loading="lazy">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+
+      <div class="compare">
+        <figure>
+          <img src="images/chromis-photo2-original.jpg" alt="Original black and white photograph" loading="lazy">
+          <figcaption>Before</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chromis-photo2-colorized.jpg" alt="The same photograph after colorization" loading="lazy">
+          <figcaption>After</figcaption>
+        </figure>
+      </div>
+
+      <h2>The app itself</h2>
+
+      <p>I kept the UI deliberately small. One activity, two screens, no settings, no onboarding, no account. A grid of everything you've colorized, a plus button, and a result screen with save and share.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/chromis-home-screen.jpg" alt="Chromis home screen showing a grid of colorized photographs" loading="lazy">
+          <figcaption>Home &mdash; your colorized history</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chromis-processing-screen.jpg" alt="Chromis processing screen shown during inference" loading="lazy">
+          <figcaption>Processing</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chromis-result-screen.jpg" alt="Chromis result screen with hold to compare, save and share" loading="lazy">
+          <figcaption>Result &mdash; hold to compare</figcaption>
+        </figure>
+      </div>
+
+      <p>The grid is a staggered Pinterest-style layout because colorized photos are all different aspect ratios and forcing them into squares wastes the good part of the image. It persists across restarts, and long-pressing an item deletes it. That's the entire feature set. I removed more than I added.</p>
+
+      <h2>How it actually works</h2>
+
+      <p>The interesting part is that the model never sees a colour image, and never produces one either.</p>
+
+      <p>Colour images can be represented in <a href="https://en.wikipedia.org/wiki/CIELAB_color_space" target="_blank" rel="noopener noreferrer">CIE Lab</a>, which splits a pixel into <strong>L</strong> (lightness) and <strong>a</strong> and <strong>b</strong> (the two chrominance channels that carry all the colour). The useful property: a black and white photograph <em>is already</em> the L channel. Nothing is missing from it &mdash; the brightness information is complete. What's absent is a and b.</p>
+
+      <p>So colorization stops being "invent a new picture" and becomes something much narrower: given L, predict a and b. Then staple the original L back on. The structure, the grain, the sharpness, every detail of the original photograph survives untouched, because the model is not allowed anywhere near it. It only gets to choose colours.</p>
+
+      <p>The pipeline in <a href="https://github.com/rajumark/Chromis/blob/main/app/src/main/java/raju/shingadiya/chromis/engine/DDColorEngine.kt" target="_blank" rel="noopener noreferrer"><code>DDColorEngine.kt</code></a> is five steps:</p>
+
+      <ol>
+        <li>Decode the picked image to a bitmap and hand it to OpenCV.</li>
+        <li>Convert RGB to Lab and split out the channels. Keep the full-resolution <strong>L</strong>.</li>
+        <li>Downscale L to 512&times;512, normalise, and feed it to <a href="https://github.com/piddnad/DDColor" target="_blank" rel="noopener noreferrer">DDColor</a> as a 1&times;3&times;512&times;512 tensor through <a href="https://onnxruntime.ai/" target="_blank" rel="noopener noreferrer">ONNX Runtime</a>.</li>
+        <li>Take the predicted a and b, upscale them back to the photo's real dimensions.</li>
+        <li>Merge them with the <em>original</em> full-resolution L, convert Lab back to RGB, done.</li>
+      </ol>
+
+      <p>Step five is the whole trick for output quality. Inference happens at 512&times;512 because that's what the model wants and what a phone can afford. But you never see a 512&times;512 image. Chrominance is low-frequency information &mdash; broad regions of "this is skin", "this is foliage" &mdash; so it upscales without visible damage. Detail lives in luminance, and luminance is never downscaled at all. A 12-megapixel photo comes out at 12 megapixels, still sharp.</p>
+
+      <h3>Defensive code around the model output</h3>
+
+      <p>One thing I'd flag for anyone doing FP16 inference: the engine sweeps the model's output for NaN and infinity before using it, logs the observed range, and substitutes a neutral 128 for any bad value rather than letting it through.</p>
+
+      <p>That isn't paranoia for its own sake. FP16 has a narrow range, and a single stray value converted into a Lab channel doesn't produce a subtle artifact &mdash; it produces a screaming magenta block across part of the picture. Clamping into <code>0..255</code> on the way out costs nothing and turns a catastrophic failure into, at worst, a slightly desaturated patch.</p>
+
+      <h2>What's in it</h2>
+
+      <dl class="spec">
+        <dt>Model</dt><dd>DDColor-Tiny, FP16 ONNX, 129 MB</dd>
+        <dt>Inference</dt><dd>ONNX Runtime 1.19.2, 4 inter-op / 4 intra-op threads, all graph optimizations on</dd>
+        <dt>Image processing</dt><dd>OpenCV 4.5.3 for Lab conversion, resizing and channel merging</dd>
+        <dt>UI</dt><dd>Jetpack Compose with Material 3, single activity</dd>
+        <dt>Concurrency</dt><dd>Kotlin coroutines &mdash; inference off the main thread</dd>
+        <dt>Minimum</dt><dd>Android 8.0 (API 26), around 200 MB RAM during inference</dd>
+        <dt>Permissions</dt><dd>Photo access only. No internet, no analytics, no crash reporting</dd>
+        <dt>Licence</dt><dd>MIT</dd>
+      </dl>
+
+      <p>A 129 MB model inside the app is the obvious cost, and I want to be straight about it rather than pretend it's free. It's why the repo needs <a href="https://git-lfs.com/" target="_blank" rel="noopener noreferrer">Git LFS</a>, and it's a real download for a user. The alternative was shipping a 15 MB app that uploads your grandmother's photograph to a server, and for this particular application I think that trade lands clearly on one side.</p>
+
+      <h2>Things that bit me</h2>
+
+      <p><strong>The model is copied out of assets on first run.</strong> ONNX Runtime wants a real file path, and assets inside an APK aren't one. So the first launch writes the 129 MB model into <code>filesDir</code> and every launch afterwards reuses it. It works, but it means first launch is slow and the app effectively occupies its model twice on disk. If I revisit this, memory-mapping from a compressed-off asset is the direction.</p>
+
+      <p><strong>Per-pixel loops in Kotlin are exactly as slow as you'd expect.</strong> The engine walks pixels individually to build and unpack the OpenCV matrices, and on large images that copying is a genuine chunk of the total time &mdash; on some photos it rivals the inference itself. Bulk <code>Mat.put</code> calls over a whole row, or moving the conversion into native code, is the single biggest speedup still on the table. I shipped the readable version first, which I don't regret, but I know where it is.</p>
+
+      <p><strong>Colorization has no correct answer.</strong> This is the conceptual one. The model isn't recovering the original colours, because that information was never captured &mdash; it's producing a plausible guess from everything it learned about what the world usually looks like. A dress that was actually green may come back blue. Both are defensible readings of the same grey. Once I stopped treating that as a bug, the results got much easier to enjoy.</p>
+
+      <h2>Where this fits</h2>
+
+      <p>Chromis is part of a set of small offline AI apps I've been building &mdash; local chat, local translation, on-device document and photo tools &mdash; all circling the same idea: a phone in 2026 is a genuinely capable inference machine, and a surprising number of things we route through a datacentre don't need to leave the device at all.</p>
+
+      <p>Not everything fits. Large language models still strain a handset. But image models in the 100 MB range, running a few seconds per photo, are comfortably within budget on hardware people already own. That's a real capability, and mostly what's missing is people building for it.</p>
+
+      <p>The code is MIT licensed and the interesting part is one file. If you're curious how the Lab trick works in practice, <a href="https://github.com/rajumark/Chromis/blob/main/app/src/main/java/raju/shingadiya/chromis/engine/DDColorEngine.kt" target="_blank" rel="noopener noreferrer">read the engine</a> &mdash; it's about 130 lines and it'll take you five minutes.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/Chromis/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Chromis" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Built something similar, or want to argue about the 129 MB? <a href="../index.html#section-contact">Get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

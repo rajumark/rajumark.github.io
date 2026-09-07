@@ -1,0 +1,192 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>LocalTranslate — 30+ languages with the radio off — Raju Shingadiya</title>
+  <meta name="description" content="LocalTranslate uses the ML Kit Translate API to translate between 30+ languages entirely on-device, after a one-time model download of about 30 MB per pair.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="LocalTranslate, offline translation, ML Kit Translate, Android, Jetpack Compose, Material You, Kotlin, privacy, travel app">
+  <link rel="canonical" href="https://rajumark.github.io/blog/localtranslate-offline-android-translation.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="LocalTranslate — offline translation for Android">
+  <meta property="og:description" content="LocalTranslate uses the ML Kit Translate API to translate between 30+ languages entirely on-device, after a one-time model download of about 30 MB per pair.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/localtranslate-offline-android-translation.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/localtranslate-1.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="LocalTranslate — offline translation for Android">
+  <meta name="twitter:description" content="LocalTranslate uses the ML Kit Translate API to translate between 30+ languages entirely on-device, after a one-time model download of about 30 MB per pair.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/localtranslate-1.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "LocalTranslate: 30+ languages, no API key, no connection",
+    "description": "LocalTranslate uses the ML Kit Translate API to translate between 30+ languages entirely on-device, after a one-time model download of about 30 MB per pair.",
+    "image": "https://rajumark.github.io/blog/images/localtranslate-1.jpg",
+    "datePublished": "2026-02-14",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/localtranslate-offline-android-translation.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">14 February 2026 · 7 min read</div>
+        <h1>LocalTranslate: 30+ languages, no API key, no connection</h1>
+        <p class="post-standfirst">The moment you most need a translator is the moment you have no signal and roaming would cost a fortune. That is a solvable problem.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/localtranslate-1.jpg" alt="LocalTranslate showing text being translated between two languages" loading="eager">
+        <figcaption>Translation running entirely on the device, no connection required</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localtranslate" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/localtranslate/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Releases
+        </a>
+      </div>
+
+      <p>Translation apps have a timing problem. You need one when you've just landed, when you're standing in front of a sign you can't read, when you're trying to explain something to a taxi driver. Which is exactly when you have no local SIM, no WiFi, and roaming charges that make you think twice about loading a webpage.</p>
+
+      <p>So the app that needs a connection is unavailable precisely when it matters. Meanwhile the phone in your hand is more than capable of running a translation model itself.</p>
+
+      <p>LocalTranslate uses <a href="https://developers.google.com/ml-kit/language/translation" target="_blank" rel="noopener noreferrer">ML Kit's Translate API</a> to do it on-device across 30+ languages.</p>
+
+      <h2>How it works</h2>
+
+      <p>Pick a source and target language, type or paste text, get the translation. One tap swaps the direction, another copies the result.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/localtranslate-1.jpg" alt="LocalTranslate main translation screen" loading="lazy">
+          <figcaption>Translate</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localtranslate-2.jpg" alt="LocalTranslate language picker" loading="lazy">
+          <figcaption>Pick from 30+ languages</figcaption>
+        </figure>
+        <figure>
+          <img src="images/localtranslate-3.jpg" alt="LocalTranslate in dark mode" loading="lazy">
+          <figcaption>Dark mode</figcaption>
+        </figure>
+      </div>
+
+      <p>The languages cover most of what you'd want travelling &mdash; Arabic, Chinese in both simplified and traditional, Czech, Danish, Dutch, English, Finnish, French, German, Greek, Hebrew, Hindi, Indonesian, Italian, Japanese, Korean, Malay, Norwegian, Polish, Portuguese, Romanian, Russian, Spanish, Swedish, Thai, Turkish, Ukrainian, Vietnamese and more.</p>
+
+      <h2>The one asterisk, stated up front</h2>
+
+      <p>Each language pair needs a model, roughly 30 MB, and that model has to be downloaded once. So the app is not offline on the very first use of a new pair &mdash; it's offline forever after.</p>
+
+      <p>I'd rather say that plainly than bury it, because "offline translation" apps that quietly need a connection are a real annoyance. The practical shape of it: download the pairs you want <em>before</em> you travel, while you're still on home WiFi, and the app then works permanently with the radio off.</p>
+
+      <p>It's the same bargain as offline maps, and it's a good one. 30 MB is nothing on a modern phone, and in exchange the app works in a basement, on a plane, in a foreign country with no data plan.</p>
+
+      <h2>What's in it</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Concern</th><th>Choice</th></tr></thead>
+          <tbody>
+            <tr><td>Translation</td><td>ML Kit Translate API 17.0.3</td></tr>
+            <tr><td>Language</td><td>Kotlin 2.0.21</td></tr>
+            <tr><td>UI</td><td>Jetpack Compose, Material 3 with Material You</td></tr>
+            <tr><td>Architecture</td><td>Single activity, ViewModel + StateFlow</td></tr>
+            <tr><td>Build</td><td>Gradle 8.9, AGP 8.7.3</td></tr>
+            <tr><td>Minimum</td><td>Android 8.0, API 26</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Material You dynamic colour, so it picks up your wallpaper palette, and a dark mode. No API keys, no accounts, no configuration. Releases are built by GitHub Actions on any commit containing <code>#go</code>, which is the same tiny CI convention I use across these projects &mdash; commit, push, and an APK appears attached to a release without me doing anything.</p>
+
+      <h2>What it isn't</h2>
+
+      <p>It's a text box, not a camera translator or a live conversation mode. Point-the-camera-at-a-menu is genuinely the killer feature of the big translation apps and this doesn't have it. Pairing this with OCR is the obvious extension &mdash; and it's exactly what <a href="localphotos-offline-ocr-photo-search.html">LocalPhotos</a> already does on the recognition side, so the pieces exist.</p>
+
+      <p>On-device model quality is also below the large cloud models, particularly on long or idiomatic passages. For signs, menus, short messages and simple questions &mdash; the actual travel use case &mdash; it's more than good enough.</p>
+
+      <h2>Why this one was easy</h2>
+
+      <p>Honestly? Because the platform did the hard part. ML Kit's translation models are already there, already optimised, already good. The app is a thin, careful shell around them.</p>
+
+      <p>Which is sort of the recurring theme across everything in this series: an enormous amount of AI capability is already sitting on the device, free, and the main thing standing between users and it is that nobody has bothered to build the small app that exposes it without an account and a subscription.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/localtranslate" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Travel a lot and have opinions about offline tooling? <a href="../index.html#section-contact">Get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

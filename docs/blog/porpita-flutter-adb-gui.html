@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Porpita — a desktop GUI for ADB — Raju Shingadiya</title>
+  <meta name="description" content="Porpita is a Flutter desktop app that puts a real GUI on ADB - terminal, file browser, logcat, app management, UI inspector - on macOS, Windows and Linux.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Porpita, ADB, Android Debug Bridge, Flutter desktop, Android tooling, logcat, dumpsys, developer tools, app_process, DEX">
+  <link rel="canonical" href="https://rajumark.github.io/blog/porpita-flutter-adb-gui.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Porpita — a cross-platform desktop GUI for ADB">
+  <meta property="og:description" content="Porpita is a Flutter desktop app that puts a real GUI on ADB - terminal, file browser, logcat, app management, UI inspector - on macOS, Windows and Linux.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/porpita-flutter-adb-gui.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/porpita-terminal.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Porpita — a cross-platform desktop GUI for ADB">
+  <meta name="twitter:description" content="Porpita is a Flutter desktop app that puts a real GUI on ADB - terminal, file browser, logcat, app management, UI inspector - on macOS, Windows and Linux.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/porpita-terminal.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Porpita: I got tired of remembering adb commands",
+    "description": "Porpita is a Flutter desktop app that puts a real GUI on ADB - terminal, file browser, logcat, app management, UI inspector - on macOS, Windows and Linux.",
+    "image": "https://rajumark.github.io/blog/images/porpita-terminal.jpg",
+    "datePublished": "2025-12-06",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/porpita-flutter-adb-gui.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">6 December 2025 · 10 min read</div>
+        <h1>Porpita: I got tired of remembering adb commands</h1>
+        <p class="post-standfirst">I have typed <code>adb shell dumpsys window windows | grep mCurrentFocus</code> more times than I would like to count. So I built the thing that types it for me.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/porpita-terminal.jpg" alt="Porpita desktop app showing an ADB shell session with dumpsys output" loading="eager">
+        <figcaption>Porpita&rsquo;s built-in shell, with the sidebar of everything else it can do</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/porpita/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/porpita" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <p>ADB is a superb tool with a genuinely hostile interface. Everything you could want is in there somewhere &mdash; behind a subcommand you half-remember, piped into a <code>grep</code> you'll rewrite from scratch every time, producing output that scrolls past faster than you can read it.</p>
+
+      <p>After eight years of Android work I still keep a text file of ADB incantations. That's not expertise, that's a workaround. So Porpita is the GUI I wanted: a desktop app that wraps the commands I actually use into screens with buttons, and keeps a real terminal one click away for everything else.</p>
+
+      <p>It runs on macOS, Windows and Linux, built with Flutter.</p>
+
+      <h2>What it does</h2>
+
+      <p>Device management first &mdash; connect, disconnect, track several devices and emulators at once, switch between them from a dropdown that's always visible. Everything else in the app acts on whichever device is selected, which sounds obvious and is the single biggest quality-of-life win over the CLI, where the correct answer is remembering to type <code>-s emulator-5554</code> on every command.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/porpita-apps.jpg" alt="Porpita app management screen listing installed packages" loading="lazy">
+          <figcaption>Apps &mdash; install, uninstall, inspect</figcaption>
+        </figure>
+        <figure>
+          <img src="images/porpita-files.jpg" alt="Porpita file browser showing device storage" loading="lazy">
+          <figcaption>Files &mdash; browse, push, pull</figcaption>
+        </figure>
+        <figure>
+          <img src="images/porpita-device-info.jpg" alt="Porpita device information screen" loading="lazy">
+          <figcaption>Device info</figcaption>
+        </figure>
+      </div>
+
+      <p>From there it grew into most of what I do day to day: a file browser with push and pull, app management, a logcat viewer, screen capture and recording, emulator management, a properties and settings editor, a UI inspector, and viewers for contacts, SMS and call logs on the connected device.</p>
+
+      <p>That last group is more useful than it sounds. Reading a device's SMS or call log through <code>adb shell content query</code> means constructing a URI query by hand and parsing the output. Porpita has a <code>content_query_parser</code> that turns it into a table you can read.</p>
+
+      <figure>
+        <img src="images/porpita-ui-inspector.jpg" alt="Porpita UI inspector showing the view hierarchy of a running app" loading="lazy">
+        <figcaption>The UI inspector &mdash; view hierarchy without opening Android Studio</figcaption>
+      </figure>
+
+      <h2>The part I'm actually proud of</h2>
+
+      <p>Here's a problem that sounds trivial and isn't: <strong>showing app icons</strong>.</p>
+
+      <p>ADB has no command that hands you an installed app's icon. The icon is a drawable inside the APK, and resolving it correctly means going through Android's resource system &mdash; density buckets, adaptive icon layers, vector drawables, the lot. You could pull the whole APK and parse it on the desktop, but you'd be reimplementing a chunk of the Android framework, badly, for every app in the list.</p>
+
+      <p>So Porpita does something else. It ships a small Kotlin server compiled to a DEX file, pushes it to the device, and runs it with <code>app_process</code> &mdash; the same mechanism the Android runtime uses to start system processes. The result is a process running <em>on the device</em>, inside the Android framework, with access to the real <code>PackageManager</code>.</p>
+
+      <pre><code>Porpita (Flutter, desktop)
+    │  push porpita.dex over ADB
+    │  start it via app_process
+    ▼
+porpita.dex (on device)
+    ├── LocalServerSocket "porpita"   ← JSON requests
+    ├── PackageManager queries         ← real framework APIs
+    ├── Drawable → PNG conversion
+    └── HttpFileServer                 ← serves the PNGs back</code></pre>
+
+      <p>The desktop app talks to it over a forwarded socket in JSON, asks for the icons it needs, and pulls the rendered PNGs over a small HTTP server. Icons get cached at <code>/data/local/tmp/porpita/icons/</code> so the second launch is instant.</p>
+
+      <p>It's more machinery than a GUI has any right to need to draw a list. But it's the difference between correct icons for every app and a grid of grey placeholders, and getting it working was the most satisfying afternoon of the project.</p>
+
+      <h2>Why Flutter</h2>
+
+      <p>Because I wanted one codebase producing real desktop binaries for three platforms, and I did not want to write an Electron app that ships a browser to draw a table.</p>
+
+      <p>Flutter desktop has rough edges &mdash; the ecosystem is thinner than mobile, and some platform integrations need writing yourself &mdash; but for an app that is fundamentally "run subprocesses, parse their output, render it in panels", it's a good fit. Layout is fast, the widget set is complete, and <code>Process.run</code> is the same on all three platforms.</p>
+
+      <p>The dependency list stayed short: <code>provider</code> for state, <code>shared_preferences</code>, <code>file_picker</code>, <code>xml</code> for parsing UI dumps, <code>network_info_plus</code> for wireless ADB, <code>qr_flutter</code> for pairing codes.</p>
+
+      <h2>How it's organised</h2>
+
+      <p>Around 426 Dart files, which sounds like a lot until you see the shape of it. A <code>services/</code> layer holds the logic that touches ADB &mdash; <code>adb_manager</code>, <code>device_manager</code>, <code>emulator_manager</code>, <code>screen_capture_service</code>, <code>adb_content_service</code>. Above that, one file per screen.</p>
+
+      <p>The bulk of the count is <code>screens/commands/</code>: a page per diagnostic command &mdash; <code>dumpsys activity</code>, <code>dumpsys wifi</code>, <code>dumpsys sensor</code>, <code>dumpsys keystore</code>, <code>cat /proc/cpuinfo</code>, <code>df -h</code>, <code>bugreport</code> and a long tail of others. Each is small: run this command, parse this output, show this table.</p>
+
+      <p>Adding a new one takes about fifteen minutes, which is why there are so many. Every time I found myself typing something into the terminal twice, it became a page.</p>
+
+      <h2>Light and dark, and why that mattered</h2>
+
+      <p>There's a full light and dark theme, and I mention it only because of what it revealed. Tools like this get used at two extremes: bright office, and 1am debugging session. Building both themes properly forced me to stop hardcoding colours in widgets, which in turn forced the design system to be real. The theme work made the app more consistent as a side effect.</p>
+
+      <h2>The honest assessment</h2>
+
+      <p>Porpita will not replace Android Studio, and it isn't trying to. Studio's profiler and debugger are in a different league.</p>
+
+      <p>What it replaces is the terminal tab where I keep a scratch file of commands. For inspecting a device, pushing a file, reading logs, checking a system property, grabbing a screenshot, or poking at an app's state, opening a window and clicking is simply faster than remembering syntax &mdash; and it doesn't require spinning up a full IDE for a thirty-second task.</p>
+
+      <p>MIT licensed. If it saves you one trip to a Stack Overflow answer about <code>dumpsys</code> flags, it's paid for itself.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/porpita/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/porpita" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Got an ADB workflow you think deserves a button? <a href="../index.html#section-contact">Tell me</a> &mdash; that&rsquo;s roughly how every screen in this app got added.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

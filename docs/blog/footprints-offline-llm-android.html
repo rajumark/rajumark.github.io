@@ -1,0 +1,215 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Footprints — a 0.5B language model living in my pocket — Raju Shingadiya</title>
+  <meta name="description" content="Footprints runs Qwen 2.5 0.5B entirely on an Android phone via llama.cpp. 507 MB APK, ~10-15 tokens a second, and no INTERNET permission anywhere in the manifest.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Footprints, offline LLM, on-device AI, Qwen 2.5, llama.cpp, GGUF, Android, Jetpack Compose, edge AI, privacy">
+  <link rel="canonical" href="https://rajumark.github.io/blog/footprints-offline-llm-android.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Footprints — an offline LLM chat app for Android">
+  <meta property="og:description" content="Footprints runs Qwen 2.5 0.5B entirely on an Android phone via llama.cpp. 507 MB APK, ~10-15 tokens a second, and no INTERNET permission anywhere in the manifest.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/footprints-offline-llm-android.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/footprints-chat.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Footprints — an offline LLM chat app for Android">
+  <meta name="twitter:description" content="Footprints runs Qwen 2.5 0.5B entirely on an Android phone via llama.cpp. 507 MB APK, ~10-15 tokens a second, and no INTERNET permission anywhere in the manifest.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/footprints-chat.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Footprints: I put a language model in an APK and deleted the internet",
+    "description": "Footprints runs Qwen 2.5 0.5B entirely on an Android phone via llama.cpp. 507 MB APK, ~10-15 tokens a second, and no INTERNET permission anywhere in the manifest.",
+    "image": "https://rajumark.github.io/blog/images/footprints-chat.jpg",
+    "datePublished": "2026-06-07",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/footprints-offline-llm-android.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">7 June 2026 · 11 min read</div>
+        <h1>Footprints: I put a language model in an APK and deleted the internet</h1>
+        <p class="post-standfirst">A 507 MB app is an absurd thing to ship. I did it anyway, because the alternative was sending every conversation to somebody else&rsquo;s server.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/footprints-chat.jpg" alt="Footprints chat interface running on an Android phone" loading="eager">
+        <figcaption>Qwen 2.5 0.5B generating text on a mid-range phone, in airplane mode</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/Footprints" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Footprints/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Download the APK
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Footprints/blob/main/app/src/main/java/raju/shingadiya/footprints/llm/LlmEngine.kt" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polyline points="16 18 22 12 16 6"/><polyline points="8 6 2 12 8 18"/></svg>
+          The engine wrapper
+        </a>
+      </div>
+
+      <p>Every chat app you have talks to a datacentre. You type, it goes over the wire, something enormous thinks about it, and the answer comes back. That's a reasonable design &mdash; the models genuinely are too big for a phone &mdash; but it means every half-formed thought you type is somebody else's log line.</p>
+
+      <p>I wanted to know what the opposite extreme felt like. Not "privacy-respecting cloud AI". Not "we anonymise your prompts". A model that is physically incapable of transmitting anything, because the app it lives in has no network permission at all.</p>
+
+      <p>Footprints is that experiment. It's a chat app with <a href="https://huggingface.co/Qwen/Qwen2.5-0.5B-Instruct-GGUF" target="_blank" rel="noopener noreferrer">Qwen 2.5 0.5B Instruct</a> baked into the APK, running through <a href="https://github.com/ggml-org/llama.cpp" target="_blank" rel="noopener noreferrer">llama.cpp</a> on the CPU.</p>
+
+      <div class="callout">
+        <p><strong>The security model is a missing line.</strong> <a href="https://github.com/rajumark/Footprints/blob/main/app/src/main/AndroidManifest.xml" target="_blank" rel="noopener noreferrer">The manifest</a> declares exactly one permission &mdash; <code>RECORD_AUDIO</code>, for optional voice input. There is no <code>INTERNET</code>. Android will not hand a socket to an app that never asked for one, so the app cannot phone home. Not "does not". <em>Cannot.</em></p>
+      </div>
+
+      <h2>The numbers, honestly</h2>
+
+      <p>I'd rather lead with the uncomfortable ones. Measured on a moto g57 power, arm64-v8a:</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Metric</th><th>Value</th></tr></thead>
+          <tbody>
+            <tr><td>APK size</td><td>507 MB</td></tr>
+            <tr><td>Model (GGUF Q4_K_M)</td><td>469 MB of that</td></tr>
+            <tr><td>Cold start to ready</td><td>~50 s (model copy + load)</td></tr>
+            <tr><td>Generation speed</td><td>~10&ndash;15 tokens/sec</td></tr>
+            <tr><td>Peak RAM</td><td>~866 MB</td></tr>
+            <tr><td>Context window</td><td>32,768 tokens</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>A half-gigabyte app that takes the better part of a minute to start is not something I'd defend as a mass-market product. On a Snapdragon 8 Gen 2 or 3 you'll see 15&ndash;20+ tok/s and it feels considerably better, but the cold start is structural.</p>
+
+      <p>What you get for it: an assistant that works in a tunnel, on a plane, in a village with no signal, with no account, no subscription, and no possibility of a prompt leaking. For a certain set of situations that's not a worse trade &mdash; it's the only acceptable one.</p>
+
+      <h2>Why 0.5B, and not something impressive</h2>
+
+      <p>This is the question everyone asks, so let me answer it properly.</p>
+
+      <p>A 7B model at Q4 wants 4&ndash;8 GB of RAM and delivers 2&ndash;5 tok/s on a phone. That's slower than you can read, and on most devices the OS kills you before you finish a paragraph. A 0.5B model fits in roughly 500 MB and runs 3&ndash;5&times; faster. It is, as far as I can tell, the smallest model that still holds a coherent conversation &mdash; and therefore the largest one that's actually usable in real time on hardware people already own.</p>
+
+      <p>Qwen 2.5 0.5B specifically because it's the strongest instruction-follower I found at that size, and it carries a full 32K context, which matters more than raw quality for a chat app where the conversation is the state.</p>
+
+      <p>Is it GPT-4? Obviously not. GPT-4 is somewhere around 6,000&times; larger. Footprints will not write your dissertation. It summarises, rephrases, drafts, brainstorms and answers ordinary questions, and it does that in your hand with the radio off.</p>
+
+      <h2>How the pieces fit</h2>
+
+      <p>The stack is deliberately shallow &mdash; eight Kotlin files, about 1,255 lines total:</p>
+
+      <pre><code>Compose UI  →  ChatViewModel (StateFlow)  →  LlmEngine  →  JNI  →  llama.cpp  →  Qwen 2.5</code></pre>
+
+      <p>The part I like most is the streaming. <code>sendUserPrompt()</code> returns a <code>Flow&lt;String&gt;</code>, the ViewModel collects tokens one at a time and pushes each into a <code>MutableStateFlow</code>, and Compose re-renders as they arrive. You watch the answer being written rather than waiting for a block of text to appear. On a slow model that difference is not cosmetic &mdash; it's the whole perceived-performance story. 12 tok/s that you can see is far more tolerable than 12 tok/s that you wait for in silence.</p>
+
+      <p>There's no DI framework. Manual injection through <code>AndroidViewModel</code> and an <code>LlmEngine</code> singleton, so the dependency graph is something you can hold in your head. One activity, one screen, no navigation library. For a project this size, every abstraction I skipped was one less thing between me and the bug.</p>
+
+      <h3>Why CPU and not GPU</h3>
+
+      <p>llama.cpp can use Vulkan or OpenCL. I stayed on CPU because GPU driver quality across Android OEMs is a lottery, and a model that runs on every arm64 device is worth more to me than one that's faster on a third of them and mysteriously broken on the rest. That may change as drivers improve; for now, universal beat fast.</p>
+
+      <h3>Why the model is inside the APK</h3>
+
+      <p>This is the 469 MB decision. I could ship a 40 MB app that downloads the model on first launch, and most projects do. But then first launch requires internet, which requires the INTERNET permission, which destroys the one property the whole project exists to demonstrate. Bundling the model is what lets the permission list stay empty. The APK size is the price of the guarantee.</p>
+
+      <h2>What's actually in it</h2>
+
+      <p>Beyond the chat loop it grew the things you inevitably want: conversation history persisted as JSON in app-internal storage, multiple conversations you can switch between and delete, system prompt presets (default, creative, professional, concise, or your own), markdown rendering for bold, italics, inline code and code blocks, export a conversation to Downloads, voice input via the platform <code>SpeechRecognizer</code>, and a dark/light toggle that overrides the system theme.</p>
+
+      <p>All of it local. The export writes a file; it does not upload one.</p>
+
+      <h2>Things I'd do differently</h2>
+
+      <p><strong>The 50-second cold start is the real problem.</strong> Most of it is copying the model out of APK assets to a real path on first run, then llama.cpp loading it. Memory-mapping an uncompressed asset directly would remove the copy entirely, and it's the first thing I'd fix.</p>
+
+      <p><strong>There are no tests yet.</strong> The dependencies are declared in <code>build.gradle.kts</code> and the ViewModel is the obvious first target. I'm not going to pretend that's fine &mdash; it's a gap, and it's next.</p>
+
+      <p><strong>The model should be swappable.</strong> Bundling one model is what makes the offline guarantee airtight, but it also means you're stuck at 0.5B. An in-app picker that downloads 1.5B or 3B would be genuinely useful for people on better hardware &mdash; at the cost of needing the network permission, which reopens the exact door I welded shut. I haven't found a way to have both, and I'd rather keep the guarantee.</p>
+
+      <h2>Was it worth building</h2>
+
+      <p>As a product, it's rough. As a demonstration, I think it's the most convincing thing I've made: proof that a genuinely useful language model can live entirely inside an app that has no way to talk to anyone.</p>
+
+      <p>Every step you take online leaves a footprint somewhere. This one doesn't leave the device.</p>
+
+      <hr>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://github.com/rajumark/Footprints" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/Footprints/releases" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></svg>
+          Releases
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Running models on phones, or think 0.5B is too small to be useful? <a href="../index.html#section-contact">Tell me I&rsquo;m wrong</a> &mdash; I like the argument.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

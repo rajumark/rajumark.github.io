@@ -1,0 +1,313 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Profiling Android GPU work with AGI — Raju Shingadiya</title>
+  <meta name="description" content="A hands-on walkthrough of Android GPU Inspector: setting it up, capturing a system profile and a frame profile, reading GPU counters, and what I actually fixed with it.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Android GPU Inspector, AGI, Android GPU profiling, Vulkan, OpenGL ES, Adreno, Mali, frame profiler, system profiler, Android performance">
+  <link rel="canonical" href="https://rajumark.github.io/blog/android-gpu-inspector-agi-guide.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Profiling Android GPU work with AGI (Android GPU Inspector)">
+  <meta property="og:description" content="How I set up Android GPU Inspector, captured system and frame traces, and used GPU counters to find why a game was dropping frames.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/android-gpu-inspector-agi-guide.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/agi-mobile-gaming.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Profiling Android GPU work with AGI">
+  <meta name="twitter:description" content="Setting up Android GPU Inspector and reading GPU counters to fix dropped frames.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/agi-mobile-gaming.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Profiling Android GPU work with AGI (Android GPU Inspector)",
+    "description": "A hands-on walkthrough of Android GPU Inspector: setup, system and frame traces, GPU counters, and real fixes.",
+    "image": "https://rajumark.github.io/blog/images/agi-mobile-gaming.jpg",
+    "datePublished": "2026-07-04",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/android-gpu-inspector-agi-guide.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">4 July 2026 · 12 min read</div>
+        <h1>Profiling Android GPU work with AGI (Android GPU Inspector)</h1>
+        <p class="post-standfirst">CPU profilers kept telling me everything was fine. The phone kept telling me otherwise. This is the tool that finally showed me what the GPU was doing.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/agi-mobile-gaming.jpg" alt="Hands holding an Android phone running a racing game" loading="eager">
+        <figcaption>Photo by Amanz on <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer">Unsplash</a></figcaption>
+      </figure>
+
+      <p>A few months back I was helping a team with a 3D-heavy Android app. On a Pixel it ran fine. On a mid-range Adreno device it hovered around 40fps and stuttered every couple of seconds. Systrace showed a main thread that was mostly idle. Android Studio's profiler showed CPU usage nowhere near the ceiling. Everything looked healthy, and the app still felt bad.</p>
+
+      <p>The problem, obviously in hindsight, was that I was looking at the wrong processor. All my tools were showing me CPU work, and the bottleneck was on the GPU. That's the gap <a href="https://developer.android.com/agi" target="_blank" rel="noopener noreferrer">Android GPU Inspector</a> &mdash; AGI &mdash; fills.</p>
+
+      <h2>What AGI actually is</h2>
+
+      <p>AGI is Google's graphics profiler for Android. It's a desktop app that talks to a connected device over adb and pulls out two very different kinds of trace:</p>
+
+      <ul>
+        <li><strong>System profile</strong> &mdash; a wide, timeline view. CPU scheduling, GPU activity, memory, battery, and hardware GPU performance counters, all on one shared timebase. This is where you go when you don't yet know what's wrong.</li>
+        <li><strong>Frame profile</strong> &mdash; one captured frame, broken down into every Vulkan or OpenGL ES call the app made. Render passes, draw calls, shaders, textures, geometry, the framebuffer at each stage. This is where you go once you know <em>which</em> frame is the problem.</li>
+      </ul>
+
+      <p>I've come to think of the system profiler as the thing that tells you where to look, and the frame profiler as the thing that tells you what to fix. Using the second one first is a good way to waste an afternoon.</p>
+
+      <p>It reads counters from Qualcomm Adreno, Arm Mali and Imagination PowerVR GPUs, which covers pretty much every Android device you'd realistically ship to.</p>
+
+      <h2>Before you start: the checklist that saved me</h2>
+
+      <p>AGI is fussier about setup than most Android tools, and the failure mode is usually a trace that captures nothing rather than a clear error. Go through this list first.</p>
+
+      <h3>On your machine</h3>
+
+      <ul>
+        <li>Windows 7+, macOS 10.11+, or Ubuntu 14.04+. On Linux you also need a 64-bit JDK or JRE 8 or newer.</li>
+        <li><code>adb</code> installed and on your path. AGI asks for the path to the binary on first launch, and it does not guess.</li>
+      </ul>
+
+      <h3>On the device</h3>
+
+      <ul>
+        <li>A <a href="https://developer.android.com/agi/supported-devices" target="_blank" rel="noopener noreferrer">supported device</a> running Android 11 or higher. Android 12+ behaves better in my experience.</li>
+        <li>USB debugging on, and <strong>Install via USB</strong> enabled if your device has that toggle.</li>
+        <li>Turn on <strong>Stay awake</strong> in developer options. Sounds cosmetic. It isn't &mdash; if the screen sleeps mid-capture the trace is garbage, and I lost an hour to that before I read the troubleshooting page.</li>
+        <li>Emulators are not supported. Don't bother trying.</li>
+      </ul>
+
+      <h3>In your app</h3>
+
+      <p>The manifest needs the app marked debuggable:</p>
+
+      <pre><code>&lt;application
+    android:name=".App"
+    android:debuggable="true"&gt;</code></pre>
+
+      <p>You'll get a lint warning about hardcoding this. In practice I keep a dedicated <code>profiling</code> build variant that sets it, so it never ends up anywhere near a release build.</p>
+
+      <p>If your app uses Vulkan, you also need to install AGI's debug layers on the device before capturing:</p>
+
+      <pre><code>app_package=com.example.yourapp
+abi=arm64v8a   # or armeabi-v7a, x86
+
+adb shell settings put global enable_gpu_debug_layers 1
+adb shell settings put global gpu_debug_app ${app_package}
+adb shell settings put global gpu_debug_layer_app com.google.android.gapid.${abi}
+adb shell settings put global gpu_debug_layers VK_LAYER_KHRONOS_validation</code></pre>
+
+      <p>Remember to clear these afterwards. Leaving the debug layers enabled globally quietly slows down every graphics app on the device, and then you spend a week wondering why your benchmarks regressed.</p>
+
+      <figure>
+        <img src="images/agi-device-setup.jpg" alt="A phone in hand next to a desktop monitor and laptop on a white desk" loading="lazy">
+        <figcaption>Photo by Rafal Jedrzejek on <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer">Unsplash</a></figcaption>
+      </figure>
+
+      <h2>Installing it</h2>
+
+      <p>Grab the build for your OS from the <a href="https://github.com/google/agi/releases" target="_blank" rel="noopener noreferrer">releases page on GitHub</a> &mdash; Windows gets an <code>.msi</code> or a zip, and there are macOS and Linux builds alongside them. You have to accept the Android SDK licence terms to download.</p>
+
+      <p>First launch asks for your adb path, then drops you on a screen with a <strong>Get Started</strong> button. Plug in the device and AGI runs a validation pass to check the GPU driver supports profiling. It takes about ten seconds and it tells you not to touch the device while it runs &mdash; take that literally, because interrupting it gives you a cached "unsupported" result that's annoying to clear.</p>
+
+      <h2>Capturing a system profile</h2>
+
+      <p>This is the one I reach for first, every time.</p>
+
+      <ol>
+        <li>Click <strong>Capture a new trace</strong>.</li>
+        <li>Pick your device from the <strong>Device</strong> dropdown, and your app under <strong>Application</strong>.</li>
+        <li>Set <strong>Type</strong> to <strong>System profile</strong>.</li>
+        <li>Set <strong>Start at</strong> to <strong>Manual</strong> and <strong>Duration</strong> to something short. Two seconds is the documented default and it's genuinely enough &mdash; these traces get enormous fast.</li>
+        <li>Hit <strong>Configure</strong> under Trace Options, then <strong>Select</strong> in the GPU section, then <strong>default</strong> to take the default counter set. Click <strong>OK</strong> twice to get back.</li>
+        <li>Choose an <strong>Output Directory</strong> and click <strong>OK</strong>. Your app launches on the device.</li>
+        <li>Get the app into the state you actually care about &mdash; the loading screen tells you nothing &mdash; then press <strong>Start</strong>.</li>
+        <li>When it finishes, click <strong>Open Trace</strong>.</li>
+      </ol>
+
+      <p>That "Manual" start setting is the whole trick. If you let it capture automatically at launch you'll profile your splash screen. I always navigate to the heaviest scene in the app, wait for it to settle, and only then start the capture.</p>
+
+      <h2>Reading the timeline without drowning in it</h2>
+
+      <p>The system profile view is dense. The first few times I opened one I just scrolled around feeling vaguely intimidated. What made it click was picking a specific question before looking.</p>
+
+      <figure>
+        <img src="images/agi-perf-graphs.jpg" alt="A laptop screen showing performance analytics graphs and charts" loading="lazy">
+        <figcaption>Photo by Luke Chesser on <a href="https://unsplash.com/" target="_blank" rel="noopener noreferrer">Unsplash</a></figcaption>
+      </figure>
+
+      <p>The question that matters most: <strong>is the GPU busy, or is it waiting?</strong> Look at the GPU queue track against your frame boundaries.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>What you see</th><th>What it usually means</th><th>Where to look next</th></tr>
+          </thead>
+          <tbody>
+            <tr>
+              <td>GPU busy nearly 100% of the frame</td>
+              <td>You're GPU bound. Rendering is the bottleneck.</td>
+              <td>Counters, then a frame trace</td>
+            </tr>
+            <tr>
+              <td>GPU has big idle gaps, CPU threads busy</td>
+              <td>CPU bound — the GPU is starved waiting for work</td>
+              <td>Thread scheduling track, then a CPU profiler</td>
+            </tr>
+            <tr>
+              <td>Both mostly idle, frames still long</td>
+              <td>Usually a sync or presentation stall</td>
+              <td>Frame processing times, vsync track</td>
+            </tr>
+            <tr>
+              <td>Memory bandwidth counters pinned</td>
+              <td>Texture or vertex traffic, not raw shader cost</td>
+              <td>Texture / vertex bandwidth views</td>
+            </tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The counters worth learning first, in the order I actually use them:</p>
+
+      <ul>
+        <li><strong>GPU utilization</strong> — the sanity check. Everything else is meaningless until you know this number.</li>
+        <li><strong>Fragment vs vertex load</strong> — tells you which half of the pipeline is under pressure. A fragment-heavy frame points at overdraw, expensive fragment shaders or too much full-screen post-processing. Vertex-heavy points at geometry density and too many draw calls.</li>
+        <li><strong>Texture memory bandwidth</strong> — this is the one that got us. Bandwidth on mobile is shared with the CPU and it's far more precious than raw compute. Uncompressed or oversized textures show up here immediately.</li>
+        <li><strong>Vertex memory bandwidth</strong> — fat vertex formats and unnecessary attributes.</li>
+      </ul>
+
+      <p>Google has separate guides for <a href="https://developer.android.com/agi/sys-trace/memory-efficiency" target="_blank" rel="noopener noreferrer">memory efficiency</a>, <a href="https://developer.android.com/agi/sys-trace/texture-memory-bw" target="_blank" rel="noopener noreferrer">texture bandwidth</a> and <a href="https://developer.android.com/agi/sys-trace/threads-scheduling" target="_blank" rel="noopener noreferrer">thread scheduling</a>, and they're short. Worth reading once so you know they exist.</p>
+
+      <div class="callout">
+        <p><strong>One thing that consistently confuses people:</strong> mobile GPUs are tile-based. Work is deferred and batched in ways that make the timeline look nothing like a desktop GPU trace. A render pass that starts late isn't necessarily slow — it may just have been scheduled that way. Read the counters, not your intuition.</p>
+      </div>
+
+      <h2>Capturing a frame profile</h2>
+
+      <p>Once the system profile says "yes, you're GPU bound", the frame profiler tells you which part of the frame is eating the budget.</p>
+
+      <ol>
+        <li><strong>Capture a new trace</strong> again, same device and application.</li>
+        <li>In <strong>Type</strong>, pick <strong>Vulkan</strong> or <strong>OpenGL on ANGLE</strong> — whichever your app actually uses.</li>
+        <li><strong>Start at: Manual</strong>, pick an output directory, click <strong>OK</strong>.</li>
+        <li>If your renderer runs in a separate process, set the process name in the optional field. Easy to miss, and without it you capture nothing.</li>
+        <li>Drive the app to the frame you want, press <strong>Start</strong>, wait a few seconds, then <strong>Open Trace</strong>.</li>
+      </ol>
+
+      <p>Getting the Type wrong is the single most common reason a frame capture comes back empty. AGI won't warn you — it just hands you a trace with no graphics commands in it, and you assume the tool is broken. If you're not sure which API your engine uses, check what it loads at runtime before you start guessing.</p>
+
+      <h3>What's in the frame view</h3>
+
+      <p>The frame profiler splits into panes and it takes a while to learn which ones matter to you:</p>
+
+      <ul>
+        <li><strong>Performance</strong> — render passes sorted by cost. Start here. Always.</li>
+        <li><strong>Commands</strong> — the full API call list for the frame.</li>
+        <li><strong>Framebuffer</strong> — what the screen looked like at any point in the frame. Brilliant for spotting draws that are entirely occluded and therefore entirely wasted.</li>
+        <li><strong>Geometry</strong> — the mesh for a selected draw call, with vertex counts.</li>
+        <li><strong>Shader</strong> — the actual shader source and its <a href="https://developer.android.com/agi/frame-trace/shader-performance" target="_blank" rel="noopener noreferrer">performance stats</a>.</li>
+        <li><strong>Textures</strong> — every texture bound in the frame, with format and size. This is where you find the 4096×4096 uncompressed PNG someone added for a UI icon.</li>
+      </ul>
+
+      <p>My routine is: sort render passes by GPU time, open the most expensive one, scrub the framebuffer to see what it's drawing, then check the textures and shader it uses. Four clicks, and usually the answer is sitting right there.</p>
+
+      <h2>What we actually found</h2>
+
+      <p>In our case, three things, none of which I would have guessed:</p>
+
+      <p>The biggest was texture bandwidth. A batch of environment textures had been exported as uncompressed RGBA8 instead of ASTC. Nobody noticed because on a Pixel there was enough headroom to absorb it. Re-encoding them cut the frame time by roughly a third on the mid-range device.</p>
+
+      <p>Second, a post-processing pass was running at full resolution when half resolution was visually identical for what it did. The framebuffer pane made that one obvious — I could see the blur being computed at a fidelity nothing downstream used.</p>
+
+      <p>Third, and this is the one that stung: a UI overlay was drawing behind an opaque panel on every single frame. Pure waste, invisible in every tool except the framebuffer view, and it had been there for over a year.</p>
+
+      <p>None of these were exotic. That's sort of the point. GPU problems on mobile are usually boring problems that no one could see.</p>
+
+      <h2>Things worth knowing before you sink a day into it</h2>
+
+      <ul>
+        <li><strong>Device support is narrower than you'd like.</strong> Check the <a href="https://developer.android.com/agi/supported-devices" target="_blank" rel="noopener noreferrer">supported devices list</a> before you promise anyone results. If the exact phone your users are complaining about isn't on it, you'll be profiling a proxy device and reasoning by analogy.</li>
+        <li><strong>Traces are big.</strong> Keep durations short. A ten-second system profile with all counters enabled will make the UI crawl.</li>
+        <li><strong>Profile a release-ish build.</strong> Debug builds have different shader compilation behaviour and you'll chase phantoms. A dedicated variant that's optimised but debuggable is the sweet spot.</li>
+        <li><strong>Clean up after yourself.</strong> Those <code>adb shell settings put global</code> commands persist across reboots. Unset them.</li>
+        <li><strong>It's not only for games.</strong> Any app with heavy custom drawing, camera preview pipelines, video compositing, or complex Compose canvas work can be GPU bound. Games are just where it shows up most obviously.</li>
+        <li>If a capture fails and the message isn't helpful, the <a href="https://developer.android.com/agi/troubleshooting" target="_blank" rel="noopener noreferrer">troubleshooting page</a> is unusually good. Nine times out of ten it's the debuggable flag, the wrong API type, or the screen going to sleep.</li>
+      </ul>
+
+      <h2>Was it worth it</h2>
+
+      <p>The setup is more work than it should be, and the first trace you open will look like noise. But I'd been guessing at GPU behaviour for years, tuning by trial and error and hoping the numbers moved. Being able to see which render pass costs what, and which texture is eating the bandwidth budget, changed how I think about rendering performance entirely.</p>
+
+      <p>If you ship anything with meaningful GPU work on Android, spend an afternoon with it. Start with a system profile on a device you know feels bad, ask one question, and follow it down.</p>
+
+      <hr>
+
+      <p>Official docs: <a href="https://developer.android.com/agi" target="_blank" rel="noopener noreferrer">developer.android.com/agi</a> · <a href="https://developer.android.com/agi/start" target="_blank" rel="noopener noreferrer">Quickstart</a> · <a href="https://github.com/google/agi/releases" target="_blank" rel="noopener noreferrer">Downloads</a></p>
+
+      <div class="post-footer">
+        Got a GPU bottleneck you can't explain, or found something AGI missed? I'd like to hear about it — <a href="../index.html#section-contact">get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">← All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

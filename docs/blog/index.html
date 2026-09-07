@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Blog — Raju Shingadiya</title>
+  <meta name="description" content="Notes from Raju Shingadiya on Android engineering — AOSP, Kotlin, GPU profiling, performance and the things I run into while shipping apps.">
+  <meta name="author" content="Raju Shingadiya">
+  <link rel="canonical" href="https://rajumark.github.io/blog/">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="website">
+  <meta property="og:title" content="Blog — Raju Shingadiya">
+  <meta property="og:description" content="Notes on Android engineering — AOSP, Kotlin, GPU profiling and performance.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/">
+  <meta property="og:site_name" content="Raju Shingadiya">
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <h1 class="page-title">Blog</h1>
+    <p class="page-sub">Things I learn while building Android apps — tooling, AOSP, performance, and the occasional debugging rabbit hole.</p>
+
+    <ul class="post-list">
+      <li class="post-item">
+        <a class="post-link" href="chromis-on-device-photo-colorizer.html">
+          <img class="post-thumb" src="images/chromis-photo3-colorized.jpg" alt="Cover image for: Chromis: I put a colorization model on a phone and cut the network cable" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">5 September 2026 · 11 min read</div>
+            <div class="post-title">Chromis: I put a colorization model on a phone and cut the network cable</div>
+            <p class="post-excerpt">Old family photos are the last thing you should upload to a stranger&rsquo;s server. So I built a colorizer that physically cannot &mdash; a 129 MB DDColor model running on the phone, with no INTERNET permission in the manifest at all.</p>
+            <div class="tags">
+              <span class="tag">Edge AI</span>
+              <span class="tag">ONNX</span>
+              <span class="tag">Compose</span>
+              <span class="tag">Privacy</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="netron-model-viewer-quantization-on-device.html">
+          <img class="post-thumb" src="images/netron-hero.jpg" alt="Cover image for: Netron: the model viewer I open before every on-device deployment" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">8 August 2026 · 10 min read</div>
+            <div class="post-title">Netron: the model viewer I open before every on-device deployment</div>
+            <p class="post-excerpt">I once shipped a &ldquo;quantized&rdquo; model that was still half float32, and nothing warned me. Here is how I use Netron to check quantization, scale and zero-point, and whether the graph will actually run on an accelerator.</p>
+            <div class="tags">
+              <span class="tag">On-device ML</span>
+              <span class="tag">Quantization</span>
+              <span class="tag">TFLite</span>
+              <span class="tag">ONNX</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="android-gpu-inspector-agi-guide.html">
+          <img class="post-thumb" src="images/agi-mobile-gaming.jpg" alt="Cover image for: Profiling Android GPU work with AGI (Android GPU Inspector)" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">4 July 2026 · 12 min read</div>
+            <div class="post-title">Profiling Android GPU work with AGI (Android GPU Inspector)</div>
+            <p class="post-excerpt">Our game was dropping frames on a mid-range Adreno device and no amount of CPU profiling explained it. AGI did. Here is how I set it up, what the counters actually mean, and how I read a frame trace.</p>
+            <div class="tags">
+              <span class="tag">Android</span>
+              <span class="tag">GPU</span>
+              <span class="tag">Performance</span>
+              <span class="tag">Vulkan</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="footprints-offline-llm-android.html">
+          <img class="post-thumb" src="images/footprints-chat.jpg" alt="Cover image for: Footprints: I put a language model in an APK and deleted the internet" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">7 June 2026 · 11 min read</div>
+            <div class="post-title">Footprints: I put a language model in an APK and deleted the internet</div>
+            <p class="post-excerpt">A 507 MB app is an absurd thing to ship. I did it anyway, because the alternative was sending every conversation to somebody else&rsquo;s server. Qwen 2.5 0.5B, llama.cpp, and a manifest with no network permission.</p>
+            <div class="tags">
+              <span class="tag">Edge AI</span>
+              <span class="tag">LLM</span>
+              <span class="tag">llama.cpp</span>
+              <span class="tag">Privacy</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="dropbg-on-device-background-removal.html">
+          <img class="post-thumb" src="images/dropbg-after.jpg" alt="Cover image for: DropBG: cutting out backgrounds without sending anyone your photos" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">16 May 2026 · 9 min read</div>
+            <div class="post-title">DropBG: cutting out backgrounds without sending anyone your photos</div>
+            <p class="post-excerpt">Every background remover wants your image on their server and your card on file. This one is a 42 MB model, runs on the phone in about a second, and costs nothing.</p>
+            <div class="tags">
+              <span class="tag">Edge AI</span>
+              <span class="tag">ONNX</span>
+              <span class="tag">Image</span>
+              <span class="tag">Privacy</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="localphotos-offline-ocr-photo-search.html">
+          <img class="post-thumb" src="images/localphotos-1.jpg" alt="Cover image for: LocalPhotos: searching pictures by the words inside them, offline" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">18 April 2026 · 8 min read</div>
+            <div class="post-title">LocalPhotos: searching pictures by the words inside them, offline</div>
+            <p class="post-excerpt">I knew I had screenshotted that address. I could not find it. So I indexed my whole gallery with on-device OCR and a Room FTS4 table.</p>
+            <div class="tags">
+              <span class="tag">OCR</span>
+              <span class="tag">ML Kit</span>
+              <span class="tag">Room</span>
+              <span class="tag">Search</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="localdocuments-android-document-scanner.html">
+          <img class="post-thumb" src="images/localdocuments-1.jpg" alt="Cover image for: LocalDocuments: a scanner app that never asks for your camera" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">22 March 2026 · 7 min read</div>
+            <div class="post-title">LocalDocuments: a scanner app that never asks for your camera</div>
+            <p class="post-excerpt">Scanner apps are a notorious category &mdash; free, ad-stuffed, and quietly holding the camera permission plus your documents. It turns out you can build one that needs neither.</p>
+            <div class="tags">
+              <span class="tag">ML Kit</span>
+              <span class="tag">PDF</span>
+              <span class="tag">Privacy</span>
+              <span class="tag">Compose</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="localtranslate-offline-android-translation.html">
+          <img class="post-thumb" src="images/localtranslate-1.jpg" alt="Cover image for: LocalTranslate: 30+ languages, no API key, no connection" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">14 February 2026 · 7 min read</div>
+            <div class="post-title">LocalTranslate: 30+ languages, no API key, no connection</div>
+            <p class="post-excerpt">The moment you most need a translator is the moment you have no signal and roaming would cost a fortune. Download the models on home WiFi, then translate forever with the radio off.</p>
+            <div class="tags">
+              <span class="tag">ML Kit</span>
+              <span class="tag">Offline</span>
+              <span class="tag">Compose</span>
+              <span class="tag">Travel</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="newzero-kotlin-multiplatform-rss-reader.html">
+          <img class="post-thumb" src="images/newzero-desktop-dark.jpg" alt="Cover image for: Newzero: one codebase, five platforms, no tracking" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">10 January 2026 · 9 min read</div>
+            <div class="post-title">Newzero: one codebase, five platforms, no tracking</div>
+            <p class="post-excerpt">RSS never died, it just stopped being a business &mdash; which makes it a very good thing to build on. Android, iOS, macOS, Windows and Linux from one Kotlin Multiplatform codebase.</p>
+            <div class="tags">
+              <span class="tag">KMP</span>
+              <span class="tag">Compose</span>
+              <span class="tag">RSS</span>
+              <span class="tag">Multiplatform</span>
+            </div>
+          </div>
+        </a>
+      </li>
+      <li class="post-item">
+        <a class="post-link" href="porpita-flutter-adb-gui.html">
+          <img class="post-thumb" src="images/porpita-terminal.jpg" alt="Cover image for: Porpita: I got tired of remembering adb commands" loading="lazy">
+          <div class="post-body">
+            <div class="post-meta">6 December 2025 · 10 min read</div>
+            <div class="post-title">Porpita: I got tired of remembering adb commands</div>
+            <p class="post-excerpt">I have typed the same dumpsys incantation more times than I would like to count. So I built a desktop GUI for ADB &mdash; and had to push a DEX onto the device just to draw the app icons.</p>
+            <div class="tags">
+              <span class="tag">Flutter</span>
+              <span class="tag">Desktop</span>
+              <span class="tag">ADB</span>
+              <span class="tag">Tooling</span>
+            </div>
+          </div>
+        </a>
+      </li>
+    </ul>
+
+    <p class="empty-note">More as I build things worth writing about.</p>
+  </div>
+</body>
+</html>
