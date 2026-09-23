@@ -336,6 +336,99 @@
       line-height: 1.3;
     }
 
+    /* AI libraries */
+    .lib-intro { font-size: 13px; color: #666; margin-bottom: 16px; max-width: 720px; }
+    .lib-grid {
+      display: grid;
+      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      gap: 16px;
+    }
+    .lib-card {
+      display: flex;
+      flex-direction: column;
+      gap: 12px;
+      padding: 18px;
+      border: 1px solid #e6e6e6;
+      border-top: 3px solid var(--lib-color);
+      border-radius: 14px;
+      background: #fff;
+      min-width: 0;
+    }
+    .lib-head { display: flex; align-items: center; gap: 12px; }
+    .lib-head img { width: 44px; height: 44px; flex-shrink: 0; }
+    .lib-name { font-size: 16px; font-weight: 600; color: #222; line-height: 1.2; }
+    .lib-tag { font-size: 12px; color: var(--lib-color); font-weight: 600; }
+    .lib-desc { font-size: 13px; color: #555; line-height: 1.55; }
+    .lib-example {
+      font-size: 12.5px;
+      color: #444;
+      background: color-mix(in srgb, var(--lib-color) 7%, #fff);
+      border-radius: 10px;
+      padding: 8px 12px;
+    }
+    .lib-example b { color: #222; font-weight: 600; }
+    .lib-stats { display: flex; flex-wrap: wrap; gap: 6px; }
+    .lib-stats span {
+      font-size: 11px;
+      font-weight: 600;
+      color: #555;
+      border: 1px solid #e0e0e0;
+      border-radius: 20px;
+      padding: 3px 10px;
+    }
+    .lib-note { font-size: 11.5px; color: #8a6d1a; }
+    .lib-dep {
+      display: flex;
+      align-items: center;
+      gap: 8px;
+      background: #f6f7f9;
+      border: 1px solid #eceef1;
+      border-radius: 8px;
+      padding: 6px 6px 6px 10px;
+    }
+    .lib-dep code {
+      flex: 1;
+      min-width: 0;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 11px;
+      color: #333;
+      word-break: break-all;
+    }
+    .lib-copy {
+      flex-shrink: 0;
+      font: inherit;
+      font-size: 11px;
+      font-weight: 600;
+      border: 1px solid #ddd;
+      background: #fff;
+      color: #555;
+      border-radius: 6px;
+      padding: 3px 8px;
+      cursor: pointer;
+    }
+    .lib-copy:hover { border-color: var(--lib-color); color: var(--lib-color); }
+    .lib-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; }
+    .lib-links a {
+      font-size: 12.5px;
+      font-weight: 600;
+      color: var(--lib-color);
+      text-decoration: none;
+    }
+    .lib-links a:hover { text-decoration: underline; }
+    .lib-setup { margin-top: 16px; font-size: 13px; color: #555; }
+    .lib-setup summary { cursor: pointer; font-weight: 600; }
+    .lib-setup pre {
+      margin-top: 10px;
+      background: #f6f7f9;
+      border: 1px solid #eceef1;
+      border-radius: 8px;
+      padding: 12px 14px;
+      overflow-x: auto;
+      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
+      font-size: 12px;
+      color: #333;
+    }
+
     .aosp-hero { margin-bottom: 32px; }
     .aosp-hero-title {
       font-size: 18px;
@@ -946,6 +1039,21 @@
         <div class="app-grid" id="grid-ai"></div>
       </div>
       <div class="project-category">
+        <div class="category-title">AI Libraries for Android</div>
+        <p class="lib-intro">On-device AI models packaged as drop-in Android libraries. Pure Kotlin, no dependencies, model bundled inside — no network, no permissions, minSdk 21. Published on JitPack.</p>
+        <div class="lib-grid" id="grid-libs"></div>
+        <details class="lib-setup">
+          <summary>Setup (same for all three)</summary>
+          <pre><code>// settings.gradle.kts
+dependencyResolutionManagement {
+    repositories {
+        mavenCentral()
+        maven { url = uri("https://jitpack.io") }
+    }
+}</code></pre>
+        </details>
+      </div>
+      <div class="project-category">
         <div class="category-title">Desktop Apps</div>
         <div class="app-grid" id="grid-desktop"></div>
       </div>
@@ -1363,6 +1471,68 @@
     renderGrid('grid-mobile', projectsData.mobile);
     renderGrid('grid-desktop', projectsData.desktop);
     renderGrid('grid-ai', projectsData.ai);
+
+    const librariesData = [
+      {
+        name: "Moji", tag: "Emoji suggestions", color: "#0071e3", icon: "images/apps_logo_screenshots/moji.svg",
+        desc: "Give it a task or message and it returns the emoji that fit, in 22+ languages.",
+        example: "<b>“Pay my bills”</b> → 💰 💸 🧾",
+        stats: ["~5 MB", "~0.5 ms / suggestion", "22+ languages"],
+        dep: 'implementation("com.github.rajumark:moji:v1.0.0")',
+        github: "https://github.com/rajumark/moji", site: "https://rajumark.github.io/moji/", jitpack: "https://jitpack.io/#rajumark/moji"
+      },
+      {
+        name: "Beacon", tag: "Language detection", color: "#d9480f", icon: "images/apps_logo_screenshots/beacon.svg",
+        desc: "Detects the language and script of any text, even short chat messages — including romanised Indian languages. 211 language/script labels.",
+        example: "<b>“Kal milte hain bhai”</b> → hin_Latn",
+        stats: ["88% on chat vs 71% ML Kit", "93% romanised Indic", "~8.5 MB", "~0.08 ms / text"],
+        dep: 'implementation("com.github.rajumark:beacon:v1.0.0")',
+        github: "https://github.com/rajumark/beacon", site: "https://rajumark.github.io/beacon/", jitpack: "https://jitpack.io/#rajumark/beacon"
+      },
+      {
+        name: "Comeback", tag: "Smart replies", color: "#2b8a3e", icon: "images/apps_logo_screenshots/comeback.svg",
+        desc: "Reads a received message and suggests 3 short replies to tap, chosen from a fixed, reviewed list of 1,303 — so it never writes anything odd. English only.",
+        example: "<b>“Thanks for your help”</b> → You're welcome · Anytime · No problem, have a great day!",
+        stats: ["63.6% top-3 (ML Kit 72.8%)", "~5 MB", "~0.5 ms / message"],
+        note: "Some training data is licensed for non-commercial use only — see NOTICE.",
+        dep: 'implementation("com.github.rajumark:comeback:v1.0.0")',
+        github: "https://github.com/rajumark/comeback", site: "https://rajumark.github.io/comeback/", jitpack: "https://jitpack.io/#rajumark/comeback"
+      }
+    ];
+
+    document.getElementById('grid-libs').innerHTML = librariesData.map(lib => `
+      <div class="lib-card" style="--lib-color:${lib.color}">
+        <div class="lib-head">
+          <img src="${lib.icon}" alt="${lib.name} logo" loading="lazy">
+          <div>
+            <div class="lib-name">${lib.name}</div>
+            <div class="lib-tag">${lib.tag}</div>
+          </div>
+        </div>
+        <div class="lib-desc">${lib.desc}</div>
+        <div class="lib-example">${lib.example}</div>
+        <div class="lib-stats">${lib.stats.map(s => `<span>${s}</span>`).join('')}</div>
+        ${lib.note ? `<div class="lib-note">${lib.note}</div>` : ''}
+        <div class="lib-dep">
+          <code>${lib.dep}</code>
+          <button class="lib-copy" type="button" data-copy='${lib.dep}'>Copy</button>
+        </div>
+        <div class="lib-links">
+          <a href="${lib.site}" target="_blank" rel="noopener noreferrer">Website ↗</a>
+          <a href="${lib.github}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+          <a href="${lib.jitpack}" target="_blank" rel="noopener noreferrer">JitPack ↗</a>
+        </div>
+      </div>
+    `).join('');
+
+    document.querySelectorAll('.lib-copy').forEach(btn => {
+      btn.addEventListener('click', () => {
+        navigator.clipboard.writeText(btn.dataset.copy).then(() => {
+          btn.textContent = 'Copied';
+          setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
+        }).catch(() => {});
+      });
+    });
 
     function toggleSection(titleEl) {
       const collapse = titleEl.nextElementSibling;
