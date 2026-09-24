@@ -1043,7 +1043,7 @@
         <p class="lib-intro">On-device AI models packaged as drop-in Android libraries. Pure Kotlin, no dependencies, model bundled inside — no network, no permissions, minSdk 21. Published on JitPack.</p>
         <div class="lib-grid" id="grid-libs"></div>
         <details class="lib-setup">
-          <summary>Setup (same for all three)</summary>
+          <summary>Setup (same for all libraries)</summary>
           <pre><code>// settings.gradle.kts
 dependencyResolutionManagement {
     repositories {
@@ -1497,6 +1497,14 @@ dependencyResolutionManagement {
         note: "Some training data is licensed for non-commercial use only — see NOTICE.",
         dep: 'implementation("com.github.rajumark:comeback:v1.0.0")',
         github: "https://github.com/rajumark/comeback", site: "https://rajumark.github.io/comeback/", jitpack: "https://jitpack.io/#rajumark/comeback"
+      },
+      {
+        name: "Gatekeeper", tag: "Toxic message detection", color: "#3b5bdb", icon: "images/apps_logo_screenshots/gatekeeper.svg",
+        desc: "Flags abusive, offensive, hateful, threatening or sexually harassing messages. Made for Indian chat — Hindi, Tamil, Telugu, Malayalam, Kannada, Hinglish, Tanglish and English, plus ~15 more languages.",
+        example: "<b>“tujhe jaan se maar dunga”</b> → Threat · <b>“bhai tu toh kamaal hai”</b> → clean",
+        stats: ["98.8% everyday chat passes", "F1 0.84 Indic vs 0.63 BERT", "~4 MB", "~1 ms / message"],
+        dep: 'implementation("com.github.rajumark:gatekeeper:v1.0.0")',
+        github: "https://github.com/rajumark/gatekeeper", site: "https://rajumark.github.io/gatekeeper/", jitpack: "https://jitpack.io/#rajumark/gatekeeper"
       }
     ];
 
