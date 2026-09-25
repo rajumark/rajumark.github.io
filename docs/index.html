@@ -1513,6 +1513,14 @@ dependencyResolutionManagement {
         stats: ["Hinglish F1 0.83 vs 0.49 XLM-R", "~7.8 MB", "~10 ms / message"],
         dep: 'implementation("com.github.rajumark:comma:v1.0.0")',
         github: "https://github.com/rajumark/comma", site: "https://rajumark.github.io/comma/", jitpack: "https://jitpack.io/#rajumark/comma"
+      },
+      {
+        name: "Hideout", tag: "Personal info detection & masking", color: "#7048e8", icon: "images/apps_logo_screenshots/hideout.svg",
+        desc: "Finds phone numbers, UPI IDs, Aadhaar, PAN, card and bank numbers, emails, names, addresses and more in a message and hides them, while prices, times and order IDs stay visible. English, Hinglish, Hindi and other Indian languages.",
+        example: "<b>“Call me on 98765 43210, my UPI is raju@okaxis”</b> → Call me on [PHONE], my UPI is [UPI]",
+        stats: ["96% PII hidden vs 64% Presidio", "19 PII types", "~8 MB", "~5 ms / message"],
+        dep: 'implementation("com.github.rajumark:hideout:v1.0.0")',
+        github: "https://github.com/rajumark/hideout", site: "https://rajumark.github.io/hideout/", jitpack: "https://jitpack.io/#rajumark/hideout"
       }
     ];
 
