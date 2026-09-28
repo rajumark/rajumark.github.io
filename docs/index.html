@@ -348,7 +348,7 @@
     .lib-intro { font-size: 13px; color: #666; margin-bottom: 16px; max-width: 720px; }
     .lib-grid {
       display: grid;
-      grid-template-columns: repeat(auto-fill, minmax(280px, 1fr));
+      grid-template-columns: 1fr;
       gap: 16px;
     }
     .lib-card {
@@ -385,36 +385,6 @@
       padding: 3px 10px;
     }
     .lib-note { font-size: 11.5px; color: #8a6d1a; }
-    .lib-dep {
-      display: flex;
-      align-items: center;
-      gap: 8px;
-      background: #f6f7f9;
-      border: 1px solid #eceef1;
-      border-radius: 8px;
-      padding: 6px 6px 6px 10px;
-    }
-    .lib-dep code {
-      flex: 1;
-      min-width: 0;
-      font-family: ui-monospace, SFMono-Regular, Menlo, monospace;
-      font-size: 11px;
-      color: #333;
-      word-break: break-all;
-    }
-    .lib-copy {
-      flex-shrink: 0;
-      font: inherit;
-      font-size: 11px;
-      font-weight: 600;
-      border: 1px solid #ddd;
-      background: #fff;
-      color: #555;
-      border-radius: 6px;
-      padding: 3px 8px;
-      cursor: pointer;
-    }
-    .lib-copy:hover { border-color: var(--lib-color); color: var(--lib-color); }
     .lib-links { display: flex; flex-wrap: wrap; gap: 14px; margin-top: auto; }
     .lib-links a {
       font-size: 12.5px;
@@ -1060,6 +1030,7 @@ dependencyResolutionManagement {
         maven { url = uri("https://jitpack.io") }
     }
 }</code></pre>
+          <pre><code id="lib-deps"></code></pre>
         </details>
       </div>
       <div class="project-category">
@@ -1488,7 +1459,7 @@ dependencyResolutionManagement {
         example: "<b>“Pay my bills”</b> → 💰 💸 🧾",
         stats: ["~5 MB", "~0.5 ms / suggestion", "22+ languages"],
         dep: 'implementation("com.github.rajumark:moji:v1.0.0")',
-        github: "https://github.com/rajumark/moji", site: "https://rajumark.github.io/moji/", jitpack: "https://jitpack.io/#rajumark/moji"
+        github: "https://github.com/rajumark/moji", site: "https://rajumark.github.io/moji/"
       },
       {
         name: "Beacon", tag: "Language detection", color: "#d9480f", icon: "images/apps_logo_screenshots/beacon.svg",
@@ -1496,7 +1467,7 @@ dependencyResolutionManagement {
         example: "<b>“Kal milte hain bhai”</b> → hin_Latn",
         stats: ["88% on chat vs 71% ML Kit", "93% romanised Indic", "~8.5 MB", "~0.08 ms / text"],
         dep: 'implementation("com.github.rajumark:beacon:v1.0.0")',
-        github: "https://github.com/rajumark/beacon", site: "https://rajumark.github.io/beacon/", jitpack: "https://jitpack.io/#rajumark/beacon"
+        github: "https://github.com/rajumark/beacon", site: "https://rajumark.github.io/beacon/"
       },
       {
         name: "Comeback", tag: "Smart replies", color: "#2b8a3e", icon: "images/apps_logo_screenshots/comeback.svg",
@@ -1505,7 +1476,7 @@ dependencyResolutionManagement {
         stats: ["63.6% top-3 (ML Kit 72.8%)", "~5 MB", "~0.5 ms / message"],
         note: "Some training data is licensed for non-commercial use only — see NOTICE.",
         dep: 'implementation("com.github.rajumark:comeback:v1.0.0")',
-        github: "https://github.com/rajumark/comeback", site: "https://rajumark.github.io/comeback/", jitpack: "https://jitpack.io/#rajumark/comeback"
+        github: "https://github.com/rajumark/comeback", site: "https://rajumark.github.io/comeback/"
       },
       {
         name: "Gatekeeper", tag: "Toxic message detection", color: "#3b5bdb", icon: "images/apps_logo_screenshots/gatekeeper.svg",
@@ -1513,7 +1484,7 @@ dependencyResolutionManagement {
         example: "<b>“tujhe jaan se maar dunga”</b> → Threat · <b>“bhai tu toh kamaal hai”</b> → clean",
         stats: ["98.8% everyday chat passes", "F1 0.84 Indic vs 0.63 BERT", "~4 MB", "~1 ms / message"],
         dep: 'implementation("com.github.rajumark:gatekeeper:v1.0.0")',
-        github: "https://github.com/rajumark/gatekeeper", site: "https://rajumark.github.io/gatekeeper/", jitpack: "https://jitpack.io/#rajumark/gatekeeper"
+        github: "https://github.com/rajumark/gatekeeper", site: "https://rajumark.github.io/gatekeeper/"
       },
       {
         name: "Comma", tag: "Punctuation & capitalisation", color: "#0c8599", icon: "images/apps_logo_screenshots/comma.svg",
@@ -1521,7 +1492,7 @@ dependencyResolutionManagement {
         example: "<b>“can you pick up the kids at 5 i am stuck in a meeting”</b> → Can you pick up the kids at 5? I am stuck in a meeting.",
         stats: ["Hinglish F1 0.83 vs 0.49 XLM-R", "~7.8 MB", "~10 ms / message"],
         dep: 'implementation("com.github.rajumark:comma:v1.0.0")',
-        github: "https://github.com/rajumark/comma", site: "https://rajumark.github.io/comma/", jitpack: "https://jitpack.io/#rajumark/comma"
+        github: "https://github.com/rajumark/comma", site: "https://rajumark.github.io/comma/"
       },
       {
         name: "Hideout", tag: "Personal info detection & masking", color: "#7048e8", icon: "images/apps_logo_screenshots/hideout.svg",
@@ -1529,7 +1500,7 @@ dependencyResolutionManagement {
         example: "<b>“Call me on 98765 43210, my UPI is raju@okaxis”</b> → Call me on [PHONE], my UPI is [UPI]",
         stats: ["96% PII hidden vs 64% Presidio", "19 PII types", "~8 MB", "~5 ms / message"],
         dep: 'implementation("com.github.rajumark:hideout:v1.0.0")',
-        github: "https://github.com/rajumark/hideout", site: "https://rajumark.github.io/hideout/", jitpack: "https://jitpack.io/#rajumark/hideout"
+        github: "https://github.com/rajumark/hideout", site: "https://rajumark.github.io/hideout/"
       },
       {
         name: "Chalk", tag: "Doodle recognition", color: "#d6336c", icon: "images/apps_logo_screenshots/chalk.svg",
@@ -1537,7 +1508,7 @@ dependencyResolutionManagement {
         example: "<b>a house drawn in 4 strokes</b> → house 89% · barn 6% · church 1%",
         stats: ["81% first guess, 94% top-3", "~1.8 MB (BEiT: 348 MB)", "345 things"],
         dep: 'implementation("com.github.rajumark:chalk:v1.0.0")',
-        github: "https://github.com/rajumark/chalk", site: "https://rajumark.github.io/chalk/", jitpack: "https://jitpack.io/#rajumark/chalk"
+        github: "https://github.com/rajumark/chalk", site: "https://rajumark.github.io/chalk/"
       }
     ];
 
@@ -1554,26 +1525,16 @@ dependencyResolutionManagement {
         <div class="lib-example">${lib.example}</div>
         <div class="lib-stats">${lib.stats.map(s => `<span>${s}</span>`).join('')}</div>
         ${lib.note ? `<div class="lib-note">${lib.note}</div>` : ''}
-        <div class="lib-dep">
-          <code>${lib.dep}</code>
-          <button class="lib-copy" type="button" data-copy='${lib.dep}'>Copy</button>
-        </div>
         <div class="lib-links">
           <a href="${lib.site}" target="_blank" rel="noopener noreferrer">Website ↗</a>
           <a href="${lib.github}" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
-          <a href="${lib.jitpack}" target="_blank" rel="noopener noreferrer">JitPack ↗</a>
         </div>
       </div>
     `).join('');
 
-    document.querySelectorAll('.lib-copy').forEach(btn => {
-      btn.addEventListener('click', () => {
-        navigator.clipboard.writeText(btn.dataset.copy).then(() => {
-          btn.textContent = 'Copied';
-          setTimeout(() => { btn.textContent = 'Copy'; }, 1500);
-        }).catch(() => {});
-      });
-    });
+    document.getElementById('lib-deps').textContent =
+      '// app/build.gradle.kts\ndependencies {\n' +
+      librariesData.map(lib => '    ' + lib.dep).join('\n') + '\n}';
 
     function toggleSection(titleEl) {
       const collapse = titleEl.nextElementSibling;
@@ -1648,7 +1609,13 @@ dependencyResolutionManagement {
         box.appendChild(iframe);
       });
     });
-    function copySectionLink(e, el) {
+    // Content is rendered by JS, so re-apply the #anchor once the page has loaded.
+  window.addEventListener('load', function () {
+    var target = location.hash && document.getElementById(location.hash.slice(1));
+    if (target) target.scrollIntoView({ behavior: 'instant' });
+  });
+
+  function copySectionLink(e, el) {
     e.preventDefault();
     var url = location.origin + location.pathname + el.getAttribute('href');
     history.replaceState(null, '', el.getAttribute('href'));
