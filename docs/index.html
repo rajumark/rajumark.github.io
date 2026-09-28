@@ -337,6 +337,14 @@
     }
 
     /* AI libraries */
+    #ai-libraries { scroll-margin-top: 72px; }
+    .category-title .share-link {
+      margin-left: 10px;
+      padding: 3px 10px;
+      font-size: 11px;
+      vertical-align: middle;
+    }
+    .category-title .share-link .icon { width: 12px; height: 12px; }
     .lib-intro { font-size: 13px; color: #666; margin-bottom: 16px; max-width: 720px; }
     .lib-grid {
       display: grid;
@@ -1038,8 +1046,8 @@
         <div class="category-title">AI Apps</div>
         <div class="app-grid" id="grid-ai"></div>
       </div>
-      <div class="project-category">
-        <div class="category-title">AI Libraries for Android</div>
+      <div class="project-category" id="ai-libraries">
+        <div class="category-title">AI Libraries for Android<a class="chip share-link" href="#ai-libraries" title="Copy link to AI Libraries" onclick="copySectionLink(event, this)"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></svg><span>AI Library</span></a></div>
         <p class="lib-intro">On-device AI models packaged as drop-in Android libraries. Pure Kotlin, no dependencies, model bundled inside — no network, no permissions, minSdk 21. Published on JitPack.</p>
         <div class="lib-grid" id="grid-libs"></div>
         <details class="lib-setup">
@@ -1639,6 +1647,18 @@ dependencyResolutionManagement {
         box.appendChild(iframe);
       });
     });
-  </script>
+    function copySectionLink(e, el) {
+    e.preventDefault();
+    var url = location.origin + location.pathname + el.getAttribute('href');
+    history.replaceState(null, '', el.getAttribute('href'));
+    var label = el.querySelector('span');
+    var done = function () {
+      label.textContent = 'Link copied';
+      setTimeout(function () { label.textContent = 'AI Library'; }, 1500);
+    };
+    if (navigator.clipboard) navigator.clipboard.writeText(url).then(done, done);
+    else done();
+  }
+</script>
 </body>
 </html>
