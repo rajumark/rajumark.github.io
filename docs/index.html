@@ -1509,6 +1509,14 @@ dependencyResolutionManagement {
         stats: ["81% first guess, 94% top-3", "~1.8 MB (BEiT: 348 MB)", "345 things"],
         dep: 'implementation("com.github.rajumark:chalk:v1.0.0")',
         github: "https://github.com/rajumark/chalk", site: "https://rajumark.github.io/chalk/"
+      },
+      {
+        name: "Emotion", tag: "Emotion detection", color: "#e67700", icon: "images/apps_logo_screenshots/emotion.svg",
+        desc: "Reads an English message and finds the emotions in it, several at once — 27 GoEmotions emotions such as joy, gratitude, anger, sadness and nervousness, plus neutral — and an overall mood. Also catches emotions that are implied, not named. For chat, support, reviews and journaling apps.",
+        example: "<b>“Exam tomorrow and I remember nothing 😰”</b> → nervousness 96% · mood: negative",
+        stats: ["Fresh chat: 38% top emotion vs 36% RoBERTa", "28 emotions + mood", "~6.4 MB (RoBERTa: 499 MB)", "~3 ms / message"],
+        dep: 'implementation("com.github.rajumark:emotion:v1.0.0")',
+        github: "https://github.com/rajumark/emotion", site: "https://rajumark.github.io/emotion/"
       }
     ];
 
