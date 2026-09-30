@@ -1,0 +1,280 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Gatekeeper playbook: 6 places to put a toxicity filter in your app — Raju Shingadiya</title>
+  <meta name="description" content="A practical playbook for adding on-device toxic message detection to a chat, comments or review feature with Gatekeeper, a 3.8 MB Kotlin Multiplatform model built for Indian chat: Hinglish, Tanglish, Hindi, Tamil and more. Which sensitivity to use where, with code.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Gatekeeper, toxicity detection, content moderation, profanity filter, Hinglish, Hindi abuse detection, Indian languages, on-device AI, Kotlin Multiplatform, trust and safety">
+  <link rel="canonical" href="https://rajumark.github.io/blog/gatekeeper-toxicity-filter-indian-chat-playbook.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Gatekeeper playbook: 6 places to put a toxicity filter in your app">
+  <meta property="og:description" content="Where to check messages, which sensitivity to pick, and what to do with the verdict. For Hinglish, Tanglish and 15+ languages, on the device.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/gatekeeper-toxicity-filter-indian-chat-playbook.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/gatekeeper-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Gatekeeper playbook: 6 places to put a toxicity filter in your app">
+  <meta name="twitter:description" content="Where to check messages, which sensitivity to pick, and what to do with the verdict. For Hinglish, Tanglish and 15+ languages, on the device.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/gatekeeper-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "A toxicity filter playbook: 6 places to put Gatekeeper in your app",
+    "description": "A practical playbook for adding on-device toxic message detection to a chat, comments or review feature with Gatekeeper, a 3.8 MB Kotlin Multiplatform model built for Indian chat: Hinglish, Tanglish, Hindi, Tamil and more. Which sensitivity to use where, with code.",
+    "image": "https://rajumark.github.io/blog/images/gatekeeper-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/gatekeeper-toxicity-filter-indian-chat-playbook.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .play { border: 1px solid var(--line-strong); background: var(--bg-soft); border-radius: 16px; padding: 18px 20px 6px; margin: 22px 0; }
+    .play h3 { margin-top: 0; }
+    .play .meta { display: flex; flex-wrap: wrap; gap: 8px; margin: -4px 0 12px; }
+    .play .meta span { font-size: 12px; font-weight: 600; letter-spacing: .03em; padding: 3px 10px; border-radius: 99px; background: var(--bg-soft); border: 1px solid var(--line); }
+    .play .meta span.s-strict { border-color: #e5484d; color: #e5484d; }
+    .play .meta span.s-bal { border-color: #d49b00; color: #d49b00; }
+    .play .meta span.s-rel { border-color: var(--accent); color: var(--accent); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 9 min read</div>
+        <h1>A toxicity filter playbook: 6 places to put Gatekeeper in your app</h1>
+        <p class="post-standfirst">A toxicity model on its own does nothing. What matters is where you check, how strict you are there, and what happens next. Here is a playbook of six places, with the setting and code for each.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/gatekeeper-kmp-desktop.jpg" alt="Gatekeeper desktop sample checking a message for toxicity" loading="eager">
+        <figcaption>One call per message, about a millisecond, nothing sent anywhere.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/gatekeeper/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/gatekeeper" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>Before the plays: the three settings</h2>
+
+      <p>Gatekeeper reads a message and returns a score from 0 to 1, a yes/no verdict and a hint about the category: insult, profanity, threat, hate or sexual. The verdict depends on how strict you ask it to be:</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Sensitivity</th><th>Threshold</th><th>Toxic caught</th><th>Normal chat flagged</th><th>Good for</th></tr></thead>
+          <tbody>
+            <tr><td><code>STRICT</code></td><td>0.25</td><td>~85%</td><td>~2&ndash;3%</td><td>kids' apps, sending to a human</td></tr>
+            <tr><td><code>BALANCED</code></td><td>0.42</td><td>~77%</td><td>~1%</td><td>most apps (default)</td></tr>
+            <tr><td><code>RELAXED</code></td><td>0.70</td><td>~64%</td><td>~0.6%</td><td>hiding things automatically</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The rule of thumb that falls out of this table: <strong>be strict when a human decides next, relaxed when the machine decides alone.</strong> Every play below follows it.</p>
+
+      <pre><code>// build.gradle.kts
+implementation("io.github.rajumark:gatekeeper:2.0.0")
+
+val gatekeeper = Gatekeeper()   // load once (~50 ms), off the main thread; check() is thread-safe</code></pre>
+
+      <h2>The six plays</h2>
+
+      <div class="play">
+        <h3>1. The nudge before sending</h3>
+        <div class="meta"><span class="s-bal">BALANCED</span><span>on the sender's device</span><span>user decides</span></div>
+        <p>Check the draft when the user taps send. If it's toxic, don't block &mdash; ask: &ldquo;This might come across as hurtful. Send anyway?&rdquo; The goal is a second thought, not censorship.</p>
+        <pre><code>if (gatekeeper.isToxic(draft)) showRethinkDialog(draft) else send(draft)</code></pre>
+      </div>
+
+      <div class="play">
+        <h3>2. Blur on arrival</h3>
+        <div class="meta"><span class="s-rel">RELAXED</span><span>on the receiver's device</span><span>machine decides</span></div>
+        <p>Incoming messages that score high get blurred with a &ldquo;tap to show&rdquo;. The receiver stays in control, and because it runs on their device, it works even in end-to-end encrypted chats where a server can't read anything.</p>
+        <pre><code>val hidden = gatekeeper.check(message.text, Sensitivity.RELAXED).isToxic</code></pre>
+      </div>
+
+      <div class="play">
+        <h3>3. The moderator queue</h3>
+        <div class="meta"><span class="s-strict">STRICT</span><span>comments, reviews, posts</span><span>human decides</span></div>
+        <p>For public content, flag generously and let a person look. Sort the queue by <code>score</code> so the worst is seen first. A 2&ndash;3% false-flag rate is fine when the cost of a false flag is one extra glance.</p>
+        <pre><code>val v = gatekeeper.check(comment, Sensitivity.STRICT)
+if (v.isToxic) moderationQueue.add(comment, priority = v.score)</code></pre>
+      </div>
+
+      <div class="play">
+        <h3>4. Kids' mode</h3>
+        <div class="meta"><span class="s-strict">STRICT</span><span>young audiences</span><span>block + tell a parent</span></div>
+        <p>With children, a missed insult is worse than a blocked joke. Use <code>STRICT</code>, and for threats specifically, don't just hide the message &mdash; surface it to whoever is responsible.</p>
+        <pre><code>val v = gatekeeper.check(text, Sensitivity.STRICT)
+if (v.isToxic &amp;&amp; v.topCategory == Category.THREAT) notifyGuardian(text)</code></pre>
+      </div>
+
+      <div class="play">
+        <h3>5. Names and bios</h3>
+        <div class="meta"><span class="s-bal">BALANCED</span><span>usernames, group names, profiles</span><span>ask to change</span></div>
+        <p>A toxic group name is seen by everyone in the group. Check names and bios at the moment they're saved and ask for another one. It's short text, so it costs almost nothing.</p>
+      </div>
+
+      <div class="play">
+        <h3>6. Your own custom line</h3>
+        <div class="meta"><span>custom threshold</span><span>tuned on your data</span></div>
+        <p>If none of the three presets fit, pass your own threshold. Take a few hundred real messages from your app, look at their scores, and pick the line where you're comfortable.</p>
+        <pre><code>gatekeeper.check(message, threshold = 0.6f)
+gatekeeper.score(message)   // just the number, 0..1</code></pre>
+      </div>
+
+      <h2>Why it's built for Indian chat</h2>
+
+      <p>Most toxicity models are trained on English, and a little on other languages written in their own scripts. Indian chat is Hindi typed in Latin letters, mixed with English, with creative spelling. That's where a generic model falls over, and where Gatekeeper was trained to hold up:</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/gatekeeper-clean.jpg" alt="Gatekeeper letting a friendly Hinglish message through" loading="lazy">
+          <figcaption>&ldquo;bhai tu toh kamaal hai 🔥&rdquo; &rarr; fine</figcaption>
+        </figure>
+        <figure>
+          <img src="images/gatekeeper-threat.jpg" alt="Gatekeeper catching a threat written in Hinglish" loading="lazy">
+          <figcaption>&ldquo;tujhe jaan se maar dunga&rdquo; &rarr; threat</figcaption>
+        </figure>
+        <figure>
+          <img src="images/gatekeeper-insult.jpg" alt="Gatekeeper catching an English insult" loading="lazy">
+          <figcaption>&ldquo;you are a stupid idiot&rdquo; &rarr; insult</figcaption>
+        </figure>
+      </div>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Gatekeeper</th><th>Multilingual BERT toxicity classifier</th></tr></thead>
+          <tbody>
+            <tr><td>Indian-language comments (hi, ta, te, ml, kn), F1</td><td><strong>0.84</strong></td><td>0.63</td></tr>
+            <tr><td>Same comments in Latin letters, F1</td><td><strong>0.83</strong></td><td>0.65</td></tr>
+            <tr><td>Everyday chat not flagged</td><td><strong>98.8%</strong></td><td>85.1%</td></tr>
+            <tr><td>15 world languages, F1</td><td>0.77</td><td><strong>0.91</strong></td></tr>
+            <tr><td>Hate-speech stress test (no slurs)</td><td>45%</td><td><strong>61%</strong></td></tr>
+            <tr><td>Size</td><td><strong>3.8 MB</strong></td><td>711 MB</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The 98.8% row matters more than it looks. A filter that flags one in seven normal messages (85.1%) trains users to ignore it. Slang like &ldquo;this movie killed me 😂&rdquo; should stay clean, and it does.</p>
+
+      <h2>What not to do</h2>
+
+      <ul>
+        <li><strong>Don't auto-ban on one verdict.</strong> Gatekeeper is a strong, fast first filter, not a judge.</li>
+        <li><strong>Don't decide on the category alone.</strong> Categories are hints and most reliable in English. Decide on <code>isToxic</code> or <code>score</code>.</li>
+        <li><strong>Don't expect it to catch polite hate.</strong> Hate against a group without slurs (&ldquo;X are vermin&rdquo;), sarcasm and some English idioms (&ldquo;I hate mondays&rdquo;) are its weak spots. Keep a report button.</li>
+      </ul>
+
+      <h2>The short version</h2>
+
+      <p>Strict where a human reviews. Relaxed where the app acts alone. Balanced for everything in between. Run it on the device so it works in private chats too, and keep a person in the loop for anything that really matters.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><strong>Gatekeeper</strong> &mdash; toxicity detection, as a practical playbook <em>(you are here)</em></li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/gatekeeper/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/gatekeeper" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Running a community app and want to compare notes on moderation? <a href="../index.html#section-contact">Get in touch</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>A PII leak checklist for Indian apps, and how Hideout closes it — Raju Shingadiya</title>
+  <meta name="description" content="An audit checklist of the places personal information leaks out of an app (logs, analytics, crash reports, support tickets, LLM prompts) and how Hideout, an 8 MB on-device PII detector for Kotlin Multiplatform, hides phone numbers, UPI IDs, Aadhaar, PAN and 15 more types before text leaves the device.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Hideout, PII detection, PII redaction, data masking, Aadhaar, PAN, UPI, DPDP Act, privacy engineering, Microsoft Presidio, on-device AI, Kotlin Multiplatform">
+  <link rel="canonical" href="https://rajumark.github.io/blog/hideout-pii-redaction-indian-apps-checklist.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="A PII leak checklist for Indian apps, and how Hideout closes it">
+  <meta property="og:description" content="Phone numbers, UPI IDs, Aadhaar, PAN and bank details end up in logs, analytics and LLM prompts. A checklist, and an 8 MB on-device fix.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/hideout-pii-redaction-indian-apps-checklist.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/hideout-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="A PII leak checklist for Indian apps, and how Hideout closes it">
+  <meta name="twitter:description" content="Phone numbers, UPI IDs, Aadhaar, PAN and bank details end up in logs, analytics and LLM prompts. A checklist, and an 8 MB on-device fix.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/hideout-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Your logs are full of Aadhaar numbers: a PII leak checklist for Indian apps",
+    "description": "An audit checklist of the places personal information leaks out of an app (logs, analytics, crash reports, support tickets, LLM prompts) and how Hideout, an 8 MB on-device PII detector for Kotlin Multiplatform, hides phone numbers, UPI IDs, Aadhaar, PAN and 15 more types before text leaves the device.",
+    "image": "https://rajumark.github.io/blog/images/hideout-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/hideout-pii-redaction-indian-apps-checklist.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    ul.audit { list-style: none; padding-left: 0; }
+    ul.audit li { position: relative; padding: 10px 0 10px 40px; border-bottom: 1px solid var(--line); }
+    ul.audit li::before { content: ""; position: absolute; left: 4px; top: 13px; width: 20px; height: 20px; border: 2px solid currentColor; border-radius: 5px; opacity: .55; }
+    .redact td:nth-child(2) code { background: rgba(78,203,122,.22); }
+    .types { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 22px; }
+    .types code { font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 8 min read</div>
+        <h1>Your logs are full of Aadhaar numbers: a PII leak checklist for Indian apps</h1>
+        <p class="post-standfirst">Users type personal information into every text box you give them. The text then flows into places nobody meant it to go. Here is a checklist for finding those places, and a way to close them before the text leaves the phone.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/hideout-kmp-desktop.jpg" alt="Hideout desktop sample replacing personal information in a message with labels" loading="eager">
+        <figcaption>Personal info in, labels out: <code>[PHONE]</code>, <code>[UPI]</code>, <code>[AADHAAR]</code>.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/hideout/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/hideout" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>The problem, in one message</h2>
+
+      <p><em>&ldquo;Call me on 98765 43210, my UPI is raju@okaxis&rdquo;</em> is a perfectly normal message. In a support chat it's helpful. The trouble starts afterwards, when that exact string is copied into a debug log, an analytics event, a crash report, a search index and, these days, a prompt sent to a cloud LLM.</p>
+
+      <p>Nobody decides to leak it. It just flows. And under India's Digital Personal Data Protection Act, &ldquo;it just flowed&rdquo; is not a comfortable position to be in.</p>
+
+      <h2>The audit: where does user text go?</h2>
+
+      <p>Walk through your app with this list. For each one, ask: <em>could raw user text end up here?</em></p>
+
+      <ul class="audit">
+        <li><strong>Debug and server logs.</strong> Especially request bodies and &ldquo;temporary&rdquo; logging that shipped.</li>
+        <li><strong>Analytics events.</strong> Search queries, form fields and &ldquo;last message&rdquo; properties.</li>
+        <li><strong>Crash and error reports.</strong> Exceptions that include the input that caused them.</li>
+        <li><strong>Support tickets and CRM notes.</strong> Read by many people, kept for years.</li>
+        <li><strong>Prompts to cloud AI APIs.</strong> Summaries, smart replies and &ldquo;AI assist&rdquo; features.</li>
+        <li><strong>Search indexes and caches.</strong> Personal data made searchable by accident.</li>
+        <li><strong>Shared screens.</strong> Screenshots in bug reports, screen sharing, message previews on a lock screen.</li>
+      </ul>
+
+      <p>Every box you tick is a leak. The fix is the same for all of them: hide personal info <strong>before</strong> the text leaves the component that received it &mdash; ideally before it leaves the device.</p>
+
+      <h2>What counts as personal info</h2>
+
+      <p>Hideout detects 19 types, each with exact character offsets and a confidence score. The Indian ones are what make it different:</p>
+
+      <div class="types">
+        <code>NAME</code> <code>PHONE</code> <code>EMAIL</code> <code>UPI</code> <code>AADHAAR</code> <code>PAN</code> <code>CARD</code> <code>BANK_ACCOUNT</code> <code>IFSC</code> <code>ADDRESS</code> <code>PASSPORT</code> <code>VOTER_ID</code> <code>DRIVING_LICENSE</code> <code>VEHICLE</code> <code>GOV_ID</code> <code>DOB</code> <code>SECRET</code> <code>USERNAME</code> <code>IP</code>
+      </div>
+
+      <p><code>SECRET</code> covers passwords, OTPs, PINs and CVVs. Aadhaar is caught even when it's already masked as <code>XXXX XXXX 1234</code>. Addresses include the house, street, building and PIN code &mdash; but a city on its own is left alone.</p>
+
+      <h2>What must <em>not</em> be hidden</h2>
+
+      <p>This is the half most redaction tools get wrong. If you hide every number, your support team can't see the order ID and your logs become useless. Hideout leaves these visible on purpose: prices, times, order IDs, UPI transaction references, PNRs and cities.</p>
+
+      <div class="table-scroll">
+        <table class="redact">
+          <thead><tr><th>Input</th><th>After <code>hide()</code></th></tr></thead>
+          <tbody>
+            <tr><td>Call me on 98765 43210, my UPI is raju@okaxis</td><td>Call me on <code>[PHONE]</code>, my UPI is <code>[UPI]</code></td></tr>
+            <tr><td>Mera naam Pooja Gupta hai, aadhar 4521 8736 1292</td><td>Mera naam <code>[NAME]</code> hai, aadhar <code>[AADHAAR]</code></td></tr>
+            <tr><td>Account no 50100234567812, IFSC HDFC0001234</td><td>Account no <code>[BANK_ACCOUNT]</code>, IFSC <code>[IFSC]</code></td></tr>
+            <tr><td>Order #40512378 will arrive by Friday, costs Rs 24,999</td><td>Order #40512378 will arrive by Friday, costs Rs 24,999 <em>(unchanged)</em></td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <div class="shots">
+        <figure>
+          <img src="images/hideout-english.jpg" alt="Hideout hiding a phone number and UPI ID in English" loading="lazy">
+          <figcaption>English</figcaption>
+        </figure>
+        <figure>
+          <img src="images/hideout-hinglish.jpg" alt="Hideout hiding a name and Aadhaar number in Hinglish" loading="lazy">
+          <figcaption>Hinglish</figcaption>
+        </figure>
+        <figure>
+          <img src="images/hideout-clean.jpg" alt="Hideout leaving an order message with no personal info unchanged" loading="lazy">
+          <figcaption>Nothing to hide</figcaption>
+        </figure>
+      </div>
+
+      <h2>Closing each leak</h2>
+
+      <p>Load it once and use it at every exit:</p>
+
+      <pre><code>// build.gradle.kts
+implementation("io.github.rajumark:hideout:2.0.0")
+
+val hideout = Hideout()                          // load once, off the main thread
+
+log.d("Support message: ${hideout.hide(text)}")   // logs
+analytics.log("search", hideout.hide(query))      // analytics
+llmApi.summarise(hideout.hide(chatHistory))       // cloud AI prompts
+
+if (hideout.contains(draft, types = setOf(PiiType.SECRET))) {
+    warn("Never share your OTP, even with us.")   // stop OTP scams at the source
+}</code></pre>
+
+      <p>Need something other than <code>[TYPE]</code>? Choose your own replacement, or only some types:</p>
+
+      <pre><code>hideout.hide("OTP is 482913", replacement = { "*".repeat(it.text.length) })   // "OTP is ******"
+hideout.hide("Call Rahul on 98765 43210", types = setOf(PiiType.PHONE))       // "Call Rahul on [PHONE]"</code></pre>
+
+      <p>And when you need positions (to highlight, not replace), <code>find()</code> returns each item with offsets that work directly with <code>String.substring</code>.</p>
+
+      <h2>Does it actually catch things?</h2>
+
+      <p>Measured on hand-written chat messages in 14 languages, written after training and never used to build or tune the model:</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Hideout</th><th>Microsoft Presidio (Indian recognizers on)</th><th>GLiNER multi PII</th></tr></thead>
+          <tbody>
+            <tr><td>PII hidden</td><td><strong>96%</strong></td><td>64%</td><td>42%</td></tr>
+            <tr><td>No-PII messages left alone</td><td><strong>95%</strong></td><td>40%</td><td>90%</td></tr>
+            <tr><td>Exactly right</td><td><strong>90%</strong></td><td>37%</td><td>47%</td></tr>
+            <tr><td>Indian chat (3,000 messages): PII hidden</td><td><strong>99%</strong></td><td>66%</td><td>62%</td></tr>
+            <tr><td>Size</td><td><strong>8 MB</strong></td><td>445 MB</td><td>1.1 GB</td></tr>
+            <tr><td>Latency, 1 CPU thread (laptop)</td><td><strong>~0.3 ms</strong></td><td>~10 ms</td><td>~66 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <h2>Known gaps (add these to your audit notes)</h2>
+
+      <ul>
+        <li>A name right before a relation word is sometimes missed: &ldquo;Hemant bhai&rdquo;.</li>
+        <li>A bare number after &ldquo;at&rdquo; can be taken for an address: &ldquo;starts at 7&rdquo;.</li>
+        <li>Wi-Fi network names can be taken for passwords.</li>
+        <li>A word next to a found item is sometimes swallowed into it.</li>
+        <li>Chinese, Japanese and Thai are not supported.</li>
+      </ul>
+
+      <p>The <code>threshold</code> parameter (default 0.5) is your dial: lower it to hide more and leak less, raise it to hide less.</p>
+
+      <h2>Why on the device</h2>
+
+      <p>A PII detector that runs on a server has already received the personal information it's supposed to protect. Hideout runs where the text is typed, with no network permission and no telemetry. The text you're protecting never has to go anywhere to be protected.</p>
+
+      <p>Print the checklist, walk your app, and put <code>hide()</code> at every exit you find.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><strong>Hideout</strong> &mdash; personal info hiding, as an audit checklist <em>(you are here)</em></li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/hideout/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/hideout" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Found a leak path I missed, or a PII format Hideout doesn't know? <a href="../index.html#section-contact">Tell me</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

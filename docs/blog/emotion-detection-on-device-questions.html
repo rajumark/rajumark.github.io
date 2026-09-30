@@ -1,0 +1,279 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Emotion: 12 questions about a 6 MB on-device emotion model — Raju Shingadiya</title>
+  <meta name="description" content="Questions and answers about Emotion, a 6.4 MB on-device emotion detection model for Kotlin Multiplatform: 28 emotions, implied feelings, why 38% is a good score, how it compares with RoBERTa, and where it fails.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Emotion detection, sentiment analysis, GoEmotions, on-device AI, Kotlin Multiplatform, RoBERTa, mood detection, Android NLP, FAQ">
+  <link rel="canonical" href="https://rajumark.github.io/blog/emotion-detection-on-device-questions.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Emotion: 12 questions about a 6 MB on-device emotion model">
+  <meta property="og:description" content="28 emotions, several at once, in about 4 ms on a phone. Why 38% beats a 78x larger model, and the honest limits.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/emotion-detection-on-device-questions.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/emotion-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Emotion: 12 questions about a 6 MB on-device emotion model">
+  <meta name="twitter:description" content="28 emotions, several at once, in about 4 ms on a phone. Why 38% beats a 78x larger model, and the honest limits.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/emotion-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "“Only 38%?” — 12 questions about detecting emotions on the device",
+    "description": "Questions and answers about Emotion, a 6.4 MB on-device emotion detection model for Kotlin Multiplatform: 28 emotions, implied feelings, why 38% is a good score, how it compares with RoBERTa, and where it fails.",
+    "image": "https://rajumark.github.io/blog/images/emotion-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/emotion-detection-on-device-questions.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .qa h2 { display: flex; gap: 12px; align-items: baseline; }
+    .qa h2::before { content: "Q"; flex: none; width: 34px; height: 34px; border-radius: 10px; display: inline-grid; place-items: center;
+      background: var(--accent); color: var(--bg); font-size: 17px; font-weight: 700; transform: translateY(4px); }
+    .chips { display: flex; flex-wrap: wrap; gap: 6px; margin: 12px 0 20px; }
+    .chips span { font-size: 13px; padding: 4px 10px; border-radius: 99px; background: var(--bg-soft); border: 1px solid var(--line); }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 8 min read</div>
+        <h1>&ldquo;Only 38%?&rdquo; &mdash; 12 questions about detecting emotions on the device</h1>
+        <p class="post-standfirst">If I were evaluating an emotion model for my app, I would have twelve questions, starting with the obvious one. So instead of an article, here are those questions, with straight answers.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/emotion-kmp-desktop.jpg" alt="Emotion desktop sample showing the emotions detected in a message" loading="eager">
+        <figcaption>Several emotions per message, each with a score, plus an overall mood.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/emotion/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/emotion" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="qa">
+
+      <h2>What does it actually do?</h2>
+
+      <p>You give it an English message. It tells you which emotions the message carries &mdash; several at once if there are several &mdash; each with a score, plus an overall mood: positive, negative, ambiguous or neutral.</p>
+
+      <pre><code>emotion.detect("Exam tomorrow and I remember nothing 😰")
+// mood = NEGATIVE, emotions = [nervousness 0.96]
+
+emotion.detect("Finally got the job!! Thank you so much for helping me 🙏")
+// mood = POSITIVE, emotions = [gratitude 0.99]</code></pre>
+
+      <h2>Which emotions?</h2>
+
+      <p>The 27 from Google's GoEmotions research, plus neutral:</p>
+
+      <div class="chips">
+        <span>admiration</span><span>amusement</span><span>anger</span><span>annoyance</span><span>approval</span><span>caring</span><span>confusion</span><span>curiosity</span><span>desire</span><span>disappointment</span><span>disapproval</span><span>disgust</span><span>embarrassment</span><span>excitement</span><span>fear</span><span>gratitude</span><span>grief</span><span>joy</span><span>love</span><span>nervousness</span><span>optimism</span><span>pride</span><span>realization</span><span>relief</span><span>remorse</span><span>sadness</span><span>surprise</span><span>neutral</span>
+      </div>
+
+      <p>It also maps them onto Ekman's six basic emotions (anger, disgust, fear, joy, sadness, surprise) for apps that want something coarser.</p>
+
+      <h2>Isn't this just sentiment analysis?</h2>
+
+      <p>Sentiment says &ldquo;negative&rdquo;. Emotion says <em>which</em> negative. &ldquo;Why is my order STILL not here?&rdquo; is annoyance. &ldquo;I miss my grandma so much today&rdquo; is sadness. Both are negative, and a support app should answer them very differently.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/emotion-joy.jpg" alt="Emotion sample detecting gratitude" loading="lazy">
+          <figcaption>Gratitude</figcaption>
+        </figure>
+        <figure>
+          <img src="images/emotion-anger.jpg" alt="Emotion sample detecting annoyance" loading="lazy">
+          <figcaption>Annoyance</figcaption>
+        </figure>
+        <figure>
+          <img src="images/emotion-sadness.jpg" alt="Emotion sample detecting sadness" loading="lazy">
+          <figcaption>Sadness</figcaption>
+        </figure>
+      </div>
+
+      <h2>Only 38%? That sounds bad.</h2>
+
+      <p>It's the question everyone asks first, so here's the full table. Two test sets, neither used for training: 107 fresh everyday messages I wrote <em>after</em> training (many with an implied emotion), and the GoEmotions test set of 5,427 Reddit comments.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Emotion</th><th>RoBERTa-base</th><th>MiniLM</th><th>ModernBERT-large</th></tr></thead>
+          <tbody>
+            <tr><td>Everyday messages: top emotion right</td><td><strong>38.3%</strong></td><td>35.5%</td><td>33.6%</td><td>33.6%</td></tr>
+            <tr><td>Everyday messages: mood right</td><td><strong>46.7%</strong></td><td>40.2%</td><td>43.0%</td><td>35.5%</td></tr>
+            <tr><td>GoEmotions: top emotion right</td><td>61.0%</td><td>63.6%</td><td>60.6%</td><td><strong>66.2%</strong></td></tr>
+            <tr><td>GoEmotions: macro-F1, 28 emotions</td><td>0.475</td><td>0.522</td><td>0.510</td><td><strong>0.538</strong></td></tr>
+            <tr><td>Size</td><td><strong>6.4 MB</strong></td><td>499 MB</td><td>121 MB</td><td>1.6 GB</td></tr>
+            <tr><td>Latency, 1 CPU thread (laptop)</td><td><strong>~0.3 ms</strong></td><td>~17 ms</td><td>~2.6 ms</td><td>~60 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Picking one right answer out of 28 is hard, and emotions are subjective: human raters disagree with each other constantly. 38% is the best score in that row, ahead of a model 78&times; larger and 60&times; slower.</p>
+
+      <h2>So it beats the big models?</h2>
+
+      <p>On everyday messages, yes. On GoEmotions' own Reddit comments, no &mdash; the large models are ahead there, and I'd rather say that than hide the row. The difference is the kind of text. Reddit comments usually <em>name</em> the feeling. Everyday messages usually <em>imply</em> it.</p>
+
+      <h2>What do you mean by &ldquo;implied&rdquo;?</h2>
+
+      <p>&ldquo;Waiting outside the principal's office&rdquo; contains no emotion word. It's nervousness. &ldquo;The scan came back clear&rdquo; is relief. Most people don't write &ldquo;I feel relieved&rdquo;; they write what happened. Emotion was trained with extra everyday sentences written specifically for feelings that GoEmotions models miss, which is where its lead on everyday messages comes from.</p>
+
+      <h2>Does it understand emoji and slang?</h2>
+
+      <p>Yes. One of its two input streams reads hashed words, word pairs and character pieces, which makes it robust to typos, slang and emoji. The 😰 in the exam message pulls hard towards nervousness.</p>
+
+      <h2>How is 6.4 MB possible?</h2>
+
+      <p>The model has 6.0M parameters. One stream reads those hashed pieces; the other reads SentencePiece tokens through four small transformer layers with attention pooling. A small network on top gives the 28 emotion scores and the basic-emotion scores. Weights are stored as 8-bit integers with one scale per row. It learned from GoEmotions, XED and BRIGHTER, and from about a million everyday sentences labelled by a large GoEmotions model.</p>
+
+      <h2>How fast is it on a phone?</h2>
+
+      <p>About 3&ndash;5 ms per message on an Android emulator once warm, and the model loads in about 250 ms. No network, no native code, the same answer on Android, iOS, desktop and the web.</p>
+
+      <h2>Where does it fail?</h2>
+
+      <ul>
+        <li><strong>Sarcasm.</strong> &ldquo;Oh great, it's raining on my day off&rdquo; is easy to misread.</li>
+        <li><strong>Subtle approval and disapproval.</strong></li>
+        <li><strong>Plain messages with times in them</strong> sometimes read as excitement: &ldquo;The meeting moved to 3 pm&rdquo;.</li>
+        <li><strong>English only.</strong></li>
+      </ul>
+
+      <p>Use the scores as signals, not verdicts.</p>
+
+      <h2>What would I actually build with it?</h2>
+
+      <ul>
+        <li>A support inbox that moves annoyed and angry messages up the queue.</li>
+        <li>A journaling app that shows mood over the month without sending a diary to a server.</li>
+        <li>A chat app that suggests a softer reply when the incoming message is sad.</li>
+        <li>A study app that answers nervousness with &ldquo;you've got this&rdquo;.</li>
+      </ul>
+
+      <pre><code>val r = emotion.detect(message)
+if (r.mood == Mood.NEGATIVE) { /* a kinder reply, a human agent, a softer UI */ }
+if (r.emotions.any { it.label == Label.NERVOUSNESS }) { /* "you've got this!" */ }</code></pre>
+
+      <h2>How do I add it?</h2>
+
+      <pre><code>// build.gradle.kts
+implementation("io.github.rajumark:emotion:2.0.0")
+
+val emotion = Emotion()   // load once, off the main thread; detect() is thread-safe</code></pre>
+
+      <p>Free for products with up to 10,000 monthly active devices, commercial apps included. Feelings are about the most private thing a message carries, which is exactly why this one runs on the device.</p>
+
+      </div>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><strong>Emotion</strong> &mdash; emotion detection, as questions and answers <em>(you are here)</em></li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/emotion/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/emotion" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Have a question that isn't here? <a href="../index.html#section-contact">Ask me</a> and it may become question thirteen.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Comeback: my smart reply model loses to Google&#x27;s, and I shipped it anyway — Raju Shingadiya</title>
+  <meta name="description" content="Comeback is an on-device smart reply library for Kotlin Multiplatform. Google ML Kit gives better replies. This essay is about why a smaller, faster, safer model that picks from a reviewed list of replies is still the right choice for many apps.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Comeback, smart reply, ML Kit Smart Reply, suggested replies, reply chips, on-device AI, Kotlin Multiplatform, AI safety, product design">
+  <link rel="canonical" href="https://rajumark.github.io/blog/comeback-smart-replies-vs-ml-kit.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Comeback: my smart reply model loses to Google&#x27;s, and I shipped it anyway">
+  <meta property="og:description" content="ML Kit: 72.8% good reply in the top 3. Comeback: 63.6%. Here&#x27;s why I still think Comeback is the better choice for a lot of apps.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/comeback-smart-replies-vs-ml-kit.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/comeback-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Comeback: my smart reply model loses to Google&#x27;s, and I shipped it anyway">
+  <meta name="twitter:description" content="ML Kit: 72.8% good reply in the top 3. Comeback: 63.6%. Here&#x27;s why I still think Comeback is the better choice for a lot of apps.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/comeback-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "My smart reply model loses to Google's. I shipped it anyway.",
+    "description": "Comeback is an on-device smart reply library for Kotlin Multiplatform. Google ML Kit gives better replies. This essay is about why a smaller, faster, safer model that picks from a reviewed list of replies is still the right choice for many apps.",
+    "image": "https://rajumark.github.io/blog/images/comeback-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/comeback-smart-replies-vs-ml-kit.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .pull { font-size: 24px; line-height: 1.35; font-weight: 500; border-left: 4px solid var(--accent); padding: 4px 0 4px 20px; margin: 30px 0; }
+    .scorecard td:first-child { font-weight: 600; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 7 min read</div>
+        <h1>My smart reply model loses to Google's. I shipped it anyway.</h1>
+        <p class="post-standfirst">I'll start with the number most people would hide: Google ML Kit's smart replies are better than mine. Then I'll tell you why I shipped mine anyway, and why you might want it.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/comeback-kmp-desktop.jpg" alt="Comeback desktop sample suggesting three reply chips for a message" loading="eager">
+        <figcaption>Three chips, three different meanings, picked from a list a human has read.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/comeback/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/comeback" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>The number</h2>
+
+      <p>I wrote 335 messages across 16 categories &mdash; thanks, plans, yes/no questions, bad news, jokes, opinions &mdash; and asked both models for three reply chips each. A reply counted as good if a person would plausibly send it.</p>
+
+      <div class="table-scroll">
+        <table class="scorecard">
+          <thead><tr><th></th><th>Comeback</th><th>Google ML Kit Smart Reply</th></tr></thead>
+          <tbody>
+            <tr><td>A good reply in the top 3</td><td>63.6%</td><td><strong>72.8%</strong></td></tr>
+            <tr><td>Top reply is good</td><td>42.1%</td><td><strong>52.8%</strong></td></tr>
+            <tr><td>Answers every message</td><td><strong>yes</strong></td><td>95%</td></tr>
+            <tr><td>Size</td><td><strong>4.6 MB</strong></td><td>6.6 MB + 4.4 MB native libraries</td></tr>
+            <tr><td>Latency (Android emulator)</td><td><strong>~0.5 ms</strong></td><td>~16.6 ms (p50)</td></tr>
+            <tr><td>Dependencies</td><td><strong>none</strong></td><td>ML Kit + native code</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>ML Kit wins on quality by about nine points. That's real, and if reply quality is the only thing you care about, use ML Kit. I mean that.</p>
+
+      <p>But I don't think quality is the only thing that matters for a reply chip. Here's the argument.</p>
+
+      <h2>A reply chip is a sentence with your name on it</h2>
+
+      <p>When your app shows a suggested reply, the user sees it as <em>something your app said</em>. If it's rude, odd or tone-deaf, that's on you, not on the model.</p>
+
+      <p>Generative reply models write text. Most of the time the text is fine. But all it takes is one Occasionally it's &ldquo;Haha&rdquo; under a message about a funeral, or something worse.ldquo;HahaOccasionally it's &ldquo;Haha&rdquo; under a message about a funeral, or something worse.rdquo; under a message about a funeral. You can filter, but you're filtering an open-ended space.</p>
+
+      <p>Comeback never writes anything. It <strong>picks</strong> from a fixed list of about 1,300 short replies that a human has read. About 100 replies that are technically valid but unhelpful (&ldquo;What?&rdquo;, &ldquo;Huh&rdquo;, &ldquo;Yes, sir&rdquo;) are never shown at all. The worst case is a reply that doesn't fit. It cannot be a reply that's offensive.</p>
+
+      <p class="pull">I'd rather ship a model that is sometimes unhelpful than one that is occasionally embarrassing.</p>
+
+      <p>And because the list is a plain file in the library, you can read it. Try doing that with a generative model.</p>
+
+      <h2>Three chips should mean three different things</h2>
+
+      <p>The failure I wanted to avoid most wasn't bad replies. It was three versions of the same reply: &ldquo;OK&rdquo;, &ldquo;Okay&rdquo;, &ldquo;OK!&rdquo;. That's one choice wearing three hats.</p>
+
+      <p>Comeback groups its replies by intent and shows at most one per group. For <em>&ldquo;Thanks for your help&rdquo;</em> you get <em>No problem, have a great day!</em>, <em>You're welcome</em> and <em>Anytime</em> &mdash; three tones, not three spellings.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/comeback-tonight.jpg" alt="Comeback suggesting replies to Are you coming tonight" loading="lazy">
+          <figcaption>&ldquo;Are you coming tonight?&rdquo;</figcaption>
+        </figure>
+        <figure>
+          <img src="images/comeback-thanks.jpg" alt="Comeback suggesting replies to Thanks for your help" loading="lazy">
+          <figcaption>&ldquo;Thanks for your help&rdquo;</figcaption>
+        </figure>
+        <figure>
+          <img src="images/comeback-sent.jpg" alt="A reply chip tapped and sent" loading="lazy">
+          <figcaption>One tap, sent</figcaption>
+        </figure>
+      </div>
+
+      <h2>Sometimes the best reply is no reply</h2>
+
+      <p><em>&ldquo;Pizza or burgers?&rdquo;</em> has no good canned answer. A model that must always say something will say something weak. ML Kit stays quiet on about 5% of messages; I think that instinct is right, and I wanted the app to control it.</p>
+
+      <pre><code>comeback.replies("Pizza or burgers?", minConfidence = 0.2f)   // [] - show no chips</code></pre>
+
+      <p>Around 0.2 hides the chips for many opinion and open questions. Tune it on your own messages. An empty row of chips is a perfectly good user experience.</p>
+
+      <h2>Speed and size are features, not specs</h2>
+
+      <p>Half a millisecond vs sixteen doesn't sound like much. It means Comeback can score replies for every message in a long chat as it scrolls into view, on any phone, without you thinking about threads. And no native libraries means the same code gives the same chips on Android, iOS, desktop and the web, with no Google Play services requirement.</p>
+
+      <h2>Where Comeback is strong, and where it isn't</h2>
+
+      <p>Strong: thanks (100% good in the top 3), yes/no questions (90%), affection and goodbyes &mdash; the everyday messages where a quick tap is exactly what people want. Weak: opinions, open questions and information messages, where a short canned reply rarely fits. That's where <code>minConfidence</code> earns its keep.</p>
+
+      <p>It's English only for now.</p>
+
+      <h2>So which should you use?</h2>
+
+      <ul>
+        <li>If you want the best possible replies and you're Android-only with Play services: <strong>ML Kit</strong>.</li>
+        <li>If you want replies that can never embarrass you, that you can read and review, that run in half a millisecond on every Kotlin platform with no native code: <strong>Comeback</strong>.</li>
+      </ul>
+
+      <p>I built the second one because it's the one I wanted in my own apps. Publishing the number where it loses felt like the only honest way to recommend it.</p>
+
+      <pre><code>implementation("io.github.rajumark:comeback:2.0.0")
+
+val comeback = Comeback()   // load once, off the main thread
+comeback.replies("Let's meet at 7").map { it.text }</code></pre>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><strong>Comeback</strong> &mdash; smart replies, as an honest opinion piece <em>(you are here)</em></li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/comeback/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/comeback" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Disagree with the trade-off? Good &mdash; <a href="../index.html#section-contact">tell me why</a>. That argument is more useful than agreement.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

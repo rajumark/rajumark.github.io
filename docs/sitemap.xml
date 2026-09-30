@@ -8,9 +8,57 @@
   </url>
   <url>
     <loc>https://rajumark.github.io/blog/</loc>
-    <lastmod>2026-09-05</lastmod>
+    <lastmod>2026-09-30</lastmod>
     <changefreq>weekly</changefreq>
     <priority>0.8</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/moji-on-device-emoji-suggestions-kotlin.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/beacon-language-detection-hinglish-benchmark.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/comma-punctuation-voice-typing-kotlin-tutorial.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/comeback-smart-replies-vs-ml-kit.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/emotion-detection-on-device-questions.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/gatekeeper-toxicity-filter-indian-chat-playbook.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/hideout-pii-redaction-indian-apps-checklist.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
+  </url>
+  <url>
+    <loc>https://rajumark.github.io/blog/chalk-doodle-recognition-strokes-not-pixels.html</loc>
+    <lastmod>2026-09-30</lastmod>
+    <changefreq>yearly</changefreq>
+    <priority>0.7</priority>
   </url>
   <url>
     <loc>https://rajumark.github.io/blog/chromis-on-device-photo-colorizer.html</loc>

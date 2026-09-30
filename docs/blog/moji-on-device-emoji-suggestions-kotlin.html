@@ -1,0 +1,237 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Moji — on-device emoji suggestions in plain Kotlin — Raju Shingadiya</title>
+  <meta name="description" content="Moji suggests the right emoji for any message or task in 22+ languages, on the device, in about half a millisecond. A story about why emoji are harder than they look, and how a 5 MB Kotlin Multiplatform model handles them.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Moji, emoji suggestions, emoji prediction, on-device AI, Kotlin Multiplatform, Android keyboard, offline NLP, Hoverfly">
+  <link rel="canonical" href="https://rajumark.github.io/blog/moji-on-device-emoji-suggestions-kotlin.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Moji — on-device emoji suggestions in plain Kotlin">
+  <meta property="og:description" content="Emoji suggestions in 22+ languages, on the device, in about half a millisecond. No server, no native code.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/moji-on-device-emoji-suggestions-kotlin.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/moji-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Moji — on-device emoji suggestions in plain Kotlin">
+  <meta name="twitter:description" content="Emoji suggestions in 22+ languages, on the device, in about half a millisecond. No server, no native code.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/moji-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Moji: a 5 MB model that knows 💰 goes with “pay my bills”",
+    "description": "Moji suggests the right emoji for any message or task in 22+ languages, on the device, in about half a millisecond. A story about why emoji are harder than they look, and how a 5 MB Kotlin Multiplatform model handles them.",
+    "image": "https://rajumark.github.io/blog/images/moji-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/moji-on-device-emoji-suggestions-kotlin.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .chat { display: grid; gap: 10px; margin: 22px 0 26px; }
+    .chat .row { display: flex; justify-content: space-between; align-items: center; gap: 14px; flex-wrap: wrap;
+      padding: 12px 16px; border-radius: 18px; background: var(--bg-soft); border: 1px solid var(--line); }
+    .chat .msg { font-size: 16px; }
+    .chat .emo { font-size: 22px; letter-spacing: 4px; white-space: nowrap; }
+    .chat .lang { font-size: 12px; opacity: .6; margin-left: 6px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 7 min read</div>
+        <h1>Moji: a 5 MB model that knows 💰 goes with &ldquo;pay my bills&rdquo;</h1>
+        <p class="post-standfirst">Every keyboard has an emoji bar. Almost none of them read what you typed. This is how I built one that does, in 22 languages, without asking a server.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/moji-kmp-desktop.jpg" alt="The Moji desktop sample suggesting emoji for the text Pay my bills" loading="eager">
+        <figcaption>The same model on desktop, Android, iOS and the web. This one is the JVM build.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/moji/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/moji" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>It started with a thumbs up</h2>
+
+      <p>Look at the last ten messages you sent. Count the emoji. For most people it's somewhere between &ldquo;a few&rdquo; and &ldquo;every single one&rdquo;. Emoji aren't decoration any more &mdash; they carry tone. &ldquo;OK&rdquo; and &ldquo;OK 🙂&rdquo; are different messages. &ldquo;OK 👍&rdquo; is a third one.</p>
+
+      <p>And yet the emoji bar on most keyboards is a history list. It shows you what you used yesterday, not what fits today. Type <em>&ldquo;Exam tomorrow&rdquo;</em> and it offers 😂 because you laughed at something last night.</p>
+
+      <p>The obvious fix is a lookup table: &ldquo;pizza&rdquo; &rarr; 🍕. That works for about a week. Then someone types <em>&ldquo;Pay my bills&rdquo;</em>, where no word is an emoji name, or <em>&ldquo;जिम जाना है&rdquo;</em>, where the words aren't even in English. The table has nothing.</p>
+
+      <h2>What I wanted instead</h2>
+
+      <p>I wanted something that reads the whole message and understands the <em>situation</em>. Paying bills is about money. Going to the gym is about effort. A football match tonight is about football, excitement and probably a late night.</p>
+
+      <p>And it had to live on the phone. An emoji bar updates on every keystroke. Sending every keystroke to a server is slow, it's expensive, and it's a strange thing to do with someone's private messages.</p>
+
+      <p>Here is what Moji does with a few real inputs:</p>
+
+      <div class="chat">
+        <div class="row"><span class="msg">Pay my bills <span class="lang">English</span></span><span class="emo">💰 💸 🧾 💵 💳</span></div>
+        <div class="row"><span class="msg">Partido de fútbol esta noche <span class="lang">Spanish</span></span><span class="emo">⚽ 🏈 🏀 🏃 🏟️</span></div>
+        <div class="row"><span class="msg">Great job thumbs up <span class="lang">medium skin tone</span></span><span class="emo">👍🏽 👏🏽</span></div>
+      </div>
+
+      <p>&ldquo;Pay my bills&rdquo; doesn't name an emoji, and the Spanish one isn't in English. The model still gets there, because it learned what messages <em>mean</em>, not what words look like.</p>
+
+      <p>It isn't perfect, and I'd rather show you than pretend. On &ldquo;Pay my bills&rdquo; the top two picks (money bag and money with wings) carry about two thirds of the confidence, and then it drifts: 🎟️ and 😍 sneak into places four and five. Short tasks in some languages drift more than that. That's why every suggestion comes with a score &mdash; so the app can show three strong picks instead of eight weak ones.</p>
+
+      <div class="compare">
+        <figure>
+          <img src="images/moji-kmp-android.jpg" alt="Moji Android sample showing emoji suggestions and their confidence for Pay my bills" loading="lazy">
+          <figcaption>&ldquo;Pay my bills&rdquo;, 0.55 ms, with the scores behind each pick</figcaption>
+        </figure>
+        <figure>
+          <img src="images/moji-spanish.jpg" alt="Moji sample app suggesting sports emoji for a Spanish message about a football match" loading="lazy">
+          <figcaption>Spanish, same model, same device</figcaption>
+        </figure>
+      </div>
+
+      <h2>The part nobody sees: fitting it in 5 MB</h2>
+
+      <p>Big language models could do this easily. They're also hundreds of megabytes and take hundreds of milliseconds. An emoji bar needs an answer before the next key lands.</p>
+
+      <p>So Moji is small on purpose. It reads the text in two ways at once: short pieces of characters (so typos and slang still land somewhere familiar) and SentencePiece tokens (so it understands words in 22+ languages). A small network scores all 1,000 emoji in its vocabulary and returns the best ones. The weights are stored as 8-bit integers, which is why the whole thing adds about 5 MB to an app.</p>
+
+      <div class="callout">
+        <p><strong>The number that matters:</strong> about 0.3&ndash;0.6 ms per suggestion once warm on JVM, Android, JS and Wasm, and about 2 ms on a mid-range phone (a Moto G57 Power). That's fast enough to run on every keystroke without the user ever feeling it.</p>
+      </div>
+
+      <h2>Why plain Kotlin, and no native code</h2>
+
+      <p>Most on-device ML libraries bring a runtime with them: TensorFlow Lite, ONNX Runtime, a native <code>.so</code> per CPU architecture. That's fine until you want the same thing on iOS, on a desktop app and in a browser.</p>
+
+      <p>Moji's inference is written in plain Kotlin in common code. The only platform-specific parts are Unicode normalization and loading the model file. That's the reason it runs on Android, iOS, macOS, JVM desktop, JavaScript and WebAssembly from one dependency &mdash; and the reason every platform gives the <em>same</em> answer. Each one is tested against the Python reference on 443 vectors and must return the same top 5 emoji.</p>
+
+      <pre><code>// build.gradle.kts
+implementation("io.github.rajumark:moji:2.0.0")
+
+// anywhere in common code
+val moji = Moji()                       // load once, off the main thread
+moji.suggestions("Pay my bills")        // 💰 💸 🧾 💵 💳
+moji.suggestions("Great job thumbs up", skinTone = SkinTone.MEDIUM)   // 👍🏽 👏🏽 …</code></pre>
+
+      <p>That skin tone parameter was a small thing that took an afternoon, and it's the kind of detail I care about. If a user has chosen a tone, every hand and person emoji the library suggests should respect it.</p>
+
+      <h2>Where it belongs</h2>
+
+      <p>The keyboard is the obvious home, but the ideas I like most are quieter ones: to-do apps that auto-icon a task (&ldquo;buy milk&rdquo; &rarr; 🥛), expense trackers that tag &ldquo;Uber&rdquo; with 🚕, calendar apps that put ✈️ next to &ldquo;flight to Goa&rdquo;. None of that needs a server. It needs a model small enough to forget it's there.</p>
+
+      <p>It's accurate enough to be useful &mdash; the right emoji is in the top 5 for 88% of a set of 111 everyday messages across 22 languages, measured on a phone &mdash; and honest enough to say when it's guessing: every suggestion comes with a confidence you can use to hide the bar.</p>
+
+      <blockquote>A good emoji suggestion is invisible. You just tap it and move on. That's the whole goal.</blockquote>
+
+      <p>Moji is free for products with up to 10,000 monthly active devices, commercial apps included, with no API key and no sign-up. If you're building a keyboard, a chat app or anything with a text box, give it five minutes.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><strong>Moji</strong> &mdash; emoji suggestions, told as a story <em>(you are here)</em></li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/moji/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/moji" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Built something with Moji, or found an emoji it gets hilariously wrong? <a href="../index.html#section-contact">Tell me</a> &mdash; the wrong ones are my favourite bug reports.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

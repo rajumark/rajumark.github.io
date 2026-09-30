@@ -1,0 +1,307 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tutorial: add punctuation to voice-typed text with Comma — Raju Shingadiya</title>
+  <meta name="description" content="A step-by-step tutorial for adding punctuation and capital letters to voice-typed or unpunctuated text with Comma, a 7.8 MB on-device model for Kotlin Multiplatform. Works for English, Hinglish, Hindi and more than a dozen other languages.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Comma, punctuation restoration, voice typing, speech to text, capitalisation, Hinglish, Hindi, Kotlin Multiplatform, Compose Multiplatform, tutorial">
+  <link rel="canonical" href="https://rajumark.github.io/blog/comma-punctuation-voice-typing-kotlin-tutorial.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Tutorial: add punctuation to voice-typed text with Comma">
+  <meta property="og:description" content="Turn &#x27;can you pick up the kids at 5 i am stuck in a meeting&#x27; into a proper sentence, on the device, in about 10 ms. Step by step.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/comma-punctuation-voice-typing-kotlin-tutorial.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/comma-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Tutorial: add punctuation to voice-typed text with Comma">
+  <meta name="twitter:description" content="Turn &#x27;can you pick up the kids at 5 i am stuck in a meeting&#x27; into a proper sentence, on the device, in about 10 ms. Step by step.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/comma-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Tutorial: fix voice-typed text in 15 minutes with Comma (Kotlin Multiplatform)",
+    "description": "A step-by-step tutorial for adding punctuation and capital letters to voice-typed or unpunctuated text with Comma, a 7.8 MB on-device model for Kotlin Multiplatform. Works for English, Hinglish, Hindi and more than a dozen other languages.",
+    "image": "https://rajumark.github.io/blog/images/comma-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/comma-punctuation-voice-typing-kotlin-tutorial.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .step { display: inline-flex; align-items: center; justify-content: center; width: 30px; height: 30px; border-radius: 50%;
+      background: var(--accent); color: var(--bg); font-size: 15px; font-weight: 700; margin-right: 10px; vertical-align: 3px; }
+    .io { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; margin: 18px 0 24px; }
+    .io div { border-radius: 12px; padding: 12px 14px; font-size: 15px; line-height: 1.5; }
+    .io .in { background: var(--code-bg); color: var(--code-fg); border: 1px solid var(--line); font-family: monospace; }
+    .io .out { background: rgba(61,220,132,.16); }
+    .io small { display: block; font-size: 11px; letter-spacing: .06em; text-transform: uppercase; opacity: .6; margin-bottom: 4px; font-family: inherit; }
+    @media (max-width: 600px) { .io { grid-template-columns: 1fr; } }
+    .checklist li { list-style: none; margin-left: -18px; }
+    .checklist li::before { content: "\2610  "; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 9 min read</div>
+        <h1>Tutorial: fix voice-typed text in 15 minutes with Comma (Kotlin Multiplatform)</h1>
+        <p class="post-standfirst">Speech-to-text hands you a wall of lowercase words with no full stops. By the end of this tutorial your app will turn that into proper sentences, on the device, in English, Hinglish, Hindi and more than a dozen other languages.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/comma-kmp-desktop.jpg" alt="Comma desktop sample restoring punctuation in a chat message" loading="eager">
+        <figcaption>What we're building: raw text in, readable sentences out, on the device.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/comma/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/comma" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>What you'll build</h2>
+
+      <p>A text box that takes whatever your speech-to-text engine (or a hurried user) produces, and returns readable text:</p>
+
+      <div class="io">
+        <div class="in"><small>In</small>can you pick up the kids at 5 i am stuck in a meeting</div>
+        <div class="out"><small>Out</small>Can you pick up the kids at 5? I am stuck in a meeting.</div>
+        <div class="in"><small>In</small>आप कैसे हैं मैं ठीक हूँ</div>
+        <div class="out"><small>Out</small>आप कैसे हैं? मैं ठीक हूँ।</div>
+        <div class="in"><small>In</small>hi rahul are you free tomorrow i need help with the report</div>
+        <div class="out"><small>Out</small>Hi, Rahul. Are you free tomorrow? I need help with the report.</div>
+      </div>
+
+      <p>Notice the second one: Hindi gets its own full stop, <code>।</code>, not a Latin dot. Urdu gets <code>۔</code> and <code>؟</code>. Getting those right is most of the reason Comma exists.</p>
+
+      <h3>You'll need</h3>
+
+      <ul class="checklist">
+        <li>A Kotlin project: Android, Compose Multiplatform, a JVM desktop app, or Kotlin/JS or Wasm.</li>
+        <li>Android <code>minSdk</code> 21 or higher, if you target Android.</li>
+        <li>Some source of unpunctuated text. Speech-to-text is the classic one, but chat input works too.</li>
+      </ul>
+
+      <p>No API key, no account, no network permission.</p>
+
+      <h2><span class="step">1</span>Add the dependency</h2>
+
+      <p>Comma is on Maven Central. In a multiplatform project put it in <code>commonMain</code>; in a plain Android project, in the app module.</p>
+
+      <pre><code>// build.gradle.kts
+dependencies {
+    implementation("io.github.rajumark:comma:2.0.0")
+}</code></pre>
+
+      <p>Gradle picks the right artifact per platform (<code>comma-android</code>, <code>comma-iosarm64</code>, <code>comma-wasm-js</code> and so on). There's no native code to package and no ABI splits to think about.</p>
+
+      <h2><span class="step">2</span>Load the model once</h2>
+
+      <p>Loading takes about 250 ms, so do it once, off the main thread, and keep the instance. <code>restore()</code> is thread-safe, so one instance can serve the whole app.</p>
+
+      <pre><code>object Punctuation {
+    private val comma = lazy { Comma() }
+
+    suspend fun fix(text: String): String = withContext(Dispatchers.Default) {
+        comma.value.restore(text)
+    }
+}</code></pre>
+
+      <p>If you use dependency injection, register <code>Comma()</code> as a singleton instead. It's <code>AutoCloseable</code>; call <code>close()</code> only if you really want the memory back.</p>
+
+      <h2><span class="step">3</span>Wire it into your UI</h2>
+
+      <p>Here's the core of a Compose screen. The same code runs on Android, iOS and desktop with Compose Multiplatform:</p>
+
+      <pre><code>@Composable
+fun VoiceNoteField(transcript: String) {
+    var fixed by remember { mutableStateOf("") }
+
+    LaunchedEffect(transcript) {
+        fixed = if (transcript.isBlank()) "" else Punctuation.fix(transcript)
+    }
+
+    Column {
+        Text("You said", style = MaterialTheme.typography.labelMedium)
+        Text(fixed.ifEmpty { transcript })
+    }
+}</code></pre>
+
+      <p>Pass in whatever your speech engine returns. Because <code>LaunchedEffect</code> is keyed on the transcript, a new result cancels the previous one, so partial results while the user is still speaking don't pile up.</p>
+
+      <h2><span class="step">4</span>Handle long voice notes</h2>
+
+      <p>You don't need to split anything yourself. Comma reads long text in overlapping windows of 128 tokens, so every word has context on both sides, even in a two-minute voice note. Just pass the whole transcript.</p>
+
+      <pre><code>val note = Punctuation.fix(fullTranscript)   // a whole paragraph is fine</code></pre>
+
+      <h2><span class="step">5</span>Know what it will change</h2>
+
+      <p>Comma <em>replaces</em> existing punctuation and re-cases the text. That's deliberate: messy input like <code>OK, bye!!! take care...</code> comes out consistent. But it means you should run it on raw speech or chat input, not on text a user has carefully written. A good pattern is a small &ldquo;Fix punctuation&rdquo; button, or applying it automatically only to text that came from speech.</p>
+
+      <pre><code>comma.restore("OK, bye!!! take care...")   // re-punctuated and re-cased
+comma.restore("   ")                       // "" for blank text</code></pre>
+
+      <h2><span class="step">6</span>Try it on real input</h2>
+
+      <p>Before you ship, feed it twenty messages from your own domain. These are the numbers to expect (word-level F1, higher is better, on test sets never used for training):</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Comma</th><th>XLM-R punctuation + true-case</th></tr></thead>
+          <tbody>
+            <tr><td>Hinglish chat, punctuation / capitals</td><td><strong>0.83 / 0.92</strong></td><td>0.49 / 0.70</td></tr>
+            <tr><td>English chat, punctuation / capitals</td><td><strong>0.86 / 0.96</strong></td><td>0.72 / 0.91</td></tr>
+            <tr><td>Hand-written messages fully right</td><td><strong>43%</strong></td><td>26%</td></tr>
+            <tr><td>Formal text, 18 languages, punctuation</td><td>0.65</td><td><strong>0.76</strong></td></tr>
+            <tr><td>Size</td><td><strong>7.8 MB</strong></td><td>1.1 GB</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Read that honestly: on chat and messages Comma is clearly ahead. On long formal prose (news, encyclopedia text) the 1.1 GB models place commas better. If your app is a messenger, a notes app or a voice assistant, you're in Comma's territory.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/comma-english.jpg" alt="Comma sample app restoring punctuation in English" loading="lazy">
+          <figcaption>English</figcaption>
+        </figure>
+        <figure>
+          <img src="images/comma-hindi.jpg" alt="Comma sample app restoring punctuation in Hindi with the Devanagari full stop" loading="lazy">
+          <figcaption>Hindi, with <code>।</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/comma-hinglish.jpg" alt="Comma sample app restoring punctuation in Hinglish" loading="lazy">
+          <figcaption>Hinglish</figcaption>
+        </figure>
+      </div>
+
+      <h2>Troubleshooting</h2>
+
+      <p><strong>&ldquo;It put ! where I wanted .&rdquo;</strong> Exclamation vs full stop is a judgement call and Comma sometimes makes a different one. If your product is formal, map <code>!</code> to <code>.</code> after restoring.</p>
+
+      <p><strong>&ldquo;Chinese / Japanese / Thai don't work.&rdquo;</strong> Right &mdash; those scripts don't separate words with spaces, and Comma works word by word. They're not supported.</p>
+
+      <p><strong>&ldquo;Some Kannada and Malayalam answers get a ?&rdquo;</strong> A known weak spot: an answer right after a question can inherit the question mark.</p>
+
+      <p><strong>&ldquo;The first call is slow.&rdquo;</strong> That's the model loading (~250 ms). Load it at app start in the background, as in step 2. After that a message takes about 10 ms on an Android emulator.</p>
+
+      <h2>Recap</h2>
+
+      <ol>
+        <li>Add <code>io.github.rajumark:comma:2.0.0</code>.</li>
+        <li>Create one <code>Comma()</code>, off the main thread.</li>
+        <li>Call <code>restore(text)</code> on raw speech or chat input.</li>
+        <li>Let it handle long text by itself.</li>
+        <li>Test on your own messages before you ship.</li>
+      </ol>
+
+      <p>That's the whole integration. Everything runs on the device, so the words your users speak never leave it &mdash; which, for voice notes, is exactly how it should be.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><strong>Comma</strong> &mdash; punctuation restoration, as a step-by-step tutorial <em>(you are here)</em></li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/comma/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/comma" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Stuck on a step, or got it running in a language I didn't list? <a href="../index.html#section-contact">Let me know</a>.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

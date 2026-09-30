@@ -1,0 +1,287 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Beacon vs ML Kit: language detection on real chat, benchmarked — Raju Shingadiya</title>
+  <meta name="description" content="A benchmark report on Beacon, an 8.5 MB on-device language detector for Kotlin Multiplatform: 88.3% on chat vs 71.3% for ML Kit, 92.1% vs 6.9% on romanised Indian languages like Hinglish, and the places it still gets wrong.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Beacon, language detection, language identification, ML Kit Language ID, Hinglish, Tanglish, romanised Hindi, Kotlin Multiplatform, on-device NLP, benchmark">
+  <link rel="canonical" href="https://rajumark.github.io/blog/beacon-language-detection-hinglish-benchmark.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Beacon vs ML Kit: language detection on real chat, benchmarked">
+  <meta property="og:description" content="88.3% vs 71.3% on chat. 92.1% vs 6.9% on Hinglish and Tanglish. The full numbers, the test sets and the known limits.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/beacon-language-detection-hinglish-benchmark.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/beacon-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Beacon vs ML Kit: language detection on real chat, benchmarked">
+  <meta name="twitter:description" content="88.3% vs 71.3% on chat. 92.1% vs 6.9% on Hinglish and Tanglish. The full numbers, the test sets and the known limits.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/beacon-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Beacon vs ML Kit: I benchmarked language detection on the messages people actually send",
+    "description": "A benchmark report on Beacon, an 8.5 MB on-device language detector for Kotlin Multiplatform: 88.3% on chat vs 71.3% for ML Kit, 92.1% vs 6.9% on romanised Indian languages like Hinglish, and the places it still gets wrong.",
+    "image": "https://rajumark.github.io/blog/images/beacon-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/beacon-language-detection-hinglish-benchmark.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .tldr { border: 2px solid currentColor; border-radius: 14px; padding: 16px 20px; margin: 24px 0; }
+    .tldr p { margin: 0 0 8px; }
+    .tldr ul { margin: 0; padding-left: 20px; }
+    .tldr li { margin: 4px 0; }
+    td.win { font-weight: 700; }
+    .bar-row { display: grid; grid-template-columns: 150px 1fr 56px; gap: 10px; align-items: center; margin: 8px 0; font-size: 14px; }
+    .bar-row .bar { height: 12px; border-radius: 6px; background: var(--line); overflow: hidden; }
+    .bar-row .bar i { display: block; height: 100%; background: var(--accent); }
+    .bar-row .bar i.other { background: var(--fg-faint); }
+    .bars { margin: 18px 0 24px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 8 min read</div>
+        <h1>Beacon vs ML Kit: I benchmarked language detection on the messages people actually send</h1>
+        <p class="post-standfirst">Language detectors score 99% on the benchmarks they're sold with. Then you feed them a two-word Hinglish message and they call it English. So I built my own tests out of real chat, and measured.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/beacon-kmp-desktop.jpg" alt="Beacon desktop sample detecting Hindi written in Latin letters" loading="eager">
+        <figcaption>&ldquo;Kal milte hain bhai&rdquo; &rarr; <code>hin_Latn</code>, Hindi in Latin letters. Most detectors say English or give up.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/beacon/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/beacon" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="tldr">
+        <p><strong>TL;DR</strong></p>
+        <ul>
+          <li>On an Android emulator, against Google ML Kit Language ID: <strong>88.3% vs 71.3%</strong> on chat, <strong>93.2% vs 84.0%</strong> on short text, <strong>92.1% vs 6.9%</strong> on romanised Indian languages.</li>
+          <li>On FLORES-200 (formal sentences, 64 shared languages) it's level with much bigger models: 98.5%, next to OpenLID-201 at 98.9% (158 MB).</li>
+          <li>8.5 MB, plain Kotlin, 40&ndash;90 &micro;s per text, same answer on Android, iOS, desktop and the web.</li>
+          <li>One-word inputs are still hard (65%). Close language pairs stay close.</li>
+        </ul>
+      </div>
+
+      <h2>1. Why run another benchmark</h2>
+
+      <p>Every language detector I tried looked great on paper. The papers test on sentences like <em>&ldquo;The committee approved the budget for the next fiscal year.&rdquo;</em> Long, clean, one language, one script.</p>
+
+      <p>Real apps receive <em>&ldquo;ok&rdquo;</em>, <em>&ldquo;Enna panra da&rdquo;</em> and <em>&ldquo;😀 123&rdquo;</em>. In India a huge share of chat is Hindi, Tamil or Bengali typed in English letters. A detector that returns <code>en</code> for all of it will route your support ticket to the wrong team, pick the wrong keyboard and translate from the wrong language.</p>
+
+      <p>So the question I cared about wasn't &ldquo;how good is it on news?&rdquo;. It was &ldquo;how good is it on the messages people actually send?&rdquo;.</p>
+
+      <h2>2. What was measured</h2>
+
+      <p>Four test sets, none used for training:</p>
+
+      <ul>
+        <li><strong>FLORES-200</strong>, the standard multilingual benchmark: formal sentences in the 64 languages every compared tool supports.</li>
+        <li><strong>Short text</strong>: Tatoeba sentences of five words or fewer.</li>
+        <li><strong>Chat</strong>: 188 hand-written chat messages. Short, informal, with emoji and slang.</li>
+        <li><strong>Romanised Indic</strong>: Hindi, Tamil, Bengali, Urdu and others typed in Latin letters, from people and from real chat.</li>
+      </ul>
+
+      <p>The answer counts as right when the label matches, and a Beacon label is language <em>and</em> script: <code>hin_Latn</code> is Hindi in Latin letters, <code>hin_Deva</code> is Hindi in Devanagari. Beacon knows 211 of these labels, including all 22 scheduled Indian languages and 12 romanised South Asian ones.</p>
+
+      <h2>3. Results against other detectors</h2>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th>Test</th><th>Beacon</th><th>Best other detector</th></tr></thead>
+          <tbody>
+            <tr><td>FLORES-200, 64 shared languages</td><td>98.5%</td><td>OpenLID-201 98.9% (158 MB), Lingua 98.2% (307 MB)</td></tr>
+            <tr><td>Short text (Tatoeba, &le; 5 words)</td><td class="win">93.8%</td><td>Lingua 89.0%</td></tr>
+            <tr><td>Chat messages (188 hand-written)</td><td class="win">88.3%</td><td>MediaPipe 71.3%</td></tr>
+            <tr><td>Romanised Indic (human + real chat)</td><td class="win">93.0%</td><td>MediaPipe 7.5%, others ~0%</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>The first row is the honest one. On clean formal text Beacon doesn't win &mdash; it's within half a point of a 158 MB model, at about a twentieth of the size. Everything below that row is where the difference shows up.</p>
+
+      <h2>4. On a phone, against ML Kit</h2>
+
+      <p>ML Kit Language ID is what most Android developers reach for, so I ran both on the same Android emulator:</p>
+
+      <div class="bars">
+        <div class="bar-row"><span>Chat &middot; Beacon</span><span class="bar"><i style="width:88.3%"></i></span><span>88.3%</span></div>
+        <div class="bar-row"><span>Chat &middot; ML Kit</span><span class="bar"><i class="other" style="width:71.3%"></i></span><span>71.3%</span></div>
+        <div class="bar-row"><span>Short &middot; Beacon</span><span class="bar"><i style="width:93.2%"></i></span><span>93.2%</span></div>
+        <div class="bar-row"><span>Short &middot; ML Kit</span><span class="bar"><i class="other" style="width:84%"></i></span><span>84.0%</span></div>
+        <div class="bar-row"><span>Romanised &middot; Beacon</span><span class="bar"><i style="width:92.1%"></i></span><span>92.1%</span></div>
+        <div class="bar-row"><span>Romanised &middot; ML Kit</span><span class="bar"><i class="other" style="width:6.9%"></i></span><span>6.9%</span></div>
+      </div>
+
+      <p>The last pair isn't a typo. ML Kit wasn't built to tell romanised Hindi from English, so it mostly doesn't. That's not a criticism of ML Kit so much as a gap nobody filled &mdash; and it's the gap Indian apps fall into every day.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/beacon-hinglish.jpg" alt="Beacon sample app detecting romanised Hindi" loading="lazy">
+          <figcaption>Hinglish &rarr; <code>hin_Latn</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/beacon-tanglish.jpg" alt="Beacon sample app detecting romanised Tamil" loading="lazy">
+          <figcaption>Tanglish &rarr; <code>tam_Latn</code></figcaption>
+        </figure>
+        <figure>
+          <img src="images/beacon-tamil.jpg" alt="Beacon sample app detecting Tamil in Tamil script" loading="lazy">
+          <figcaption>Tamil script &rarr; <code>tam_Taml</code></figcaption>
+        </figure>
+      </div>
+
+      <h2>5. Cost</h2>
+
+      <dl class="spec">
+        <dt>Size</dt><dd>About 8.5 MB added to the app (int8 weights and labels)</dd>
+        <dt>Speed</dt><dd>About 40&ndash;90 &micro;s per text once warm, on JVM, Android, JS and Wasm</dd>
+        <dt>Dependencies</dt><dd>None. No ML Kit, no TFLite, no native code, no Google Play services</dd>
+        <dt>Network</dt><dd>None. No permission, no telemetry</dd>
+        <dt>Platforms</dt><dd>Android, iOS, macOS, JVM desktop, JavaScript, WebAssembly</dd>
+        <dt>Parity</dt><dd>Same label as the Python reference on all 958 test vectors, on every platform</dd>
+      </dl>
+
+      <h2>6. Known limits</h2>
+
+      <p>A benchmark report without this section is an advert. These are the cases where Beacon is weak, and I'd want to know them before shipping it:</p>
+
+      <ul>
+        <li><strong>One word is hard.</strong> 65% accuracy on single words. Three words or more reach 94&ndash;98%.</li>
+        <li><strong>Close pairs stay close.</strong> Bosnian, Croatian and Serbian in Latin script; Indonesian and Malay; Cantonese and Mandarin in Traditional characters; Awadhi and Bhojpuri against Hindi.</li>
+        <li><strong>Some romanised languages are weaker.</strong> Very short Bengali, Gujarati, Punjabi and Marathi chat in Latin letters is behind Hinglish and Tanglish.</li>
+        <li><strong>Hindi vs Urdu in Latin letters</strong> is the same spoken language. Beacon will often give both with similar scores. If your app doesn't need the difference, treat <code>hin_Latn</code> and <code>urd_Latn</code> as one.</li>
+      </ul>
+
+      <h2>7. How to use the result</h2>
+
+      <pre><code>val beacon = Beacon()                        // load once, off the main thread
+
+val r = beacon.detect("Kal milte hain bhai")
+r.label        // "hin_Latn"
+r.confidence   // 0.50
+r.isReliable   // confidence &gt;= 0.5
+
+beacon.candidates("Kal milte hain bhai", limit = 3)
+// [hin_Latn 0.50, urd_Latn 0.44, tam_Latn 0.01]
+
+beacon.detect("😀 123")                      // "und": no letters to judge</code></pre>
+
+      <p>My advice from running these tests: use <code>isReliable</code>, and when it's false, fall back to what you already know (the user's keyboard language, their last message). A detector that says &ldquo;I'm not sure&rdquo; is far more useful than one that's confidently wrong.</p>
+
+      <h2>8. Verdict</h2>
+
+      <p>If your text is long and formal, any good detector will do. If your users chat &mdash; especially in India &mdash; the difference between 71% and 88%, or between 7% and 92%, is the difference between a feature that works and one that quietly doesn't. Beacon was built for the second case, and 8.5 MB is a small price for that difference.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><strong>Beacon</strong> &mdash; language detection, as a benchmark report <em>(you are here)</em></li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><a href="chalk-doodle-recognition-strokes-not-pixels.html">Chalk</a> &mdash; doodle recognition, as an engineering deep dive</li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/beacon/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/beacon" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Have a language pair Beacon gets wrong? <a href="../index.html#section-contact">Send it to me</a> &mdash; hard cases like that are how test sets get better.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>

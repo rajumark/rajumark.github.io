@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Chalk: recognising doodles from strokes, not pixels, in 1.8 MB — Raju Shingadiya</title>
+  <meta name="description" content="An engineering deep dive into Chalk, an on-device doodle recogniser for Kotlin Multiplatform. It reads pen strokes instead of images, knows 345 QuickDraw categories, scores 81% top-1 at 1.8 MB, and beats a 348 MB image model on half-finished drawings.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Chalk, doodle recognition, sketch recognition, QuickDraw, stroke-based model, transformer, Ramer-Douglas-Peucker, on-device AI, Kotlin Multiplatform, Compose">
+  <link rel="canonical" href="https://rajumark.github.io/blog/chalk-doodle-recognition-strokes-not-pixels.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Chalk: recognising doodles from strokes, not pixels, in 1.8 MB">
+  <meta property="og:description" content="81% top-1 on 345 categories at 1.8 MB, and better than a 193x larger image model while you&#x27;re still drawing. The pipeline, step by step.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/chalk-doodle-recognition-strokes-not-pixels.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/chalk-kmp-desktop.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Chalk: recognising doodles from strokes, not pixels, in 1.8 MB">
+  <meta name="twitter:description" content="81% top-1 on 345 categories at 1.8 MB, and better than a 193x larger image model while you&#x27;re still drawing. The pipeline, step by step.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/chalk-kmp-desktop.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "Strokes, not pixels: how a 1.8 MB model guesses your doodle before you finish it",
+    "description": "An engineering deep dive into Chalk, an on-device doodle recogniser for Kotlin Multiplatform. It reads pen strokes instead of images, knows 345 QuickDraw categories, scores 81% top-1 at 1.8 MB, and beats a 348 MB image model on half-finished drawings.",
+    "image": "https://rajumark.github.io/blog/images/chalk-kmp-desktop.jpg",
+    "datePublished": "2026-09-30",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/chalk-doodle-recognition-strokes-not-pixels.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .series ul { margin: 10px 0 0; padding-left: 20px; }
+    .series li { margin: 4px 0; font-size: 15px; line-height: 1.55; }
+
+    .pipeline { counter-reset: s; list-style: none; padding-left: 0; }
+    .pipeline li { counter-increment: s; position: relative; padding: 12px 0 12px 52px; border-left: 2px solid var(--line-strong); margin-left: 16px; }
+    .pipeline li::before { content: counter(s); position: absolute; left: -17px; top: 10px; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: var(--bg); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+    .diagram { margin: 22px 0; }
+    .diagram svg { width: 100%; height: auto; display: block; }
+    .diagram .ink { stroke: currentColor; fill: none; stroke-width: 3; stroke-linecap: round; stroke-linejoin: round; }
+    .diagram .pt { fill: var(--accent); stroke: var(--bg); stroke-width: 1.5; }
+    .diagram text { fill: currentColor; font-size: 13px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">30 September 2026 · 10 min read</div>
+        <h1>Strokes, not pixels: how a 1.8 MB model guesses your doodle before you finish it</h1>
+        <p class="post-standfirst">The obvious way to recognise a doodle is to render it as an image and run a vision model. I did the opposite: Chalk reads the pen strokes in the order you drew them. This is how the pipeline works, and why that choice pays off.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/chalk-kmp-desktop.jpg" alt="Chalk desktop sample recognising a hand-drawn house" loading="eager">
+        <figcaption>Four strokes in, &ldquo;house&rdquo; out. The model never sees an image.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/chalk/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/chalk" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <h2>The decision: read the pen, not the picture</h2>
+
+      <p>A drawing on a touch screen isn't an image. It's a list of strokes, and each stroke is a list of points in the order the finger moved. An image throws most of that away: which line came first, which direction it went, where the finger lifted.</p>
+
+      <p>That information is exactly what makes a doodle recognisable early. A house usually starts with the walls, then the roof. A sun often starts with a circle, then rays. If you keep the order, the model can guess while the user is still drawing &mdash; like Google's Quick, Draw! game.</p>
+
+      <p>So Chalk takes strokes as input:</p>
+
+      <pre><code>val square = Stroke.of(100f, 100f, 900f, 100f, 900f, 900f, 100f, 900f, 100f, 100f)
+chalk.guess(listOf(square))    // [square, picture frame, …]
+
+// a house drawn with 4 strokes
+chalk.guess(strokes)           // [house 0.89, barn 0.06, church 0.01]</code></pre>
+
+      <p>Size and position on screen don't matter. Pass raw screen pixels from a Compose <code>pointerInput</code> or <code>View.onTouchEvent</code>, one <code>Stroke</code> per finger-down to finger-up.</p>
+
+      <h2>The pipeline</h2>
+
+      <ol class="pipeline">
+        <li><strong>Align.</strong> Move the drawing so its top-left corner is at the origin.</li>
+        <li><strong>Scale.</strong> Scale uniformly so the longer side is 255 units. A tiny doodle and a full-screen one look the same.</li>
+        <li><strong>Resample.</strong> Put points every unit along each stroke, so fast and slow fingers produce the same density.</li>
+        <li><strong>Simplify.</strong> Run the Ramer-Douglas-Peucker algorithm to drop points that sit on nearly straight lines. This is the same simplification Google applied to the QuickDraw dataset, so live input looks like the training data.</li>
+        <li><strong>Tokenise.</strong> Each remaining point, at most 128, becomes a token: its position, its step from the previous point, and whether it starts or ends a stroke.</li>
+        <li><strong>Read.</strong> A small transformer (4 layers, 1.6M parameters) reads the tokens in drawing order and averages them into one vector.</li>
+        <li><strong>Pick.</strong> That vector scores all 345 categories. The top few are your guesses.</li>
+      </ol>
+
+      <div class="diagram" aria-label="A wobbly hand-drawn stroke with many points, simplified by Ramer-Douglas-Peucker to a few key points">
+        <svg viewBox="0 0 640 170" role="img">
+          <text x="10" y="20">Raw finger input: dozens of points</text>
+          <path class="ink" d="M20 140 C 60 60, 100 58, 140 90 S 220 150, 260 60"/>
+          <g>
+            <circle class="pt" cx="20" cy="140" r="3"/><circle class="pt" cx="32" cy="118" r="3"/><circle class="pt" cx="44" cy="100" r="3"/><circle class="pt" cx="56" cy="87" r="3"/><circle class="pt" cx="68" cy="79" r="3"/><circle class="pt" cx="80" cy="75" r="3"/><circle class="pt" cx="92" cy="74" r="3"/><circle class="pt" cx="104" cy="76" r="3"/><circle class="pt" cx="116" cy="80" r="3"/><circle class="pt" cx="128" cy="85" r="3"/><circle class="pt" cx="140" cy="90" r="3"/><circle class="pt" cx="152" cy="97" r="3"/><circle class="pt" cx="164" cy="105" r="3"/><circle class="pt" cx="176" cy="112" r="3"/><circle class="pt" cx="188" cy="117" r="3"/><circle class="pt" cx="200" cy="118" r="3"/><circle class="pt" cx="212" cy="115" r="3"/><circle class="pt" cx="224" cy="105" r="3"/><circle class="pt" cx="236" cy="92" r="3"/><circle class="pt" cx="248" cy="77" r="3"/><circle class="pt" cx="260" cy="60" r="3"/>
+          </g>
+          <text x="290" y="100">&#8594;</text>
+          <text x="340" y="20">After RDP: the few points that matter</text>
+          <polyline class="ink" points="360,140 400,76 450,82 500,118 540,104 580,60"/>
+          <g>
+            <circle class="pt" cx="360" cy="140" r="4"/><circle class="pt" cx="400" cy="76" r="4"/><circle class="pt" cx="450" cy="82" r="4"/><circle class="pt" cx="500" cy="118" r="4"/><circle class="pt" cx="540" cy="104" r="4"/><circle class="pt" cx="580" cy="60" r="4"/>
+          </g>
+        </svg>
+      </div>
+
+      <p>Step 4 is the one that makes the model small. After simplification a typical doodle is a few dozen tokens, not the tens of thousands of pixels an image model has to look at. Less input means a smaller model can do the job.</p>
+
+      <h2>Training for real fingers</h2>
+
+      <p>QuickDraw drawings were made with a mouse or finger in a browser game, then cleaned up. Real input in an app is messier, and it arrives unfinished. So training added:</p>
+
+      <ul>
+        <li>random rotations and stretches,</li>
+        <li>thinned-out points,</li>
+        <li>half-finished drawings, cut off partway through the strokes.</li>
+      </ul>
+
+      <p>That last one is why Chalk is good at guessing early. It has seen thousands of drawings that stop halfway, labelled with what they were going to become.</p>
+
+      <div class="shots">
+        <figure>
+          <img src="images/chalk-house.jpg" alt="Chalk recognising a finished house drawing" loading="lazy">
+          <figcaption>House, 89%</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chalk-partial.jpg" alt="Chalk recognising a half-drawn house from walls and roof only" loading="lazy">
+          <figcaption>Half-drawn: walls + roof, house 86%</figcaption>
+        </figure>
+        <figure>
+          <img src="images/chalk-fish.jpg" alt="Chalk recognising a fish drawing" loading="lazy">
+          <figcaption>Fish, 97%</figcaption>
+        </figure>
+      </div>
+
+      <h2>Results: small vs large</h2>
+
+      <p>Measured on QuickDraw drawings never used for training (500 per category), fed through the same touch-input pipeline the library uses. The image models get each drawing rendered as a picture first.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead><tr><th></th><th>Chalk</th><th>BEiT-base sketch classifier</th><th>MobileViT-small</th></tr></thead>
+          <tbody>
+            <tr><td>Finished drawings: top-1 / top-3</td><td>81.5% / 94.3%</td><td><strong>83.3% / 95.6%</strong></td><td>70.6% / 87.9%</td></tr>
+            <tr><td>Half-drawn: top-1 / top-3</td><td><strong>53.3% / 73.9%</strong></td><td>50.1% / 69.7%</td><td>40.4% / 59.7%</td></tr>
+            <tr><td>Size</td><td><strong>1.8 MB</strong></td><td>348 MB</td><td>21 MB</td></tr>
+            <tr><td>Latency, 1 CPU thread (Python, laptop)</td><td><strong>~1 ms</strong></td><td>~69 ms</td><td>~2.5 ms</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>Read it this way: a 193&times; larger image model is 1.8 points better on finished drawings. On half-finished drawings, which is what a live &ldquo;guess as you draw&rdquo; feature actually sees, the stroke model wins. And across all 172,500 test drawings it scores about the same for every country (India 80.4%, US 81.1%, UK 80.3%).</p>
+
+      <h2>Engineering notes from the Kotlin port</h2>
+
+      <p><strong>Pure Kotlin is slower than SIMD Python, and that's fine.</strong> The ~1 ms above uses vectorised maths. In the pure-Kotlin library a guess takes about 13 ms on a laptop JVM, 25 ms on an Android emulator and 50&ndash;90 ms in a browser. Still fast enough to run after every stroke.</p>
+
+      <p><strong>One maths function broke parity on one drawing.</strong> Every platform is tested against the reference on 150 drawings and must agree. On Apple platforms and JavaScript, the system <code>hypot</code> rounds slightly differently from the JVM's, and that tiny difference, after resampling and simplification, changed the result on 1 of the 150 drawings. The fix was a common fdlibm-style <code>hypot</code> in shared code, so all six platforms compute the same distances bit for bit. The kind of bug that takes a day to find and one function to fix.</p>
+
+      <p><strong>No runtime to ship.</strong> No TFLite, no ONNX Runtime, no native code. The 1.7 MB of int8 weights ship inside the library, and the whole thing runs on Android, iOS, macOS, JVM desktop, JavaScript and WebAssembly.</p>
+
+      <h2>Where it struggles</h2>
+
+      <p>Some categories look alike when drawn quickly. The hardest are marker, bear, garden hose, aircraft carrier, cooler and cup (34&ndash;45% top-1). The easiest &mdash; helicopter, angel, wine glass, star, ladder and The Mona Lisa &mdash; are 97&ndash;98%. Very neat, computer-made shapes are harder than hand-drawn ones: a perfect triangle is a close call between &ldquo;triangle&rdquo; and &ldquo;see saw&rdquo;. And it only knows the 345 QuickDraw categories; anything else gets the nearest one.</p>
+
+      <h2>Try it</h2>
+
+      <pre><code>// build.gradle.kts
+implementation("io.github.rajumark:chalk:2.0.0")
+
+val chalk = Chalk()                      // load once, off the main thread
+strokes += Stroke(xs.toFloatArray(), ys.toFloatArray())   // on finger up
+val best = chalk.guess(strokes).firstOrNull()</code></pre>
+
+      <p>Drawing games, kids' learning apps, sketch search, a whiteboard that tidies shapes: they all get better when the app understands what's being drawn while it's being drawn. That's the whole bet behind reading the pen instead of the picture.</p>
+
+      <hr>
+
+      <div class="callout series">
+        <p><strong>The Hoverfly series.</strong> Eight small on-device models, one job each, all plain Kotlin Multiplatform with no native code. Each post is written differently, because each model taught me something different.</p>
+        <ul>
+          <li><a href="moji-on-device-emoji-suggestions-kotlin.html">Moji</a> &mdash; emoji suggestions, told as a story</li>
+          <li><a href="beacon-language-detection-hinglish-benchmark.html">Beacon</a> &mdash; language detection, as a benchmark report</li>
+          <li><a href="comma-punctuation-voice-typing-kotlin-tutorial.html">Comma</a> &mdash; punctuation restoration, as a step-by-step tutorial</li>
+          <li><a href="comeback-smart-replies-vs-ml-kit.html">Comeback</a> &mdash; smart replies, as an honest opinion piece</li>
+          <li><a href="emotion-detection-on-device-questions.html">Emotion</a> &mdash; emotion detection, as questions and answers</li>
+          <li><a href="gatekeeper-toxicity-filter-indian-chat-playbook.html">Gatekeeper</a> &mdash; toxicity detection, as a practical playbook</li>
+          <li><a href="hideout-pii-redaction-indian-apps-checklist.html">Hideout</a> &mdash; personal info hiding, as an audit checklist</li>
+          <li><strong>Chalk</strong> &mdash; doodle recognition, as an engineering deep dive <em>(you are here)</em></li>
+        </ul>
+      </div>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/chalk/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/chalk" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/hoverfly/#models" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          All Hoverfly models
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Drew something Chalk refuses to recognise? <a href="../index.html#section-contact">Send it over</a> &mdash; I collect the misses.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>
