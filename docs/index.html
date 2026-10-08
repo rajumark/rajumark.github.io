@@ -1517,6 +1517,14 @@ dependencyResolutionManagement {
         stats: ["Fresh chat: 38% top emotion vs 36% RoBERTa", "28 emotions + mood", "~6.4 MB (RoBERTa: 499 MB)", "~3 ms / message"],
         dep: 'implementation("com.github.rajumark:emotion:v1.0.0")',
         github: "https://github.com/rajumark/emotion", site: "https://rajumark.github.io/emotion/"
+      },
+      {
+        name: "Retake", tag: "Photo quality check", color: "#1971c2", icon: "images/apps_logo_screenshots/retake.svg",
+        desc: "Looks at a photo and says whether it is good or should be retaken, and why: blurry, too dark, too bright, glare, noisy, or a finger over the lens. Screenshots and graphics count as good. Kotlin Multiplatform: Android, iOS, desktop and web. For KYC, scanners, marketplaces and gallery apps.",
+        example: "<b>a shaky photo</b> → retake: blur 99% · “Blurry: hold still and tap to focus”",
+        stats: ["Real photos: 87% right vs 53% OpenCV rules", "6 problems", "~0.5 MB", "0 of 102 screenshots flagged"],
+        dep: 'implementation("io.github.rajumark:retake:1.0.0")',
+        github: "https://github.com/rajumark/retake", site: "https://rajumark.github.io/retake/"
       }
     ];
 
