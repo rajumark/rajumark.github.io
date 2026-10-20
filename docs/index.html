@@ -367,6 +367,7 @@
     .lib-name { font-size: 16px; font-weight: 600; color: #222; line-height: 1.2; }
     .lib-tag { font-size: 12px; color: var(--lib-color); font-weight: 600; }
     .lib-desc { font-size: 13px; color: #555; line-height: 1.55; }
+    .lib-desc code { font-family: ui-monospace, Menlo, monospace; font-size: 12px; background: #f3f0ff; border-radius: 4px; padding: 1px 5px; }
     .lib-example {
       font-size: 12.5px;
       color: #444;
@@ -1031,6 +1032,39 @@ dependencyResolutionManagement {
     }
 }</code></pre>
           <pre><code id="lib-deps"></code></pre>
+        </details>
+      </div>
+      <div class="project-category" id="kernelin">
+        <div class="category-title">Kotlin GPU Compiler</div>
+        <p class="lib-intro">An open-source K2 compiler plugin. Published on Maven Central.</p>
+        <div class="lib-grid">
+          <div class="lib-card" style="--lib-color:#7f52ff">
+            <div class="lib-head">
+              <img src="images/apps_logo_screenshots/kernelin.svg" alt="Kernelin logo" loading="lazy">
+              <div>
+                <div class="lib-name">Kernelin</div>
+                <div class="lib-tag">Plain Kotlin → GPU code</div>
+              </div>
+            </div>
+            <div class="lib-desc">Write GPU kernels in plain Kotlin. Add <code>@Kernel</code> to a function and a K2 compiler plugin turns it into a WGSL compute shader at build time, so it runs on any GPU through WebGPU (browser, desktop, Android). The same function still runs on the CPU, so normal unit tests check the logic. IntelliJ IDEA and Android Studio underline code the GPU can't run while you type.</div>
+            <div class="lib-example"><b>@Kernel fun saxpy(a: Float, x: FloatArray, y: FloatArray)</b> → WGSL shader · same result on CPU and GPU</div>
+            <div class="lib-stats"><span>Up to 118× faster than 10 CPU cores (Apple M5)</span><span>33× on a mid-range Android phone</span><span>GPU output matches Kotlin CPU</span><span>JVM, Wasm, JS, Android, Native</span></div>
+            <div class="lib-links">
+              <a href="https://rajumark.github.io/kernelin/" target="_blank" rel="noopener noreferrer">Website ↗</a>
+              <a href="https://rajumark.github.io/kernelin/demo/" target="_blank" rel="noopener noreferrer">Live demo ↗</a>
+              <a href="https://rajumark.github.io/kernelin-projects/" target="_blank" rel="noopener noreferrer">Real-world apps ↗</a>
+              <a href="https://github.com/rajumark/kernelin" target="_blank" rel="noopener noreferrer">GitHub ↗</a>
+              <a href="blog/kernelin-gpu-kernels-in-plain-kotlin.html" target="_blank" rel="noopener">Blog post ↗</a>
+            </div>
+          </div>
+        </div>
+        <details class="lib-setup">
+          <summary>Setup</summary>
+          <pre><code>// build.gradle.kts
+plugins {
+    kotlin("jvm") version "2.4.21"   // or multiplatform / Android
+    id("io.github.rajumark.kernelin") version "0.3.0"
+}</code></pre>
         </details>
       </div>
       <div class="project-category">

@@ -1,0 +1,263 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Kernelin: GPU kernels in plain Kotlin, with a K2 compiler plugin — Raju Shingadiya</title>
+  <meta name="description" content="Why I built Kernelin, a K2 compiler plugin that turns plain Kotlin @Kernel functions into WGSL compute shaders for any WebGPU GPU, while the same function still runs on the CPU for unit tests. How it works, measured speed on an Apple M5 and a mid-range Android phone, and what it can't do yet.">
+  <meta name="author" content="Raju Shingadiya">
+  <meta name="keywords" content="Kernelin, Kotlin compiler plugin, K2, GPU programming, WGSL, WebGPU, compute shader, Kotlin Multiplatform, Kotlin/Wasm, Android GPU, Maven Central">
+  <link rel="canonical" href="https://rajumark.github.io/blog/kernelin-gpu-kernels-in-plain-kotlin.html">
+  <meta name="robots" content="index, follow">
+  <link rel="icon" type="image/png" href="../images/androiddoelicon.png">
+
+  <meta property="og:type" content="article">
+  <meta property="og:title" content="Kernelin: GPU kernels in plain Kotlin">
+  <meta property="og:description" content="Add @Kernel to a Kotlin function and it runs on the GPU through WebGPU, up to 118x faster than 10 CPU cores, and still runs on the CPU for your tests. How the compiler plugin works.">
+  <meta property="og:url" content="https://rajumark.github.io/blog/kernelin-gpu-kernels-in-plain-kotlin.html">
+  <meta property="og:image" content="https://rajumark.github.io/blog/images/kernelin-website.jpg">
+  <meta property="og:site_name" content="Raju Shingadiya">
+  <meta name="twitter:card" content="summary_large_image">
+  <meta name="twitter:title" content="Kernelin: GPU kernels in plain Kotlin">
+  <meta name="twitter:description" content="Add @Kernel to a Kotlin function and it runs on the GPU through WebGPU, up to 118x faster than 10 CPU cores, and still runs on the CPU for your tests. How the compiler plugin works.">
+  <meta name="twitter:image" content="https://rajumark.github.io/blog/images/kernelin-website.jpg">
+
+  <script type="application/ld+json">
+  {
+    "@context": "https://schema.org",
+    "@type": "BlogPosting",
+    "headline": "I wanted GPU code in plain Kotlin, so I wrote a compiler plugin",
+    "description": "Why I built Kernelin, a K2 compiler plugin that turns plain Kotlin @Kernel functions into WGSL compute shaders for any WebGPU GPU, while the same function still runs on the CPU for unit tests.",
+    "image": "https://rajumark.github.io/blog/images/kernelin-website.jpg",
+    "datePublished": "2026-10-20",
+    "author": {
+      "@type": "Person",
+      "name": "Raju Shingadiya",
+      "url": "https://rajumark.github.io/"
+    },
+    "mainEntityOfPage": "https://rajumark.github.io/blog/kernelin-gpu-kernels-in-plain-kotlin.html"
+  }
+  </script>
+
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Comfortaa:wght@300;500&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="blog.css">
+  <style>
+    .pipeline { counter-reset: s; list-style: none; padding-left: 0; }
+    .pipeline li { counter-increment: s; position: relative; padding: 12px 0 12px 52px; border-left: 2px solid var(--line-strong); margin-left: 16px; }
+    .pipeline li::before { content: counter(s); position: absolute; left: -17px; top: 10px; width: 32px; height: 32px; border-radius: 50%;
+      background: var(--accent); color: var(--bg); display: grid; place-items: center; font-weight: 700; font-size: 14px; }
+  </style>
+</head>
+<body>
+  <div class="header">
+    <div class="header-inner">
+      <div class="profile">
+        <a href="../index.html"><img class="avatar" src="../raju_profile_small_image.png" alt="Raju Shingadiya"></a>
+        <span class="name">Raju Shingadiya</span>
+      </div>
+      <div class="nav">
+        <a class="nav-item" href="../index.html#section-about">About</a>
+        <a class="nav-item" href="../index.html#section-projects">Projects</a>
+        <a class="nav-item" href="../index.html#section-experience">Experience</a>
+        <a class="nav-item active" href="index.html">Blog</a>
+        <a class="nav-item" href="../index.html#section-contact">Contact me</a>
+      </div>
+    </div>
+  </div>
+
+  <div class="post-nav">
+    <div class="post-nav-inner">
+      <a class="back-btn" href="index.html">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><line x1="19" y1="12" x2="5" y2="12"/><polyline points="12 19 5 12 12 5"/></svg>
+        All posts
+      </a>
+    </div>
+  </div>
+
+  <div class="wrap">
+    <article class="article">
+      <header class="post-header">
+        <div class="post-meta">20 October 2026 · 9 min read</div>
+        <h1>I wanted GPU code in plain Kotlin, so I wrote a compiler plugin</h1>
+        <p class="post-standfirst">Every phone and laptop has a GPU that sits idle while our Kotlin code loops over arrays on one CPU core. Using it means learning a second language and pasting it into your app as a string. Kernelin removes that step: add <code>@Kernel</code> to a normal Kotlin function, and the compiler writes the GPU code for you.</p>
+      </header>
+
+      <figure class="hero">
+        <img src="images/kernelin-website.jpg" alt="Kernelin website: Write GPU kernels in plain Kotlin" loading="eager">
+        <figcaption>Kernelin 0.3.0 is on Maven Central. One line in your Gradle build.</figcaption>
+      </figure>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/kernelin/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/kernelin" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/kernelin/demo/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><polygon points="5 3 19 12 5 21 5 3"/></svg>
+          Live demo
+        </a>
+      </div>
+
+      <h2>The problem: GPU code is a second language</h2>
+
+      <p>If you want to run a computation on the GPU from Kotlin today, you write a shader in WGSL (or GLSL, or Metal), put it in a string or a resource file, and then glue it to your Kotlin code by hand: which buffer is binding 1, which number goes into the uniform struct, in what order, with what padding.</p>
+
+      <p>None of that is checked by the Kotlin compiler. Rename a parameter, swap two buffers, pass an <code>Int</code> where the shader expects an <code>f32</code> &mdash; it compiles fine, and you find out at runtime, on the GPU, where you can't set a breakpoint or print a line. And you can't unit test the shader on your laptop's CI the way you test the rest of your code.</p>
+
+      <p>Kotlin already has a compiler that understands every line of your code. So I asked: why not let the compiler write the shader?</p>
+
+      <h2>The idea: one function, two places to run</h2>
+
+      <p>You write a normal Kotlin function and mark it with <code>@Kernel</code>. It runs once per thread; <code>globalId()</code> tells each thread which element is its own.</p>
+
+<pre><code>@Kernel
+fun saxpy(alpha: Float, x: FloatArray, y: FloatArray) {
+    val i = globalId()
+    y[i] += alpha * x[i]
+}</code></pre>
+
+      <p>At build time Kernelin turns that into this WGSL compute shader (trimmed):</p>
+
+<pre><code>@group(0) @binding(1) var&lt;storage, read&gt; x: array&lt;f32&gt;;
+@group(0) @binding(2) var&lt;storage, read_write&gt; y: array&lt;f32&gt;;
+...
+  let i: i32 = i32(kernelin_id);
+  y[i] += (kernelin_params.alpha * x[i]);</code></pre>
+
+      <p>Notice that <code>x</code> became a <code>read</code> buffer and <code>y</code> a <code>read_write</code> one. Kernelin looks at how each array is used, so only arrays you write are copied back from the GPU.</p>
+
+      <p>Then you call it like a normal function. The compiler checks the names and types of the arguments:</p>
+
+<pre><code>val gpu = WebGpu.create()                              // any WebGPU browser, desktop or Android
+gpu.dispatch(n) { saxpy(alpha = 2.5f, x = x, y = y) }
+
+// the same kernel on the CPU, for unit tests
+KernelinCpu.dispatch(n) { saxpy(2.5f, x, y) }</code></pre>
+
+      <p>That last line is the part I care about most. Your kernel is still Kotlin, so a plain JUnit test can run it on the CPU, with normal stack traces and a debugger. The logic is tested before it ever reaches a GPU.</p>
+
+      <h2>How it works inside the compiler</h2>
+
+      <p>Kernelin is a <strong>K2 compiler plugin</strong>. It runs inside the normal Kotlin build, after type checking, so it sees fully resolved code: every name, type and overload is already known.</p>
+
+      <ol class="pipeline">
+        <li><strong>Find kernels.</strong> The plugin visits every function marked <code>@Kernel</code> in the Kotlin IR (the compiler's internal tree of your code).</li>
+        <li><strong>Translate.</strong> A translator walks that tree <em>before</em> the platform backends lower it, so loops, <code>&amp;&amp;</code>, <code>++</code> and <code>+=</code> still have their source shape. Each expression becomes a WGSL expression of type <code>i32</code>, <code>f32</code> or <code>bool</code>. Your helper functions become WGSL <code>fn</code>s.</li>
+        <li><strong>Report.</strong> Anything the GPU can't run (a <code>String</code>, a lambda, a <code>Double</code>, recursion) becomes a normal compiler error at the exact file and line, with a hint. The build fails before a bad shader can exist. Since 0.2.0, IntelliJ IDEA and Android Studio underline it while you type.</li>
+        <li><strong>Embed.</strong> Every <code>kernelSource(::saxpy)</code> call is replaced with the finished WGSL and a small manifest (which parameter is which binding) as string constants. No files to load at runtime, nothing to keep in sync by hand.</li>
+      </ol>
+
+      <p>Every generated shader in the test suite is also checked by <a href="https://github.com/gfx-rs/wgpu/tree/trunk/naga" target="_blank" rel="noopener noreferrer">naga</a>, the WGSL validator used by Firefox's WebGPU, so a translator bug shows up as a failed test, not as a black screen on someone's phone.</p>
+
+      <h2>Is it actually faster?</h2>
+
+      <p>I measured five kernels on two very different machines: an Apple M5 laptop (WebGPU in Chrome on Metal) and a <strong>moto g57 power</strong>, a mid-range Android phone with an Adreno GPU (WebGPU in Chrome for Android). The CPU side is the <em>same</em> Kotlin function run by <code>KernelinCpu</code> on all cores. Times are milliseconds, median of 5 runs; GPU time is with the data already on the GPU.</p>
+
+      <div class="table-scroll">
+        <table>
+          <thead>
+            <tr><th>Kernel</th><th>M5 GPU</th><th>M5 CPU (10 cores)</th><th>Phone GPU</th><th>Phone CPU (8 cores)</th></tr>
+          </thead>
+          <tbody>
+            <tr><td>waves (4M points, heavy math)</td><td>4.6</td><td>546</td><td>61</td><td>2,035</td></tr>
+            <tr><td>mandelbrot (4M pixels)</td><td>4.5</td><td>101</td><td>48</td><td>413</td></tr>
+            <tr><td>blur (16M floats)</td><td>2.0</td><td>20</td><td>29</td><td>130</td></tr>
+            <tr><td>saxpy (16M floats)</td><td>1.6</td><td>8.7</td><td>15</td><td>94</td></tr>
+            <tr><td>vectorAdd (16M floats)</td><td>1.8</td><td>7.0</td><td>15</td><td>102</td></tr>
+          </tbody>
+        </table>
+      </div>
+
+      <p>That's up to <strong>118&times; faster</strong> than all ten M5 cores, and up to <strong>33&times;</strong> faster than all eight phone cores. On every kernel the GPU output matched the Kotlin CPU output (exactly, or within a float rounding step).</p>
+
+      <div class="callout">
+        <p><strong>The honest part.</strong> Those GPU times assume the data is already on the GPU. If you count copying 16 million floats to the GPU and back, a simple <code>vectorAdd</code> takes about 30 ms on the M5 &mdash; <em>slower</em> than the CPU's 7 ms. Adding two numbers is cheaper than moving them. The GPU wins when each element needs real work (the <code>waves</code> kernel is still 10 ms end to end vs 546 ms), or when you keep data on the GPU across many steps, which Kernelin supports since 0.3.0.</p>
+      </div>
+
+      <h2>Real apps, not just benchmarks</h2>
+
+      <p>Micro-benchmarks are easy to make look good, so I built three real applications with Kernelin from Maven Central. Each one checks its own answers against an exact formula or ground truth on every run.</p>
+
+      <figure>
+        <img src="images/kernelin-projects.jpg" alt="Kernelin projects page with Risk Engine, Photo Studio and Motion Guard" loading="lazy">
+        <figcaption>All three run in the browser on your GPU: <a href="https://rajumark.github.io/kernelin-projects/" target="_blank" rel="noopener noreferrer">rajumark.github.io/kernelin-projects</a></figcaption>
+      </figure>
+
+      <ul>
+        <li><strong>Risk Engine</strong> (finance simulation): Monte Carlo pricing of an options book, 1 million paths &times; 252 trading days &times; 4 scenarios in 46 ms on the M5 GPU &mdash; 53&times; faster than 10 JVM cores. Checked against Black&ndash;Scholes.</li>
+        <li><strong>Photo Studio</strong> (image): live edge-preserving denoise and photo development; 3.8 MP in 48 ms, +11.3 dB PSNR on a test chart with real sensor noise.</li>
+        <li><strong>Motion Guard</strong> (video): motion vectors and vehicle speeds from a traffic camera; a 720p frame in 19 ms, so live at 30 fps, with precision 0.995 and recall 0.972 against ground truth.</li>
+      </ul>
+
+      <p>Building them also found a real bug in Kernelin: a helper function named like a WGSL built-in (<code>uniform</code>) broke the shader. That's exactly why I build real apps on top of my own libraries.</p>
+
+      <h2>Three things I learned</h2>
+
+      <p><strong>1. "Works on my GPU" means very little.</strong> My CI runs the GPU tests on lavapipe, a software Vulkan driver. A loop counter that counted down and wrapped around was fine on Apple Metal but crashed the driver's shader compiler on CI. GPU drivers are compilers too, and each one has its own bugs. Testing on more than one GPU (laptop, phone, software driver) is not optional.</p>
+
+      <p><strong>2. Matching Kotlin exactly is most of the work.</strong> Translating <code>a + b</code> is easy. The hard part is the corners: what <code>min(-0f, 0f)</code> returns, what <code>Float.toInt()</code> does with NaN, what a shift by 40 bits means. WGSL leaves many of these undefined, Kotlin doesn't. Since 0.3.0 Kernelin gives Kotlin's exact answer for these, so a kernel tested on the CPU behaves the same on the GPU. The few remaining differences are listed in the docs.</p>
+
+      <p><strong>3. A clear error beats a clever feature.</strong> Kernels are a strict subset of Kotlin. Early on, unsupported code produced odd shaders. Now it's a compile error that tells you what to write instead (&ldquo;use a <code>for</code> loop instead of <code>forEach</code>&rdquo;). Developers forgive a missing feature; they don't forgive a silent wrong answer.</p>
+
+      <h2>What it can't do yet</h2>
+
+      <ul>
+        <li><strong>No <code>Double</code> or <code>Long</code></strong> &mdash; most GPUs have no 64-bit math. Use <code>Float</code> and <code>Int</code>.</li>
+        <li><strong>No classes, collections, lambdas, strings or recursion</strong> inside a kernel. Only numbers and flat arrays.</li>
+        <li><strong>No shared memory or atomics yet</strong>, so things like reductions need two passes.</li>
+        <li>Each Kernelin release is built for one Kotlin version (0.3.0 for Kotlin 2.4.21), because the compiler plugin API changes between Kotlin releases.</li>
+      </ul>
+
+      <h2>Try it</h2>
+
+<pre><code>// build.gradle.kts
+plugins {
+    kotlin("jvm") version "2.4.21"   // or kotlin("multiplatform"), or an Android plugin
+    id("io.github.rajumark.kernelin") version "0.3.0"
+}</code></pre>
+
+      <p>The Gradle plugin adds the runtime for you. The runtime works on JVM, Android, JS, Wasm and Kotlin/Native. The quickest way to see it is the <a href="https://rajumark.github.io/kernelin/demo/" target="_blank" rel="noopener noreferrer">live demo</a>: a fractal computed on your GPU by Kernelin-generated code, with a CPU vs GPU race button. The <a href="https://rajumark.github.io/kernelin/docs.html" target="_blank" rel="noopener noreferrer">documentation</a> covers everything else.</p>
+
+      <div class="repo-links">
+        <a class="repo-btn primary" href="https://rajumark.github.io/kernelin/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><circle cx="12" cy="12" r="10"/><line x1="2" y1="12" x2="22" y2="12"/><path d="M12 2a15.3 15.3 0 0 1 4 10 15.3 15.3 0 0 1-4 10 15.3 15.3 0 0 1-4-10 15.3 15.3 0 0 1 4-10z"/></svg>
+          Project site
+        </a>
+        <a class="repo-btn" href="https://github.com/rajumark/kernelin" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></svg>
+          Source on GitHub
+        </a>
+        <a class="repo-btn" href="https://rajumark.github.io/kernelin-projects/" target="_blank" rel="noopener noreferrer">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="3" width="7" height="7"/><rect x="14" y="3" width="7" height="7"/><rect x="14" y="14" width="7" height="7"/><rect x="3" y="14" width="7" height="7"/></svg>
+          Real-world apps
+        </a>
+      </div>
+
+      <div class="post-footer">
+        Have a loop that's too slow on the CPU? <a href="../index.html#section-contact">Tell me about it</a> &mdash; I'd love to see if it fits in a kernel.
+      </div>
+
+      <a class="back-link" href="index.html">&larr; All posts</a>
+    </article>
+  </div>
+
+  <script>
+    (function () {
+      var header = document.querySelector('.header');
+      function syncHeaderHeight() {
+        document.documentElement.style.setProperty('--header-h', header.offsetHeight + 'px');
+      }
+      syncHeaderHeight();
+      window.addEventListener('resize', syncHeaderHeight);
+      if (window.ResizeObserver) new ResizeObserver(syncHeaderHeight).observe(header);
+    })();
+  </script>
+  <script src="post-actions.js"></script>
+</body>
+</html>
